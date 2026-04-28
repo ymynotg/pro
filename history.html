@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史数据</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #f5f5f5;
+            --secondary: #ffffff;
+            --accent: #2196F3;
+            --highlight: #1976D2;
+            --up: #4CAF50;
+            --down: #f44336;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --border: #e0e0e0;
+        }
+        
+        body {
+            font-family: "Noto Sans SC", sans-serif;
+            background: #fafafa;
+            color: var(--text-primary);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+        
+        .close-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .close-btn:hover {
+            background: var(--highlight);
+        }
+        
+        .stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            background: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        
+        .up { color: var(--up); }
+        .down { color: var(--down); }
+        
+        .table-wrapper {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+        
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: var(--text-secondary);
+            position: sticky;
+            top: 0;
+        }
+        
+        tbody tr:hover {
+            background: #fafafa;
+        }
+        
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .price {
+            font-family: "JetBrains Mono", monospace;
+        }
+        
+        .change {
+            font-weight: 500;
+        }
+        
+        .premium {
+            font-weight: 500;
+        }
+        
+        .premium.high { color: var(--down); }
+        .premium.medium { color: #ff9800; }
+        .premium.low { color: var(--up); }
+        
+        .loading, .empty, .error {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+        
+        @media print {
+            body { background: white; }
+            .header { border-bottom-color: #ccc; }
+            .table-wrapper { box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <div class="title" id="title">历史数据</div>
+            <div class="subtitle" id="subtitle"></div>
+        </div>
+        <button class="close-btn" onclick="window.close()">关闭窗口</button>
+    </div>
+    
+    <div class="stats" id="stats"></div>
+    
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>日期</th>
+                    <th>收盘价</th>
+                    <th>涨跌幅</th>
+                    <th>净值</th>
+                    <th>溢价率</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+                <tr><td colspan="5" class="loading">加载中...</td></tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code') || '';
+    const type = params.get('type') || 'lof';
+    
+    async function loadHistory() {
+        if (!code) {
+            document.getElementById('tbody').innerHTML = '<tr><td colspan="5" class="error">无效的基金代码</td></tr>';
+            return;
+        }
+        
+        const apiType = type === 'qdii' ? 'qdii' : 'lof';
+        
+        try {
+            const res = await fetch(`/api/history/${code}`);
+            const data = await res.json();
+            
+            if (data.success && data.data && data.data.history && data.data.history.length > 0) {
+                const fund = data.data;
+                const history = fund.history;
+                
+                document.getElementById('title').textContent = `${code} - ${fund.name || '历史数据'}`;
+                document.getElementById('subtitle').textContent = `数据来源: ${fund.source || '东方财富'} | 更新时间: ${fund.update_time || ''}`;
+                
+                // Statistics
+                const latest = history[0];
+                const premiums = history.map(h => parseFloat(h.premium) || 0);
+                const maxPremium = Math.max(...premiums);
+                const minPremium = Math.min(...premiums);
+                
+                document.getElementById('stats').innerHTML = `
+                    <div class="stat">
+                        <div class="stat-label">数据天数</div>
+                        <div class="stat-value">${history.length}天</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">最高溢价率</div>
+                        <div class="stat-value">${maxPremium.toFixed(2)}%</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">最低溢价率</div>
+                        <div class="stat-value">${minPremium.toFixed(2)}%</div>
+                    </div>
+                `;
+                
+                // Render table - sorted by date descending (new to old)
+                const sorted = [...history].sort((a, b) => new Date(b.date) - new Date(a.date));
+                let html = '';
+                sorted.forEach(item => {
+                    const change = parseFloat(item.change) || 0;
+                    const premium = parseFloat(item.premium) || 0;
+                    
+                    let changeClass = '';
+                    let changeSign = '';
+                    if (change > 0) { changeClass = 'up'; changeSign = '+'; }
+                    else if (change < 0) { changeClass = 'down'; }
+                    
+                    let premiumClass = '';
+                    let premiumSign = '';
+                    if (premium > 3) { premiumClass = 'high'; premiumSign = ''; }
+                    else if (premium > 1) { premiumClass = 'medium'; premiumSign = ''; }
+                    else if (premium > 0) { premiumClass = 'up'; premiumSign = ''; }
+                    else if (premium < 0) { premiumClass = 'low'; premiumSign = ''; }
+                    
+                    html += `<tr>
+                        <td>${item.date}</td>
+                        <td class="price">${(parseFloat(item.price) || 0).toFixed(4)}</td>
+                        <td class="change ${changeClass}">${changeSign}${change.toFixed(2)}%</td>
+                        <td class="price">${(parseFloat(item.nav) || 0).toFixed(4)}</td>
+                        <td class="premium ${premiumClass}">${premium >= 0 ? '+' : ''}${premium.toFixed(2)}%</td>
+                    </tr>`;
+                });
+                
+                document.getElementById('tbody').innerHTML = html;
+            } else {
+                document.getElementById('title').textContent = `${code} - 历史数据`;
+                document.getElementById('tbody').innerHTML = '<tr><td colspan="5" class="empty">暂无历史数据</td></tr>';
+            }
+        } catch (e) {
+            console.error(e);
+            document.getElementById('tbody').innerHTML = '<tr><td colspan="5" class="error">加载失败: ' + e.message + '</td></tr>';
+        }
+    }
+    
+    loadHistory();
+    </script>
+</body>
+</html>

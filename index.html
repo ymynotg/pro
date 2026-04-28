@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>跨境套利系统</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@400;500;600;700&family=Source+Han+Sans+CN:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #f5f5f5;
+            --secondary: #ffffff;
+            --accent: #2196F3;
+            --highlight: #1976D2;
+            --up: #4CAF50;
+            --down: #f44336;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --border: #e0e0e0;
+            --card-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Source Han Sans CN", "Noto Sans SC", sans-serif;
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 50%, #eeeeee 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .logo {
+            font-family: "Orbitron", sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: 2px;
+        }
+
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .refresh-time {
+            font-family: "JetBrains Mono", monospace;
+        }
+
+        .refresh-btn {
+            background: var(--accent);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: var(--highlight);
+            color: white;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--secondary);
+            padding: 6px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 14px 32px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: "Orbitron", sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+            background: rgba(33, 150, 243, 0.1);
+        }
+
+        .tab.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background: var(--highlight);
+            border-radius: 2px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .panel {
+            background: var(--secondary);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .panel-title {
+            font-family: "Orbitron", sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.green {
+            background: var(--up);
+            box-shadow: 0 0 10px var(--up);
+        }
+
+        .status-dot.yellow {
+            background: #ffd93d;
+            box-shadow: 0 0 10px #ffd93d;
+        }
+
+        .status-dot.red {
+            background: var(--down);
+            box-shadow: 0 0 10px var(--down);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: var(--card-shadow);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        .stat-value.up { color: var(--up); }
+        .stat-value.down { color: var(--down); }
+
+        .table-wrapper {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .data-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .data-table th {
+            font-family: "Orbitron", sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            background: #fafafa;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .data-table th:hover {
+            background: #f0f0f0;
+        }
+
+        .data-table th::after {
+            content: ' ↕';
+            font-size: 10px;
+            opacity: 0.3;
+        }
+
+        .data-table th.asc::after {
+            content: ' ↑';
+            opacity: 1;
+        }
+
+        .data-table th.desc::after {
+            content: ' ↓';
+            opacity: 1;
+        }
+
+        .data-table th:first-child {
+            border-radius: 0;
+        }
+
+        .data-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-family: "JetBrains Mono", monospace;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .data-table td:first-child {
+
+        .data-table tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(33, 150, 243, 0.05);
+        }
+
+        .data-table tbody tr.up-row {
+            border-left: 3px solid var(--up);
+        }
+
+        .data-table tbody tr.down-row {
+            border-left: 3px solid var(--down);
+        }
+
+        .price {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .price.up { color: var(--up); }
+        .price.down { color: var(--down); }
+
+        .change {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .change.up {
+            background: rgba(124, 179, 66, 0.15);
+            color: var(--up);
+        }
+
+.change.down {
+            background: rgba(239, 83, 80, 0.15);
+            color: var(--down);
+        }
+
+        .status-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-tag.status-open {
+            background: rgba(76, 175, 80, 0.15);
+            color: #4CAF50;
+        }
+
+        .status-tag.status-closed {
+            background: rgba(244, 67, 54, 0.15);
+            color: #f44336;
+        }
+
+        .status-tag.status-limit {
+            background: rgba(255, 152, 0, 0.15);
+            color: #ff9800;
+        }
+
+        .filter-input {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            min-width: 200px;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .data-table td:nth-child(2) {
+            font-family: "Source Han Sans CN", sans-serif;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--highlight);
+        }
+
+        .opportunity {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .opportunity.high {
+            background: rgba(124, 179, 66, 0.2);
+            color: var(--up);
+            border: 1px solid var(--up);
+        }
+
+        .opportunity.medium {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid #ffc107;
+        }
+
+        .opportunity.low {
+            background: rgba(239, 83, 80, 0.2);
+            color: var(--down);
+            border: 1px solid var(--down);
+        }
+
+        .data-table td:nth-child(2) {
+            max-width: 200px;
+            width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .code-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .code-link:hover {
+            text-decoration: underline;
+        }
+
+        .history-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .history-modal.active {
+            display: flex;
+        }
+
+        .history-modal-content {
+            background: var(--secondary);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--card-shadow);
+        }
+
+        .history-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .history-modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .history-modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 12px; }
+            .tabs { flex-wrap: wrap; }
+            .tab { flex: none; width: calc(50% - 2px); }
+            .header-info { display: none; }
+            .data-table { font-size: 12px; }
+            .data-table th, .data-table td { padding: 10px 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">跨境套利系统</div>
+            <div class="header-info">
+                <span class="refresh-time">更新时间: <span id="updateTime">--:--:--</span></span>
+                <button class="refresh-btn" onclick="refreshData()">刷新数据</button>
+            </div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="lof">LOF</button>
+            <button class="tab" data-tab="qdii">QDII</button>
+            <button class="tab" data-tab="etf">ETF</button>
+            <button class="tab" data-tab="option">期权</button>
+        </div>
+
+        <div id="lof" class="tab-content active">
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span class="status-dot green"></span>
+                        LOF 套利监控
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-label">LOF个数</div>
+                        <div class="stat-value" id="lofCount">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">套利机会数</div>
+                        <div class="stat-value" id="lofOpportunityCount">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">最高溢价</div>
+                        <div class="stat-value up" id="lofMaxPremium">+0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">最低溢价</div>
+                        <div class="stat-value" id="lofMinPremium">0%</div>
+                    </div>
+                </div>
+                <div class="filter-bar">
+                    <input type="text" class="filter-input" placeholder="搜索代码或名称..." oninput="filterTable('lof', this.value)">
+                </div>
+                <div class="table-wrapper" id="lofTableWrapper">
+                    <table class="data-table" id="lofTable">
+                        <thead>
+                            <tr>
+                                <th data-sort="code">代码</th>
+                                <th data-sort="name">名称</th>
+                                <th data-sort="price">当前价</th>
+                                <th data-sort="change">涨跌幅</th>
+                                <th data-sort="nav">净值</th>
+                                <th data-sort="premium">溢价率</th>
+                                <th data-sort="valuation">估值</th>
+                                <th data-sort="valPremium">估溢率</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lofTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="qdii" class="tab-content">
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span class="status-dot yellow"></span>
+                        QDII 套利监控
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-label">QDII个数</div>
+                        <div class="stat-value" id="qdiiCount">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">套利机会数</div>
+                        <div class="stat-value" id="qdiiOpportunityCount">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">最高溢价</div>
+                        <div class="stat-value up" id="qdiiMaxPremium">+0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">最低溢价</div>
+                        <div class="stat-value" id="qdiiMinPremium">0%</div>
+                    </div>
+                </div>
+                <div class="filter-bar">
+                    <input type="text" class="filter-input" placeholder="搜索代码或名称..." oninput="filterTable('qdii', this.value)">
+                </div>
+                <div class="table-wrapper" id="qdiiTableWrapper">
+                    <table class="data-table" id="qdiiTable">
+                        <thead>
+                            <tr>
+                                <th data-sort="code">代码</th>
+                                <th data-sort="name">名称</th>
+                                <th data-sort="price">当前价</th>
+                                <th data-sort="change">涨跌幅</th>
+                                <th data-sort="nav">净值</th>
+                                <th data-sort="premium">溢价率</th>
+                                <th data-sort="valuation">估值</th>
+                                <th data-sort="valPremium">估溢率</th>
+                                <th>申购状态</th>
+                                <th>赎回状态</th>
+                            </tr>
+                        </thead>
+                        <tbody id="qdiiTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="etf" class="tab-content">
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span class="status-dot green"></span>
+                        ETF 套利监控
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-label">平均折溢价</div>
+                        <div class="stat-value" id="etfAvgPremium">-0.12%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">套利机会数</div>
+                        <div class="stat-value" id="etfOpportunityCount">3</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">最大折价</div>
+                        <div class="stat-value down" id="etfMaxDiscount">-0.85%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">IH持仓市值</div>
+                        <div class="stat-value" id="etfIhValue">8.92亿</div>
+                    </div>
+                </div>
+                <div class="filter-bar">
+                    <input type="text" class="filter-input" placeholder="搜索代码或名称..." oninput="filterTable('etf', this.value)">
+                    <select class="filter-select" onchange="sortTable('etf', this.value)">
+                        <option value="">排序方式</option>
+                        <option value="premium-desc">折溢价降序</option>
+                        <option value="premium-asc">折溢价升序</option>
+                    </select>
+                </div>
+                <table class="data-table" id="etfTable">
+                    <thead>
+                        <tr>
+                            <th>代码</th>
+                            <th>名称</th>
+                            <th>当前价</th>
+                            <th>涨跌幅</th>
+                            <th>IOPV估值</th>
+                            <th>折溢价率</th>
+                            <th>套利空间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="etfTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="option" class="tab-content">
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span class="status-dot yellow"></span>
+                        期权套利监控
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-label">波动率差</div>
+                        <div class="stat-value" id="optVolDiff">+2.3%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">套利机会数</div>
+                        <div class="stat-value" id="optOpportunityCount">4</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">最大套利空间</div>
+                        <div class="stat-value up" id="optMaxSpace">+1.8%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">成交量(万)</div>
+                        <div class="stat-value" id="optVolume">56.7</div>
+                    </div>
+                </div>
+                <div class="filter-bar">
+                    <input type="text" class="filter-input" placeholder="搜索标的或合约..." oninput="filterTable('option', this.value)">
+                    <select class="filter-select" onchange="sortTable('option', this.value)">
+                        <option value="">排序方式</option>
+                        <option value="space-desc">套利空间降序</option>
+                        <option value="space-asc">套利空间升序</option>
+                    </select>
+                </div>
+                <table class="data-table" id="optionTable">
+                    <thead>
+                        <tr>
+                            <th>标的</th>
+                            <th>合约</th>
+                            <th>认购价格</th>
+                            <th>认沽价格</th>
+                            <th>合成期货</th>
+                            <th>套利空间</th>
+                            <th>机会评级</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="optionTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer class="footer">
+            跨境套利系统 v1.0 | 数据仅供参考，不构成投资建议
+        </footer>
+    </div>
+
+    <div id="historyModal" class="history-modal" onclick="if(event.target === this) closeHistory()">
+        <div class="history-modal-content">
+            <div class="history-modal-header">
+                <div class="history-modal-title" id="historyTitle">历史数据</div>
+                <button class="history-modal-close" onclick="closeHistory()">&times;</button>
+            </div>
+            <div id="historyContent">
+                <div class="table-wrapper">
+                    <table class="data-table" id="historyTable">
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>收盘价</th>
+                                <th>涨跌幅</th>
+                                <th>净值</th>
+                                <th>溢价率</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const mockData = {
+            lof: [],
+            qdii: [],
+            etf: [
+                { code: '513050', name: '中证500ETF', price: 3.4523, change: 1.23, iopv: 3.4612, premium: -0.26, space: 0.8 },
+                { code: '513300', name: '沪深300ETF', price: 4.1234, change: 0.89, iopv: 4.1356, premium: -0.30, space: 0.9 },
+                { code: '159919', name: '创业板ETF', price: 2.5678, change: 2.34, iopv: 2.5712, premium: -0.13, space: 0.5 },
+                { code: '513500', name: '中证100ETF', price: 1.8923, change: -0.45, iopv: 1.8901, premium: 0.12, space: 0.3 },
+                { code: '510300', name: '沪深300ETF', price: 4.5678, change: 1.56, iopv: 4.5523, premium: 0.34, space: 0.6 },
+            ],
+            option: [
+                { code: '510050', name: '50ETF', call: 3.10, put: 2.98, future: 6.08, space: 1.8, level: 'high' },
+                { code: '510300', name: '300ETF', call: 4.25, put: 4.12, future: 8.37, space: 1.2, level: 'medium' },
+                { code: '510500', name: '500ETF', call: 2.85, put: 2.72, space: 0.9, level: 'medium' },
+                { code: '159919', name: '创业板', call: 2.60, put: 2.48, space: 0.5, level: 'low' },
+            ]
+        };
+
+        const pageState = {
+            lof: { page: 1, total: 0, loading: false, hasMore: true },
+            qdii: { page: 1, total: 0, loading: false, hasMore: true }
+        };
+
+        async function fetchData(page = 1, append = false) {
+            try {
+                console.log('Fetching LOF and QDII data, page:', page);
+                const [lofRes, qdiiRes] = await Promise.all([
+                    fetch(`/api/lof?page=${page}&page_size=1000`),
+                    fetch(`/api/qdii?page=${page}&page_size=1000`)
+                ]);
+                const lofData = await lofRes.json();
+                const qdiiData = await qdiiRes.json();
+                
+                if (append) {
+                    mockData.lof = mockData.lof.concat(lofData.data || []);
+                    mockData.qdii = mockData.qdii.concat(qdiiData.data || []);
+                } else {
+                    mockData.lof = lofData.data || [];
+                    mockData.qdii = qdiiData.data || [];
+                }
+                
+                pageState.lof.total = lofData.total || 0;
+                pageState.qdii.total = qdiiData.total || 0;
+                pageState.lof.hasMore = mockData.lof.length < pageState.lof.total;
+                pageState.qdii.hasMore = mockData.qdii.length < pageState.qdii.total;
+                
+                console.log('LOF:', mockData.lof.length, '/', pageState.lof.total, 'QDII:', mockData.qdii.length, '/', pageState.qdii.total);
+            } catch (e) {
+                console.error('Fetch data error:', e);
+            }
+        }
+
+        async function loadMore(type) {
+            if (pageState[type].loading || !pageState[type].hasMore) return;
+            pageState[type].loading = true;
+            
+            const nextPage = pageState[type].page + 1;
+            try {
+                const res = await fetch(`/api/${type}?page=${nextPage}&page_size=50`);
+                const data = await res.json();
+                
+                if (data.data && data.data.length > 0) {
+                    mockData[type] = mockData[type].concat(data.data);
+                    pageState[type].page = nextPage;
+                    pageState[type].hasMore = mockData[type].length < data.total;
+                    renderTable(type, mockData[type]);
+                }
+            } catch (e) {
+                console.error('Load more error:', e);
+            }
+            
+            pageState[type].loading = false;
+        }
+
+        function formatValue(val, decimals = 2) {
+            if (val === '' || val === null || val === undefined) return '-';
+            const num = parseFloat(val);
+            if (isNaN(num)) return '-';
+            return num.toFixed(decimals);
+        }
+
+        function renderTable(type, data) {
+            const tbody = document.getElementById(type + 'TableBody');
+            if (!tbody) return;
+
+            let html = '';
+            data.forEach(item => {
+                const change = parseFloat(item.change) || 0;
+                const changeClass = change > 0 ? 'up' : change < 0 ? 'down' : '';
+                const changeSign = change > 0 ? '+' : '';
+                const premium = parseFloat(item.premium) || 0;
+                const premiumClass = type === 'etf' 
+                    ? (premium >= 0 ? 'high' : 'low')
+                    : (premium > 3 ? 'high' : premium > 1 ? 'medium' : 'low');
+                const premiumSign = premium >= 0 ? '+' : '';
+                const rowClass = change > 0 ? 'up-row' : change < 0 ? 'down-row' : '';
+
+                if (type === 'lof') {
+                    const valuation = parseFloat(item.valuation) || 0;
+                    const price = parseFloat(item.price) || 0;
+                    const valPremium = valuation > 0 ? ((price - valuation) / valuation * 100) : 0;
+                    const valPremiumClass = valPremium > 3 ? 'high' : valPremium > 1 ? 'medium' : valPremium < 0 ? 'low' : '';
+                    const valPremiumSign = valPremium >= 0 ? '+' : '';
+                    
+                    html += `<tr class="${rowClass}">
+                        <td><a href="javascript:void(0)" class="code-link" data-code="${item.code}" onclick="showHistory('${item.code}')">${item.code}</a></td>
+                        <td title="${item.name}">${item.name}</td>
+                        <td class="price ${changeClass}">${formatValue(item.price, 4)}</td>
+                        <td><span class="change ${changeClass}">${changeSign}${formatValue(change)}%</span></td>
+                        <td>${formatValue(item.nav, 4)}</td>
+                        <td class="premium ${premiumClass}">${premiumSign}${formatValue(premium)}%</td>
+                        <td>${formatValue(item.valuation, 4)}</td>
+                        <td class="premium ${valPremiumClass}">${valPremiumSign}${formatValue(valPremium)}%</td>
+                    </tr>`;
+                } else if (type === 'qdii') {
+                    const valuation = parseFloat(item.valuation) || 0;
+                    const price = parseFloat(item.price) || 0;
+                    const valPremium = valuation > 0 ? ((price - valuation) / valuation * 100) : 0;
+                    const valPremiumClass = valPremium > 3 ? 'high' : valPremium > 1 ? 'medium' : valPremium < 0 ? 'low' : '';
+                    const valPremiumSign = valPremium >= 0 ? '+' : '';
+                    const subscribeStatus = item.subscribe_status || '-';
+                    const redeemStatus = item.redeem_status || '-';
+                    const subscribeClass = subscribeStatus === '开放' ? 'status-open' : subscribeStatus === '暂停' ? 'status-closed' : 'status-limit';
+                    const redeemClass = redeemStatus === '开放' ? 'status-open' : redeemStatus === '暂停' ? 'status-closed' : 'status-limit';
+                    
+                    html += `<tr class="${rowClass}">
+                        <td><a href="javascript:void(0)" class="code-link" data-code="${item.code}" onclick="showHistory('${item.code}')">${item.code}</a></td>
+                        <td title="${item.name}">${item.name}</td>
+                        <td class="price ${changeClass}">${formatValue(item.price, 4)}</td>
+                        <td><span class="change ${changeClass}">${changeSign}${formatValue(change)}%</span></td>
+                        <td>${formatValue(item.nav, 4)}</td>
+                        <td class="premium ${premiumClass}">${premiumSign}${formatValue(premium)}%</td>
+                        <td>${formatValue(item.valuation, 4)}</td>
+                        <td class="premium ${valPremiumClass}">${valPremiumSign}${formatValue(valPremium)}%</td>
+                        <td><span class="status-tag ${subscribeClass}">${subscribeStatus}</span></td>
+                        <td><span class="status-tag ${redeemClass}">${redeemStatus}</span></td>
+                    </tr>`;
+                } else if (type === 'etf') {
+                    html += `<tr class="${rowClass}">
+                        <td>${item.code}</td>
+                        <td>${item.name}</td>
+                        <td class="price ${changeClass}">${formatValue(item.price, 4)}</td>
+                        <td><span class="change ${changeClass}">${changeSign}${formatValue(change)}%</span></td>
+                        <td>${formatValue(item.iopv, 4)}</td>
+                        <td class="premium ${premiumClass}">${premiumSign}${formatValue(premium)}%</td>
+                        <td class="premium ${premiumClass}">${formatValue(item.space, 1)}%</td>
+                        <td><button class="action-btn">详情</button></td>
+                    </tr>`;
+                } else if (type === 'option') {
+                    const levelClass = item.level || '';
+                    html += `<tr>
+                        <td>${item.code}</td>
+                        <td>${item.name}</td>
+                        <td class="price">${formatValue(item.call, 2)}</td>
+                        <td class="price">${formatValue(item.put, 2)}</td>
+                        <td>${formatValue(item.future, 2)}</td>
+                        <td class="premium high">+${formatValue(item.space, 1)}%</td>
+                        <td><span class="opportunity ${levelClass}">${levelClass === 'high' ? '高' : levelClass === 'medium' ? '中' : '低'}</span></td>
+                        <td><button class="action-btn">详情</button></td>
+                    </tr>`;
+                }
+            });
+tbody.innerHTML = html;
+        }
+        
+        function updateLofStats(data) {
+            const count = data.length;
+            const premiums = data.map(item => parseFloat(item.premium) || 0).filter(p => p !== 0);
+            const opportunities = premiums.filter(p => Math.abs(p) > 2).length;
+            const maxPremium = premiums.length > 0 ? Math.max(...premiums) : 0;
+            const minPremium = premiums.length > 0 ? Math.min(...premiums) : 0;
+            
+            document.getElementById('lofCount').textContent = count;
+            document.getElementById('lofOpportunityCount').textContent = opportunities;
+            document.getElementById('lofMaxPremium').textContent = maxPremium >= 0 ? '+' + maxPremium.toFixed(2) + '%' : maxPremium.toFixed(2) + '%';
+            document.getElementById('lofMinPremium').textContent = minPremium >= 0 ? '+' + minPremium.toFixed(2) + '%' : minPremium.toFixed(2) + '%';
+        }
+
+        function updateQdiiStats(data) {
+            const count = data.length;
+            const premiums = data.map(item => parseFloat(item.premium) || 0).filter(p => p !== 0);
+            const opportunities = premiums.filter(p => Math.abs(p) > 2).length;
+            const maxPremium = premiums.length > 0 ? Math.max(...premiums) : 0;
+            const minPremium = premiums.length > 0 ? Math.min(...premiums) : 0;
+            
+            document.getElementById('qdiiCount').textContent = count;
+            document.getElementById('qdiiOpportunityCount').textContent = opportunities;
+            document.getElementById('qdiiMaxPremium').textContent = maxPremium >= 0 ? '+' + maxPremium.toFixed(2) + '%' : maxPremium.toFixed(2) + '%';
+            document.getElementById('qdiiMinPremium').textContent = minPremium >= 0 ? '+' + minPremium.toFixed(2) + '%' : minPremium.toFixed(2) + '%';
+        }
+        
+        async function initTables() {
+            await fetchData();
+            renderTable('lof', mockData.lof);
+            renderTable('qdii', mockData.qdii);
+            renderTable('etf', mockData.etf);
+            renderTable('option', mockData.option);
+            updateLofStats(mockData.lof);
+            updateQdiiStats(mockData.qdii);
+            updateTime();
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const time = now.toTimeString().slice(0, 8);
+            document.getElementById('updateTime').textContent = time;
+        }
+
+        async function refreshData() {
+            await fetch('/api/refresh', {method: 'POST'});
+            
+            pageState.lof = { page: 1, total: 0, loading: false, hasMore: true };
+            pageState.qdii = { page: 1, total: 0, loading: false, hasMore: true };
+            
+            await fetchData(1, false);
+            
+            renderTable('lof', mockData.lof);
+            renderTable('qdii', mockData.qdii);
+            updateLofStats(mockData.lof);
+            updateQdiiStats(mockData.qdii);
+            updateTime();
+        }
+
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        function filterTable(type, value) {
+            const tbody = document.getElementById(type + 'TableBody');
+            const rows = tbody.getElementsByTagName('tr');
+            const search = value.toLowerCase();
+            for (let row of rows) {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(search) ? '' : 'none';
+            }
+        }
+
+        function sortTable(type, value) {
+            if (!value) return;
+            const [key, order] = value.split('-');
+            const sorted = [...mockData[type]].sort((a, b) => {
+                return order === 'desc' ? b[key] - a[key] : a[key] - b[key];
+            });
+            renderTable(type, sorted);
+        }
+
+        function initSortHandlers() {
+            const headers = document.querySelectorAll('.data-table th[data-sort]');
+            console.log('Found sortable headers:', headers.length);
+            
+            headers.forEach(th => {
+                const clickHandler = (e) => {
+                    e.stopPropagation();
+                    console.log('Header clicked:', th.dataset.sort);
+                    const table = th.closest('table');
+                    const type = table.id.replace('Table', '');
+                    console.log('Table type:', type, 'mockData[type]:', mockData[type]?.length);
+                    
+                    if (!mockData[type] || mockData[type].length === 0) {
+                        console.log('No data to sort');
+                        return;
+                    }
+                    
+                    const key = th.dataset.sort;
+                    const currentOrder = th.classList.contains('asc') ? 'asc' : th.classList.contains('desc') ? 'desc' : null;
+                    const order = currentOrder === 'asc' ? 'desc' : 'asc';
+                    
+                    table.querySelectorAll('th').forEach(h => h.classList.remove('asc', 'desc'));
+                    th.classList.add(order);
+                    
+                    const sorted = [...mockData[type]].sort((a, b) => {
+                        let aVal = a[key];
+                        let bVal = b[key];
+                        
+                        if (key === 'code' || key === 'name') {
+                            aVal = String(aVal || '').toLowerCase();
+                            bVal = String(bVal || '').toLowerCase();
+                            return order === 'desc' ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal);
+                        } else {
+                            aVal = aVal === '' ? -Infinity : (parseFloat(aVal) || 0);
+                            bVal = bVal === '' ? -Infinity : (parseFloat(bVal) || 0);
+                            return order === 'desc' ? bVal - aVal : aVal - bVal;
+                        }
+                    });
+                    console.log('Sorted first 3:', sorted.slice(0, 3).map(x => x[key]));
+                    renderTable(type, sorted);
+                };
+                th.onclick = clickHandler;
+            });
+            console.log('Sort handlers initialized');
+        }
+
+        function initScrollHandler() {
+            document.querySelectorAll('.table-wrapper').forEach(wrapper => {
+                wrapper.addEventListener('scroll', () => {
+                    const type = wrapper.id.replace('Table', '').replace('Wrapper', '');
+                    if (type !== 'lof' && type !== 'qdii') return;
+                    
+                    const { scrollTop, scrollHeight, clientHeight } = wrapper;
+                    if (scrollTop + clientHeight >= scrollHeight - 50) {
+                        loadMore(type);
+                    }
+                });
+            });
+        }
+
+        function showHistory(code, type = 'lof') {
+            window.open(`/history.html?code=${code}&type=${type}`, '_blank', 'width=900,height=700,left=100,top=50');
+        }
+
+        function closeHistory() {
+            document.getElementById('historyModal').classList.remove('active');
+        }
+
+        const REFRESH_INTERVAL = {
+            trading: 900000,        // 交易时间15分钟
+            nonTrading: 0,          // 非交易时间不刷新
+        };
+        
+        async function loadRefreshConfig() {
+            try {
+                const res = await fetch('/api/config');
+                if (res.ok) {
+                    const config = await res.json();
+                    if (config.refresh) {
+                        if (config.refresh.trading_interval) REFRESH_INTERVAL.trading = config.refresh.trading_interval;
+                        if (config.refresh.non_trading_interval !== undefined) REFRESH_INTERVAL.nonTrading = config.refresh.non_trading_interval;
+                    }
+                }
+            } catch (e) {
+                console.log('使用默认刷新配置');
+            }
+        }
+        
+        function getRefreshInterval() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const day = now.getDay();
+            
+            if (day === 0 || day === 6) return REFRESH_INTERVAL.nonTrading;
+            
+            const timeInMinutes = hours * 60 + minutes;
+            if (timeInMinutes >= 570 && timeInMinutes <= 905) { // 9:30 - 15:05
+                return REFRESH_INTERVAL.trading;
+            }
+            return REFRESH_INTERVAL.nonTrading;
+        }
+        
+        let refreshTimer = null;
+        function startAutoRefresh() {
+            if (refreshTimer) clearInterval(refreshTimer);
+            const interval = getRefreshInterval();
+            if (interval > 0) {
+                refreshTimer = setInterval(refreshData, interval);
+            }
+        }
+        
+        initTables().then(() => {
+            loadRefreshConfig();
+            initSortHandlers();
+            initScrollHandler();
+            startAutoRefresh();
+            setInterval(startAutoRefresh, 60000);
+        });
+    </script>
+</body>
+</html>

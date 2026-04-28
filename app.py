@@ -1,0 +1,568 @@
+# 跨境套利系统后端
+# 安装依赖: pip install flask flask-cors requests
+# 运行: python app.py
+
+import os
+import json
+import requests
+import time
+import random
+import logging
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from flask import Flask, jsonify, render_template, request, send_from_directory
+from flask_cors import CORS
+import datetime
+import threading
+
+app = Flask(__name__, template_folder='.')
+CORS(app)
+
+# 路径配置
+BASE_DIR = os.path.dirname(__file__)
+LOF_CONFIG = os.path.join(BASE_DIR, 'lof_config.json')
+QDII_CONFIG = os.path.join(BASE_DIR, 'qdii_config.json')
+FUND_HISTORY_DIR = os.path.join(BASE_DIR, 'fund_history')
+
+# 缓存配置
+CACHE = {}                    # 基金实时数据缓存
+CACHE_EXPIRE = 300            # 缓存有效期(秒), 5分钟
+HISTORY_CACHE = {}            # 历史数据内存缓存
+HISTORY_LOCK = threading.Lock() # 历史缓存线程锁
+
+# 并发控制: 20个工作线程
+EXECUTOR = ThreadPoolExecutor(max_workers=20)
+
+def load_config(config_file):
+    """
+    加载JSON配置文件
+    
+    Args:
+        config_file: 配置文件路径
+    
+    Returns:
+        dict: 配置数据, 失败返回None
+    """
+    if os.path.exists(config_file):
+        try:
+            with open(config_file, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except:
+            pass
+    return None
+
+def get_fund_realtime(code):
+    """
+    从天天基金获取基金实时数据(估值、净值)
+    
+    Args:
+        code: 基金代码
+    
+    Returns:
+        dict: 包含price/valuation/nav/change/update_time, 失败返回None
+    """
+    url = f'https://fundgz.1234567.com.cn/js/{code}.js'
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Referer': 'https://fund.eastmoney.com/',
+    }
+    try:
+        resp = requests.get(url, headers=headers, timeout=10)
+        if resp.status_code == 200:
+            text = resp.text
+            if 'jsonpgz' in text:
+                import re
+                match = re.search(r'jsonpgz\(({.+})\)', text)
+                if match:
+                    data = json.loads(match.group(1))
+                    return {
+                        'price': float(data.get('gsz', 0)),       # 估算价格
+                        'nav': float(data.get('dwjz', 0)),        # 单位净值
+                        'valuation': float(data.get('gsz', 0)),     # 估值(同估算价格)
+                        'change': float(data.get('gszzl', 0)),   # 涨跌幅(%)
+                        'update_time': data.get('gztime', ''),   # 更新时间
+                    }
+    except Exception as e:
+        pass
+    return None
+
+def get_market_price(code):
+    """
+    从腾讯行情获取LOF基金二级市场交易价格
+    
+    Args:
+        code: 基金代码, 以1开头为深市, 5开头为沪市
+    
+    Returns:
+        float: 当前交易价格, 获取失败返回0
+    """
+    import re
+    try:
+        market = 'sz' if code.startswith('1') else 'sh'
+        url = f'https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_day&param={market}{code},day,,,2,qfq'
+        resp = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'}, timeout=10)
+        match = re.search(r'kline_day\s*=\s*({.+})', resp.text)
+        if match:
+            data = json.loads(match.group(1))
+            code_data = data.get('data', {}).get(f'{market}{code}', {})
+            qt = code_data.get('qt', {})
+            qt_data = qt.get(f'{market}{code}', [])
+            if qt_data and len(qt_data) >= 4:
+                price = float(qt_data[3])
+                return price if price > 0 else 0
+    except:
+        pass
+    return 0
+
+def fetch_fund_data(code):
+    """
+    获取单只基金完整数据(带缓存)
+    
+    Args:
+        code: 基金代码
+    
+    Returns:
+        dict: 包含realtime/market_price/time
+    """
+    cache_key = f'fund_{code}'
+    now = time.time()
+    
+    # 检查缓存, 未过期直接返回
+    if cache_key in CACHE and now - CACHE[cache_key].get('time', 0) < CACHE_EXPIRE:
+        return CACHE[cache_key].get('data', {})
+    
+    # 获取实时数据
+    realtime = get_fund_realtime(code)
+    market_price = get_market_price(code)
+    
+    data = {
+        'realtime': realtime,
+        'market_price': market_price,
+        'time': now
+    }
+    
+    # 有数据才缓存
+    if realtime or market_price > 0:
+        CACHE[cache_key] = data
+    
+    return data
+
+def get_fund_status(code):
+    """
+    获取基金申购/赎回状态
+    
+    Args:
+        code: 基金代码
+    
+    Returns:
+        dict: 包含subscribe_status/redeem_status
+        注: 暂未找到公开API, 返回空值
+    """
+    try:
+        url = f'https://fund.eastmoney.com/pingzhongdata/{code}.js'
+        resp = requests.get(url, headers={
+            'User-Agent': 'Mozilla/5.0',
+            'Referer': 'https://fund.eastmoney.com/'
+        }, timeout=10)
+        if resp.status_code == 200:
+            import re
+            text = resp.text
+            sg_match = re.search(r'fund_SgState\s*=\s*"([^"]+)"', text)
+            sh_match = re.search(r'fund_ShState\s*=\s*"([^"]+)"', text)
+            if sg_match or sh_match:
+                return {
+                    'subscribe_status': sg_match.group(1) if sg_match else '',
+                    'redeem_status': sh_match.group(1) if sh_match else '',
+                }
+    except:
+        pass
+    return {'subscribe_status': '', 'redeem_status': ''}
+
+def format_fund_data(funds, fund_type=None):
+    """
+    格式化基金数据列表(并发获取所有基金数据)
+    
+    Args:
+        funds: 基金配置列表
+        fund_type: 基金类型过滤, None表示全部
+    
+    Returns:
+        list: 格式化后的基金数据列表
+    """
+    codes = [f.get('code', '') for f in funds if not fund_type or f.get('type') == fund_type]
+    
+    # 并发提交所有任务
+    futures = {EXECUTOR.submit(fetch_fund_data, code): code for code in codes}
+    
+    # 收集所有结果
+    fund_data_map = {}
+    for future in as_completed(futures):
+        code = futures[future]
+        fund_data_map[code] = future.result()
+    
+    # QDII基金获取状态信息(串行, 避免请求过快)
+    fund_status_map = {}
+    if fund_type == 'qdii':
+        for f in funds[:50]:
+            code = f.get('code', '')
+            fund_status_map[code] = get_fund_status(code)
+    
+    # 格式化输出
+    result = []
+    for f in funds:
+        if fund_type and f.get('type') != fund_type:
+            continue
+        code = f.get('code', '')
+        
+        fund_data = fund_data_map.get(code, {})
+        realtime = fund_data.get('realtime')
+        market_price = fund_data.get('market_price', 0)
+        
+        nav = realtime.get('nav', 0) if realtime else 0
+        valuation = realtime.get('valuation', 0) if realtime else 0
+        change = realtime.get('change', '') if realtime else ''
+        
+        price = market_price if market_price > 0 else 0
+        premium = ((price - nav) / nav * 100) if nav > 0 and price > 0 else 0
+        
+        item = {
+            'code': code,
+            'name': f.get('name', ''),
+            'price': price if price > 0 else '',
+            'change': change,
+            'premium': round(premium, 2) if premium else '',
+            'nav': nav if nav > 0 else '',
+            'space': round(premium, 1) if premium else '',
+            'valuation': valuation if valuation > 0 else '',
+        }
+        
+        # QDII基金添加申购/赎回状态
+        if fund_type == 'qdii':
+            # 过滤无场内交易价格的基金（场外QDII）
+            if price <= 0:
+                continue
+            status = fund_status_map.get(code, {})
+            item['subscribe_status'] = status.get('subscribe_status', '')
+            item['redeem_status'] = status.get('redeem_status', '')
+        
+        result.append(item)
+    return result
+
+@app.route('/')
+def index():
+    """首页"""
+    return render_template('index.html')
+
+@app.route('/history.html')
+def history():
+    """历史数据页面"""
+    return render_template('history.html')
+
+@app.route('/api/lof')
+def api_lof():
+    """
+    获取LOF基金列表(分页)
+    
+    Query参数:
+        page: 页码, 默认1
+        page_size: 每页数量, 默认500
+    """
+    config = load_config(LOF_CONFIG)
+    if config and 'funds' in config:
+        funds = config['funds']
+        data = format_fund_data(funds)
+    else:
+        data = []
+    
+    page = request.args.get('page', 1, type=int)
+    page_size = request.args.get('page_size', 500, type=int)
+    total = len(data)
+    start = (page - 1) * page_size
+    end = start + page_size
+    paged_data = data[start:end]
+    
+    return jsonify({
+        'success': True,
+        'data': paged_data,
+        'total': total,
+        'page': page,
+        'page_size': page_size,
+        'timestamp': datetime.datetime.now().isoformat()
+    })
+
+@app.route('/api/qdii')
+def api_qdii():
+    """
+    获取QDII基金列表(分页)
+    
+    Query参数:
+        page: 页码, 默认1
+        page_size: 每页数量, 默认500
+    """
+    config = load_config(QDII_CONFIG)
+    if config and 'funds' in config:
+        funds = config['funds']
+        data = format_fund_data(funds)
+    else:
+        data = []
+    
+    page = request.args.get('page', 1, type=int)
+    page_size = request.args.get('page_size', 500, type=int)
+    total = len(data)
+    start = (page - 1) * page_size
+    end = start + page_size
+    paged_data = data[start:end]
+    
+    return jsonify({
+        'success': True,
+        'data': paged_data,
+        'total': total,
+        'page': page,
+        'page_size': page_size,
+        'timestamp': datetime.datetime.now().isoformat()
+    })
+
+@app.route('/api/refresh', methods=['POST'])
+def api_refresh():
+    """清空实时数据缓存, 强制重新获取"""
+    global CACHE
+    CACHE = {}
+    return jsonify({
+        'success': True,
+        'message': 'Cache cleared',
+        'timestamp': datetime.datetime.now().isoformat()
+    })
+
+@app.route('/api/fund/<code>')
+def api_fund(code):
+    """获取单只基金实时数据"""
+    data = get_fund_realtime(code)
+    if data:
+        return jsonify({
+            'success': True,
+            'code': code,
+            'data': data,
+            'timestamp': datetime.datetime.now().isoformat()
+        })
+    else:
+        return jsonify({
+            'success': False,
+            'code': code,
+            'message': '无法获取数据',
+            'timestamp': datetime.datetime.now().isoformat()
+        })
+
+@app.route('/api/fund/batch', methods=['POST'])
+def api_fund_batch():
+    """批量获取基金实时数据(已废弃, 使用并发模式)"""
+    codes = request.json.get('codes', [])
+    results = {}
+    for code in codes:
+        data = get_fund_realtime(code)
+        if data:
+            results[code] = data
+        time.sleep(random.uniform(0.1, 0.3))
+    
+    return jsonify({
+        'success': True,
+        'data': results,
+        'timestamp': datetime.datetime.now().isoformat()
+    })
+
+@app.route('/api/etf')
+def api_etf():
+    """获取ETF数据(模拟数据)"""
+    return jsonify({
+        'success': True,
+        'data': [
+            {'code': '513050', 'name': '中证500ETF', 'price': 3.4523, 'change': 1.23, 'iopv': 3.4612, 'premium': -0.26, 'space': 0.8},
+            {'code': '513300', 'name': '沪深300ETF', 'price': 4.1234, 'change': 0.89, 'iopv': 4.1356, 'premium': -0.30, 'space': 0.9},
+            {'code': '159919', 'name': '创业板ETF', 'price': 2.5678, 'change': 2.34, 'iopv': 2.5712, 'premium': -0.13, 'space': 0.5},
+            {'code': '513500', 'name': '中证100ETF', 'price': 1.8923, 'change': -0.45, 'iopv': 1.8901, 'premium': 0.12, 'space': 0.3},
+            {'code': '510300', 'name': '沪深300ETF', 'price': 4.5678, 'change': 1.56, 'iopv': 4.5523, 'premium': 0.34, 'space': 0.6},
+        ],
+        'timestamp': datetime.datetime.now().isoformat()
+    })
+
+@app.route('/api/option')
+def api_option():
+    """获取期权数据(模拟数据)"""
+    return jsonify({
+        'success': True,
+        'data': [
+            {'code': '510050', 'name': '50ETF', 'call': 3.10, 'put': 2.98, 'future': 6.08, 'space': 1.8, 'level': 'high'},
+            {'code': '510300', 'name': '300ETF', 'call': 4.25, 'put': 4.12, 'future': 8.37, 'space': 1.2, 'level': 'medium'},
+            {'code': '510500', 'name': '500ETF', 'call': 2.85, 'put': 2.72, 'future': 5.57, 'space': 0.9, 'level': 'medium'},
+            {'code': '159919', 'name': '创业板', 'call': 2.60, 'put': 2.48, 'future': 5.08, 'space': 0.5, 'level': 'low'},
+        ],
+        'timestamp': datetime.datetime.now().isoformat()
+    })
+
+def get_history_from_file(code):
+    """
+    从文件读取历史数据
+    
+    Args:
+        code: 基金代码
+    
+    Returns:
+        dict: 历史数据对象, 不存在返回None
+    """
+    history_file = os.path.join(FUND_HISTORY_DIR, f'{code}.json')
+    if os.path.exists(history_file):
+        try:
+            with open(history_file, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except:
+            pass
+    return None
+
+LOG_CONF_FILE = os.path.join(BASE_DIR, 'config', 'logging.conf')
+
+@app.route('/api/config')
+def api_config():
+    """获取前端配置(刷新间隔等)"""
+    import configparser
+    config = configparser.ConfigParser()
+    config.read(LOG_CONF_FILE)
+    return jsonify({
+        'success': True,
+        'refresh': {
+            'trading_interval': config.getint('refresh', 'trading_interval', fallback=30000),
+            'non_trading_interval': config.getint('refresh', 'non_trading_interval', fallback=900000),
+        }
+    })
+
+@app.route('/api/history/<code>')
+def api_history(code):
+    """
+    获取基金历史数据(带缓存)
+    
+    先从内存缓存读取, 没有则从文件读取并缓存
+    """
+    with HISTORY_LOCK:
+        if code in HISTORY_CACHE:
+            return jsonify({
+                'success': True,
+                'code': code,
+                'data': HISTORY_CACHE[code],
+                'timestamp': datetime.datetime.now().isoformat()
+            })
+    
+    data = get_history_from_file(code)
+    if data:
+        with HISTORY_LOCK:
+            HISTORY_CACHE[code] = data
+        return jsonify({
+            'success': True,
+            'code': code,
+            'data': data,
+            'timestamp': datetime.datetime.now().isoformat()
+        })
+    else:
+        return jsonify({
+            'success': False,
+            'code': code,
+            'message': '无历史数据',
+            'timestamp': datetime.datetime.now().isoformat()
+        })
+
+@app.route('/fund_history/<code>')
+def serve_history_file(code):
+    """静态文件访问历史数据"""
+    return send_from_directory(FUND_HISTORY_DIR, f'{code}.json')
+
+@app.route('/api/history/refresh', methods=['POST'])
+def api_history_refresh():
+    """清空历史数据缓存"""
+    with HISTORY_LOCK:
+        HISTORY_CACHE.clear()
+    return jsonify({
+        'success': True,
+        'message': '历史数据缓存已刷新',
+        'timestamp': datetime.datetime.now().isoformat()
+    })
+
+@app.route('/api/stats')
+def api_stats():
+    """获取统计信息(模拟数据)"""
+    return jsonify({
+        'lof': {'avgPremium': 2.34, 'opportunityCount': 8, 'maxPremium': 5.82, 'volume': 12340},
+        'qdii': {'avgPremium': 3.21, 'opportunityCount': 5, 'maxPremium': 8.45, 'quota': 42.5},
+        'etf': {'avgPremium': -0.12, 'opportunityCount': 3, 'maxDiscount': -0.85, 'ihValue': 8.92},
+        'option': {'volDiff': 2.3, 'opportunityCount': 4, 'maxSpace': 1.8, 'volume': 56.7},
+        'timestamp': datetime.datetime.now().isoformat()
+    })
+
+def preload_history():
+    """后台预加载历史数据"""
+    if not os.path.exists(FUND_HISTORY_DIR):
+        return
+    try:
+        for filename in os.listdir(FUND_HISTORY_DIR):
+            if filename.endswith('.json'):
+                code = filename[:-5]
+                data = get_history_from_file(code)
+                if data:
+                    with HISTORY_LOCK:
+                        HISTORY_CACHE[code] = data
+        print(f"历史数据预加载完成: {len(HISTORY_CACHE)} 只基金")
+    except Exception as e:
+        print(f"历史数据预加载失败: {e}")
+
+def preload_funds():
+    """后台预加载基金实时数据"""
+    def _preload():
+        time.sleep(2)
+        print("开始预加载基金数据...")
+        
+        lof_config = load_config(LOF_CONFIG)
+        qdii_config = load_config(QDII_CONFIG)
+        
+        codes = []
+        if lof_config and 'funds' in lof_config:
+            codes.extend([f.get('code') for f in lof_config['funds']])
+        if qdii_config and 'funds' in qdii_config:
+            codes.extend([f.get('code') for f in qdii_config['funds']])
+        
+        futures = {EXECUTOR.submit(fetch_fund_data, code): code for code in codes[:100]}
+        for future in as_completed(futures):
+            pass
+        
+        print(f"基金数据预加载完成: {len(CACHE)} 只基金")
+    
+    threading.Thread(target=_preload, daemon=True).start()
+
+if __name__ == '__main__':
+    # 配置日志
+    import logging
+    from logging.handlers import RotatingFileHandler
+    
+    log_dir = os.path.join(BASE_DIR, 'logs')
+    os.makedirs(log_dir, exist_ok=True)
+    log_file = os.path.join(log_dir, 'app.log')
+    
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            RotatingFileHandler(log_file, maxBytes=10*1024*1024, backupCount=5),
+            logging.StreamHandler()
+        ]
+    )
+    logger = logging.getLogger(__name__)
+    
+    logger.info('=' * 50)
+    logger.info('启动套利系统服务')
+    logger.info('=' * 50)
+    
+    # 启动后台预加载任务
+    preload_history()
+    preload_funds()
+    
+    logger.info(f'服务地址: http://0.0.0.0:4000')
+    logger.info(f'LOF配置: {LOF_CONFIG}')
+    logger.info(f'QDII配置: {QDII_CONFIG}')
+    logger.info(f'历史数据目录: {FUND_HISTORY_DIR}')
+    logger.info('=' * 50)
+    
+    app.run(debug=True, host='0.0.0.0', port=4000)

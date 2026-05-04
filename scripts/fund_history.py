@@ -52,7 +52,8 @@ def get_fund_realtime(code):
     - update_time: 更新时间
     """
     logger.info(f"获取基金实时数据: {code}")
-    url = f'https://fundgz.1234567.com.cn/js/{code}.js'
+    import datetime
+    url = f'https://fundgz.1234567.com.cn/js/{code}.js?rt={int(datetime.datetime.now().timestamp())}'
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         'Referer': 'https://fund.eastmoney.com/',
@@ -66,7 +67,7 @@ def get_fund_realtime(code):
                 data = json.loads(match.group(1))
                 return {
                     'price': float(data.get('gsz', 0)),
-                    'change': float(data.get('gszzl', 0)),
+                    'change': float(data.get('gszzf', 0)),  # 修复字段名: gszzl -> gszzf
                     'nav': float(data.get('dwjz', 0)),
                     'valuation': float(data.get('gsz', 0)),
                     'update_time': data.get('gztime', ''),
@@ -193,6 +194,41 @@ def get_price_from_tencent(code, days=30):
     
     return price_map
 
+
+def get_realtime_price_from_tencent(code):
+    """
+    从腾讯获取LOF基金实时交易价格（盘中实时数据）
+    数据来源: https://qt.gtimg.cn
+    API: /q=sz{code} 或 /q=sh{code}
+    返回: 包含当前价、涨跌幅等实时数据
+    """
+    import re
+    try:
+        market = 'sz' if code.startswith('1') else 'sh'
+        url = f'https://qt.gtimg.cn/q={market}{code}'
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+        resp = requests.get(url, headers=headers, timeout=10)
+        if resp.status_code == 200:
+            content = resp.text
+            match = re.search(r'="(.+)"', content)
+            if match:
+                fields = match.group(1).split('~')
+                if len(fields) > 32:
+                    return {
+                        'current_price': float(fields[3]) if fields[3] else 0,
+                        'yesterday_close': float(fields[4]) if fields[4] else 0,
+                        'open_price': float(fields[5]) if fields[5] else 0,
+                        'change_amount': float(fields[31]) if fields[31] else 0,
+                        'change_percent': float(fields[32]) if fields[32] else 0,
+                        'high': float(fields[33]) if fields[33] else 0,
+                        'low': float(fields[34]) if fields[34] else 0,
+                    }
+    except Exception as e:
+        logger.warning(f"{code}: 获取腾讯实时价格失败 - {str(e)}")
+    return None
+
 def get_fund_history(code, days=30):
     logger.info(f"获取基金历史数据: {code}, days={days}")
     
@@ -204,16 +240,26 @@ def get_fund_history(code, days=30):
         today = datetime.now().strftime('%Y-%m-%d')
         nav = realtime.get('nav', 0) if realtime else 0
         valuation = realtime.get('valuation', 0) if realtime else 0
-        price_map = get_market_price(code, 1)
-        market_price = price_map.get(today, 0)
-        price = market_price
+        change = realtime.get('change', '') if realtime else ''
+        
+        # 使用腾讯实时接口获取当前价
+        realtime_price_data = get_realtime_price_from_tencent(code)
+        if realtime_price_data:
+            price = realtime_price_data.get('current_price', 0)
+            # 如果使用实时价格的涨跌幅，可以用这个
+            # change = realtime_price_data.get('change_percent', change)
+        else:
+            # 备用：使用历史价格接口获取最近价格
+            price_map = get_price_from_tencent(code, 1)
+            price = price_map.get(today, 0)
+        
         premium = ((price - nav) / nav * 100) if nav > 0 and price > 0 else 0
         result = [{
             'date': today,
             'nav': nav if nav > 0 else '',
             'valuation': valuation if valuation > 0 else '',
-            'price': price if price > 0 else '',
-            'change': realtime.get('change', 0) if realtime else '',
+            'price': round(price, 4) if price > 0 else '',
+            'change': change,
             'premium': round(premium, 2) if premium else '',
         }]
     

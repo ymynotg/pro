@@ -44,7 +44,7 @@ def setup_logger(name='generate_history'):
 logger = setup_logger()
 
 def get_tencent_kline(code, days=365):
-    """从腾讯获取K线数据"""
+    """从腾讯获取K线数据（历史价格）"""
     market = 'sz' if code.startswith('1') else 'sh'
     url = f'https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_day&param={market}{code},day,,,{days},qfq'
     try:
@@ -58,6 +58,59 @@ def get_tencent_kline(code, days=365):
     except Exception as e:
         logger.warning(f"{code}: 腾讯K线获取失败 - {e}")
     return {}
+
+
+def get_historical_nav(code, days=365):
+    """
+    从东方财富获取历史净值数据（获取全部可用数据）
+    API: https://api.fund.eastmoney.com/f10/lsjz
+    返回: {日期: 净值} 字典
+    """
+    url = 'https://api.fund.eastmoney.com/f10/lsjz'
+    headers = {
+        'User-Agent': 'Mozilla/5.0',
+        'Referer': 'https://fund.eastmoney.com/',
+    }
+    nav_dict = {}
+    page_index = 1
+    max_pages = 500  # 安全限制：最多获取500页（约10000条）
+    
+    try:
+        while page_index <= max_pages:
+            params = {
+                'fundCode': code,
+                'pageIndex': page_index,
+                'pageSize': 20,  # API每次最多返回20条
+                'startDate': '',
+                'endDate': '',
+            }
+            resp = requests.get(url, params=params, headers=headers, timeout=15)
+            if resp.status_code == 200:
+                data = resp.json()
+                if data.get('Data') and data['Data'].get('LSJZList'):
+                    lsjz_list = data['Data']['LSJZList']
+                    if not lsjz_list:  # 无数据，退出
+                        break
+                    for item in lsjz_list:
+                        date = item.get('FSRQ', '')
+                        nav = item.get('DWJZ', '')
+                        if date and nav:
+                            nav_dict[date] = float(nav)
+                    # 如果返回少于20条，说明已到最后一页
+                    if len(lsjz_list) < 20:
+                        break
+                    page_index += 1
+                    time.sleep(0.1)  # 避免请求过快
+                else:
+                    break
+            else:
+                break
+        
+        logger.debug(f"{code}: 获取历史净值 {len(nav_dict)} 条")
+        return nav_dict
+    except Exception as e:
+        logger.warning(f"{code}: 历史净值获取失败 - {e}")
+        return {}
 
 def get_fund_realtime(code):
     """从天天基金获取实时估值"""
@@ -81,29 +134,36 @@ def get_fund_realtime(code):
     return None
 
 def generate_fund_history(code, days=365):
-    """生成单只基金历史数据"""
+    """生成单只基金历史数据（修复：使用历史净值而非当日净值）"""
     price_map = get_tencent_kline(code, days)
     if not price_map:
         return None
-
+    
+    # 获取历史净值数据（不再使用当日净值）
+    nav_map = get_historical_nav(code, days)
+    if not nav_map:
+        logger.warning(f"{code}: 无法获取历史净值，暂停生成")
+        return None
+    
     realtime = get_fund_realtime(code)
-    nav = realtime.get('nav', 0) if realtime else 0
     valuation = realtime.get('valuation', 0) if realtime else 0
-
+    
     dates = sorted(price_map.keys(), reverse=True)[:days]
     history = []
     for date in dates:
         price = price_map[date]
+        # ✅ 修复：使用历史净值，而不是当日净值
+        nav = nav_map.get(date, 0)
         premium = ((price - nav) / nav * 100) if nav > 0 and price > 0 else 0
         history.append({
             'date': date,
-            'nav': round(nav, 4) if nav > 0 else '',
+            'nav': round(nav, 4) if nav > 0 else '',  # ✅ 每日净值不同
             'valuation': round(valuation, 4) if valuation > 0 else '',
             'price': round(price, 4),
             'change': realtime.get('change', '') if realtime else '',
             'premium': round(premium, 2) if premium else '',
         })
-
+    
     return {
         'code': code,
         'days': len(history),
@@ -117,7 +177,7 @@ def save_history(code, data):
     with open(history_file, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-def load_fund_codes():
+def load_fund_codes(lof_only=False):
     """加载所有基金代码（LOF + QDII）"""
     codes = []
 
@@ -127,7 +187,7 @@ def load_fund_codes():
             for fund in config.get('funds', []):
                 codes.append(fund.get('code'))
 
-    if os.path.exists(QDII_CONFIG):
+    if not lof_only and os.path.exists(QDII_CONFIG):
         with open(QDII_CONFIG, 'r', encoding='utf-8') as f:
             config = json.load(f)
             for fund in config.get('funds', []):
@@ -156,22 +216,25 @@ def update_fund_history(code, days=365, incremental=True):
             if not price_map:
                 return None
             
+            # ✅ 修复：获取最新一天的净值（从历史净值API）
+            today = datetime.now().strftime('%Y-%m-%d')
+            nav_map = get_historical_nav(code, 1)
+            nav = nav_map.get(today, 0)
+            
             realtime = get_fund_realtime(code)
-            nav = realtime.get('nav', 0) if realtime else 0
             valuation = realtime.get('valuation', 0) if realtime else 0
             
             # 检查今天是否已有数据
-            today = datetime.now().strftime('%Y-%m-%d')
             if old_data['history'] and old_data['history'][0]['date'] == today:
                 logger.info(f"{code}: 今天数据已存在，跳过")
                 return old_data
             
-            # 添加今天的数据
+            # 添加今天的数据（使用正确的净值）
             for date, price in price_map.items():
                 premium = ((price - nav) / nav * 100) if nav > 0 and price > 0 else 0
                 old_data['history'].insert(0, {
                     'date': date,
-                    'nav': round(nav, 4) if nav > 0 else '',
+                    'nav': round(nav, 4) if nav > 0 else '',  # ✅ 使用当日净值
                     'valuation': round(valuation, 4) if valuation > 0 else '',
                     'price': round(price, 4),
                     'change': realtime.get('change', '') if realtime else '',
@@ -185,20 +248,21 @@ def update_fund_history(code, days=365, incremental=True):
         except Exception as e:
             logger.warning(f"{code}: 增量更新失败，转为全量 - {e}")
     
-    # 全量生成
+    # 全量生成（已修复，会使用历史净值）
     return generate_fund_history(code, days)
 
 
-def generate_all_history(days=365, incremental=False):
+def generate_all_history(days=365, incremental=False, lof_only=False):
     """生成或更新所有基金历史数据
     
     Args:
         days: 全量生成时的天数
         incremental: True增量更新，False全量替换
+        lof_only: True只处理LOF基金，False处理LOF+QDII
     """
     os.makedirs(DATA_DIR, exist_ok=True)
 
-    codes = load_fund_codes()
+    codes = load_fund_codes(lof_only=lof_only)
     logger.info(f"开始{'增量更新' if incremental else '全量生成'}历史数据，共 {len(codes)} 只基金")
 
     success = 0
@@ -215,7 +279,7 @@ def generate_all_history(days=365, incremental=False):
         else:
             failed += 1
 
-        time.sleep(random.uniform(0.05, 0.15))
+        time.sleep(random.uniform(1, 3))  # 增加延迟，避免API频率限制
 
     logger.info(f"完成: 成功 {success}, 失败 {failed}")
     return {'success': success, 'failed': failed, 'total': len(codes)}
@@ -228,29 +292,28 @@ def get_history_from_file(code):
     return None
 
 if __name__ == '__main__':
-    import sys
-    if len(sys.argv) > 1:
-        code = sys.argv[1]
-        days = int(sys.argv[2]) if len(sys.argv) > 2 else 365
-        data = generate_fund_history(code, days)
+    import argparse
+    parser = argparse.ArgumentParser(description='生成基金历史数据')
+    parser.add_argument('code', nargs='?', help='单个基金代码（可选）')
+    parser.add_argument('--days', type=int, default=365, help='全量生成时的天数（默认365）')
+    parser.add_argument('--incremental', action='store_true', help='增量更新（只更新最新一天）')
+    parser.add_argument('--lof-only', action='store_true', help='只处理LOF基金')
+    args = parser.parse_args()
+    
+    if args.code:
+        data = generate_fund_history(args.code, args.days)
         if data:
-            save_history(code, data)
-            print(f"已生成 {code} 历史数据: {data['days']} 条")
+            save_history(args.code, data)
+            print(f"已生成 {args.code} 历史数据: {data['days']} 条")
         else:
-            print(f"生成 {code} 历史数据失败")
+            print(f"生成 {args.code} 历史数据失败")
     else:
-        import argparse
-        parser = argparse.ArgumentParser(description='生成基金历史数据')
-        parser.add_argument('--incremental', action='store_true', help='增量更新（只更新最新一天）')
-        parser.add_argument('--days', type=int, default=365, help='全量生成时的天数（默认365）')
-        args = parser.parse_args()
-        
         if args.incremental:
             logger.info(f"开始增量更新历史数据")
-            result = generate_all_history(days=args.days, incremental=True)
+            result = generate_all_history(days=args.days, incremental=True, lof_only=args.lof_only)
         else:
-            logger.info(f"开始全量生成历史数据 (默认{args.days}天)")
-            result = generate_all_history(days=args.days, incremental=False)
+            logger.info(f"开始{'LOF' if args.lof_only else '全部'}基金历史数据全量生成 (默认{args.days}天)")
+            result = generate_all_history(days=args.days, incremental=False, lof_only=args.lof_only)
         
         print(f"\n完成! 成功: {result['success']}, 失败: {result['failed']}, 总计: {result['total']}")
         print(f"历史数据目录: {DATA_DIR}")

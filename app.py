@@ -8,11 +8,44 @@ import requests
 import time
 import random
 import logging
+from logging.handlers import RotatingFileHandler
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from flask import Flask, jsonify, render_template, request, send_from_directory
 from flask_cors import CORS
 import datetime
 import threading
+import re
+
+# 配置日志
+LOG_DIR = os.path.join(os.path.dirname(__file__), 'logs')
+os.makedirs(LOG_DIR, exist_ok=True)
+LOG_FILE = os.path.join(LOG_DIR, 'app.log')
+
+logger = logging.getLogger('arbitrage_system')
+logger.setLevel(logging.DEBUG)
+
+# 文件处理器：轮转日志，最大10MB，保留5个备份
+file_handler = RotatingFileHandler(LOG_FILE, maxBytes=10*1024*1024, backupCount=5, encoding='utf-8')
+file_handler.setLevel(logging.DEBUG)
+file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - [%(funcName)s] - %(message)s')
+file_handler.setFormatter(file_formatter)
+logger.addHandler(file_handler)
+
+# 控制台处理器：只显示INFO及以上级别
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+console_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(console_formatter)
+logger.addHandler(console_handler)
+
+# 缓存配置
+CACHE = {}                    # 基金实时数据缓存
+CACHE_EXPIRE = 300            # 缓存有效期(秒), 5分钟
+HISTORY_CACHE = {}            # 历史数据内存缓存
+HISTORY_LOCK = threading.Lock() # 历史缓存线程锁
+
+# 并发控制: 20个工作线程
+EXECUTOR = ThreadPoolExecutor(max_workers=20)
 
 app = Flask(__name__, template_folder='.')
 CORS(app)
@@ -60,34 +93,56 @@ def get_fund_realtime(code):
     Returns:
         dict: 包含price/valuation/nav/change/update_time, 失败返回None
     """
-    url = f'https://fundgz.1234567.com.cn/js/{code}.js'
+    import datetime
+    url = f'https://fundgz.1234567.com.cn/js/{code}.js?rt={int(datetime.datetime.now().timestamp())}'
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         'Referer': 'https://fund.eastmoney.com/',
     }
+    
+    start_time = time.time()
+    logger.debug(f"[REQUEST] 天天基金实时数据 - URL: {url}")
+    logger.debug(f"[REQUEST] Headers: {headers}")
+    
     try:
         resp = requests.get(url, headers=headers, timeout=10)
+        elapsed = round((time.time() - start_time) * 1000, 2)
+        
+        logger.debug(f"[RESPONSE] 状态码: {resp.status_code}, 耗时: {elapsed}ms")
+        logger.debug(f"[RESPONSE] 内容长度: {len(resp.text)} 字符")
+        
         if resp.status_code == 200:
             text = resp.text
+            logger.debug(f"[RESPONSE] 返回内容前100字符: {text[:100]}")
+            
             if 'jsonpgz' in text:
                 import re
                 match = re.search(r'jsonpgz\(({.+})\)', text)
                 if match:
                     data = json.loads(match.group(1))
-                    return {
+                    result = {
                         'price': float(data.get('gsz', 0)),       # 估算价格
                         'nav': float(data.get('dwjz', 0)),        # 单位净值
                         'valuation': float(data.get('gsz', 0)),     # 估值(同估算价格)
-                        'change': float(data.get('gszzl', 0)),   # 涨跌幅(%)
+                        'change': float(data.get('gszzl', 0)),   # 涨跌幅(%) - 修复字段名
                         'update_time': data.get('gztime', ''),   # 更新时间
                     }
+                    logger.info(f"[SUCCESS] 基金{code} - 净值:{result['nav']}, 估算:{result['price']}, 涨跌:{result['change']}%")
+                    return result
+            else:
+                logger.warning(f"[WARNING] 基金{code} - 返回内容不包含jsonpgz")
+        else:
+            logger.error(f"[ERROR] 基金{code} - HTTP状态码: {resp.status_code}")
+            
     except Exception as e:
-        pass
+        elapsed = round((time.time() - start_time) * 1000, 2)
+        logger.error(f"[ERROR] 基金{code} - 请求失败: {str(e)}, 耗时: {elapsed}ms")
+        
     return None
 
 def get_market_price(code):
     """
-    从腾讯行情获取LOF基金二级市场交易价格
+    从腾讯行情获取LOF基金实时交易价格
     
     Args:
         code: 基金代码, 以1开头为深市, 5开头为沪市
@@ -96,21 +151,50 @@ def get_market_price(code):
         float: 当前交易价格, 获取失败返回0
     """
     import re
+    market = 'sz' if code.startswith('1') else 'sh'
+    url = f'https://qt.gtimg.cn/q={market}{code}'
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+    }
+    
+    start_time = time.time()
+    logger.debug(f"[REQUEST] 腾讯行情接口 - URL: {url}")
+    logger.debug(f"[REQUEST] 交易所: {market}, 基金代码: {code}")
+    
     try:
-        market = 'sz' if code.startswith('1') else 'sh'
-        url = f'https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?_var=kline_day&param={market}{code},day,,,2,qfq'
-        resp = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'}, timeout=10)
-        match = re.search(r'kline_day\s*=\s*({.+})', resp.text)
-        if match:
-            data = json.loads(match.group(1))
-            code_data = data.get('data', {}).get(f'{market}{code}', {})
-            qt = code_data.get('qt', {})
-            qt_data = qt.get(f'{market}{code}', [])
-            if qt_data and len(qt_data) >= 4:
-                price = float(qt_data[3])
-                return price if price > 0 else 0
-    except:
-        pass
+        resp = requests.get(url, headers=headers, timeout=10)
+        elapsed = round((time.time() - start_time) * 1000, 2)
+        
+        logger.debug(f"[RESPONSE] 状态码: {resp.status_code}, 耗时: {elapsed}ms")
+        logger.debug(f"[RESPONSE] 内容长度: {len(resp.text)} 字符")
+        
+        if resp.status_code == 200:
+            content = resp.text
+            logger.debug(f"[RESPONSE] 返回内容前100字符: {content[:100]}")
+            
+            # 解析腾讯实时行情数据, 格式: v_sz162411="1~基金名称~代码~当前价~昨收~今开~..."
+            # 使用非贪婪匹配避免多个引号问题
+            match = re.search(r'v_\w+="([^"]+)"', content)
+            if match:
+                fields = match.group(1).split('~')
+                logger.debug(f"[PARSE] 解析到 {len(fields)} 个字段")
+                
+                if len(fields) > 32:
+                    current_price = float(fields[3]) if fields[3] else 0
+                    change_percent = float(fields[32]) if fields[32] else 0
+                    logger.info(f"[SUCCESS] 基金{code} - 当前价:{current_price}, 涨跌幅:{change_percent}%")
+                    return current_price if current_price > 0 else 0
+                else:
+                    logger.warning(f"[WARNING] 基金{code} - 字段数量不足: {len(fields)}")
+            else:
+                logger.warning(f"[WARNING] 基金{code} - 正则匹配失败")
+        else:
+            logger.error(f"[ERROR] 基金{code} - HTTP状态码: {resp.status_code}")
+            
+    except Exception as e:
+        elapsed = round((time.time() - start_time) * 1000, 2)
+        logger.error(f"[ERROR] 基金{code} - 请求失败: {str(e)}, 耗时: {elapsed}ms")
+        
     return 0
 
 def fetch_fund_data(code):
@@ -128,7 +212,7 @@ def fetch_fund_data(code):
     
     # 检查缓存, 未过期直接返回
     if cache_key in CACHE and now - CACHE[cache_key].get('time', 0) < CACHE_EXPIRE:
-        return CACHE[cache_key].get('data', {})
+        return CACHE[cache_key]
     
     # 获取实时数据
     realtime = get_fund_realtime(code)
@@ -148,81 +232,121 @@ def fetch_fund_data(code):
 
 def get_fund_status(code):
     """
-    获取基金申购/赎回状态
+    获取基金申购/赎回状态（天天基金基本信息页面）
     
     Args:
         code: 基金代码
     
     Returns:
-        dict: 包含subscribe_status/redeem_status
-        注: 暂未找到公开API, 返回空值
+        dict: 包含subscribe_status/redeem_status/limit_amount
     """
+    url = f'https://fundf10.eastmoney.com/jbgk_{code}.html'
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Referer': 'https://fund.eastmoney.com/'
+    }
+    
+    start_time = time.time()
+    logger.debug(f"[REQUEST] 天天基金基本信息 - URL: {url}")
+    
     try:
-        url = f'https://fund.eastmoney.com/pingzhongdata/{code}.js'
-        resp = requests.get(url, headers={
-            'User-Agent': 'Mozilla/5.0',
-            'Referer': 'https://fund.eastmoney.com/'
-        }, timeout=10)
+        resp = requests.get(url, headers=headers, timeout=10)
+        elapsed = round((time.time() - start_time) * 1000, 2)
+        
+        logger.debug(f"[RESPONSE] 状态码: {resp.status_code}, 耗时: {elapsed}ms")
+        
         if resp.status_code == 200:
-            import re
-            text = resp.text
-            sg_match = re.search(r'fund_SgState\s*=\s*"([^"]+)"', text)
-            sh_match = re.search(r'fund_ShState\s*=\s*"([^"]+)"', text)
-            if sg_match or sh_match:
-                return {
-                    'subscribe_status': sg_match.group(1) if sg_match else '',
-                    'redeem_status': sh_match.group(1) if sh_match else '',
-                }
-    except:
-        pass
-    return {'subscribe_status': '', 'redeem_status': ''}
+            content = resp.text
+            
+            # 提取申购状态
+            subscribe_match = re.search(r'交易状态：<span>([^<]+)</span>', content)
+            subscribe_status = subscribe_match.group(1).strip() if subscribe_match else ''
+            
+            # 提取赎回状态
+            redeem_match = re.search(r'<span[^>]*>(开放赎回|暂停赎回|限制赎回)</span>', content)
+            redeem_status = redeem_match.group(1).strip() if redeem_match else ''
+            
+            # 提取限制金额
+            limit_amount = ''
+            amount_match = re.search(r'单日累计购买上限([\d.]+)(万|元)', content)
+            if amount_match:
+                num_str = amount_match.group(1)
+                unit = amount_match.group(2)
+                num = float(num_str)
+                # 去掉无意义的小数
+                if num == int(num):
+                    num_str = str(int(num))
+                else:
+                    num_str = f'{num:g}'
+                limit_amount = f'{num_str}{unit}'
+            
+            result = {
+                'subscribe_status': subscribe_status,
+                'redeem_status': redeem_status,
+                'limit_amount': limit_amount
+            }
+            logger.info(f"[SUCCESS] 基金{code} - 申购:{subscribe_status}, 赎回:{redeem_status}, 限额:{limit_amount}")
+            return result
+        else:
+            logger.error(f"[ERROR] 基金{code} - HTTP状态码: {resp.status_code}")
+            
+    except Exception as e:
+        elapsed = round((time.time() - start_time) * 1000, 2)
+        logger.error(f"[ERROR] 基金{code} - 请求失败: {str(e)}, 耗时: {elapsed}ms")
+    
+    logger.warning(f"[FALLBACK] 基金{code} - 申赎状态查询失败")
+    return {'subscribe_status': '', 'redeem_status': '', 'limit_amount': ''}
 
-def format_fund_data(funds, fund_type=None):
+
+
+
+def format_fund_data(funds):
     """
     格式化基金数据列表(并发获取所有基金数据)
-    
+
     Args:
         funds: 基金配置列表
-        fund_type: 基金类型过滤, None表示全部
-    
+
     Returns:
         list: 格式化后的基金数据列表
     """
-    codes = [f.get('code', '') for f in funds if not fund_type or f.get('type') == fund_type]
-    
+    codes = [f.get('code', '') for f in funds]
+
     # 并发提交所有任务
     futures = {EXECUTOR.submit(fetch_fund_data, code): code for code in codes}
-    
+
     # 收集所有结果
     fund_data_map = {}
     for future in as_completed(futures):
         code = futures[future]
         fund_data_map[code] = future.result()
-    
-    # QDII基金获取状态信息(串行, 避免请求过快)
+
+    # QDII_LOF基金获取状态信息(串行, 避免请求过快)
     fund_status_map = {}
-    if fund_type == 'qdii':
-        for f in funds[:50]:
+    for f in funds:
+        if f.get('type') == 'QDII_LOF':
             code = f.get('code', '')
             fund_status_map[code] = get_fund_status(code)
-    
+
     # 格式化输出
     result = []
     for f in funds:
-        if fund_type and f.get('type') != fund_type:
-            continue
         code = f.get('code', '')
-        
+
         fund_data = fund_data_map.get(code, {})
         realtime = fund_data.get('realtime')
         market_price = fund_data.get('market_price', 0)
-        
+
         nav = realtime.get('nav', 0) if realtime else 0
         valuation = realtime.get('valuation', 0) if realtime else 0
         change = realtime.get('change', '') if realtime else ''
-        
+
         price = market_price if market_price > 0 else 0
+
+
         premium = ((price - nav) / nav * 100) if nav > 0 and price > 0 else 0
+
+        valPremium = ((price - valuation) / valuation * 100) if valuation > 0 and price > 0 else 0
         
         item = {
             'code': code,
@@ -233,17 +357,19 @@ def format_fund_data(funds, fund_type=None):
             'nav': nav if nav > 0 else '',
             'space': round(premium, 1) if premium else '',
             'valuation': valuation if valuation > 0 else '',
+            'valPremium': round(valPremium, 2) if valPremium else '',
         }
-        
-        # QDII基金添加申购/赎回状态
-        if fund_type == 'qdii':
+
+        # QDII_LOF基金添加申购/赎回状态
+        if f.get('type') == 'QDII_LOF':
             # 过滤无场内交易价格的基金（场外QDII）
             if price <= 0:
                 continue
             status = fund_status_map.get(code, {})
             item['subscribe_status'] = status.get('subscribe_status', '')
             item['redeem_status'] = status.get('redeem_status', '')
-        
+            item['limit_amount'] = status.get('limit_amount', '')
+
         result.append(item)
     return result
 
@@ -533,24 +659,7 @@ def preload_funds():
     threading.Thread(target=_preload, daemon=True).start()
 
 if __name__ == '__main__':
-    # 配置日志
-    import logging
-    from logging.handlers import RotatingFileHandler
-    
-    log_dir = os.path.join(BASE_DIR, 'logs')
-    os.makedirs(log_dir, exist_ok=True)
-    log_file = os.path.join(log_dir, 'app.log')
-    
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        handlers=[
-            RotatingFileHandler(log_file, maxBytes=10*1024*1024, backupCount=5),
-            logging.StreamHandler()
-        ]
-    )
-    logger = logging.getLogger(__name__)
-    
+    # 日志已在文件开头配置，此处只需记录启动信息
     logger.info('=' * 50)
     logger.info('启动套利系统服务')
     logger.info('=' * 50)

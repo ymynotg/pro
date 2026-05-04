@@ -85,6 +85,25 @@
             color: white;
         }
 
+        .clean-btn {
+            background: #ff9800;
+            border: 1px solid var(--border);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .clean-btn:hover {
+            background: #f57c00;
+        }
+
+        .clean-btn.active {
+            background: #4caf50;
+        }
+
         .tabs {
             display: flex;
             gap: 4px;
@@ -523,6 +542,7 @@
             <div class="header-info">
                 <span class="refresh-time">更新时间: <span id="updateTime">--:--:--</span></span>
                 <button class="refresh-btn" onclick="refreshData()">刷新数据</button>
+                <button class="clean-btn" onclick="cleanData()">数据清洗</button>
             </div>
         </header>
 
@@ -624,8 +644,8 @@
                                 <th data-sort="premium">溢价率</th>
                                 <th data-sort="valuation">估值</th>
                                 <th data-sort="valPremium">估溢率</th>
-                                <th>申购状态</th>
-                                <th>赎回状态</th>
+                                <th data-sort="subscribe_status">申购/限额</th>
+                                <th data-sort="redeem_status">赎回状态</th>
                             </tr>
                         </thead>
                         <tbody id="qdiiTableBody">
@@ -791,6 +811,57 @@
             ]
         };
 
+        // 数据清洗相关状态
+        let isFilterActive = false;
+
+        // 加载过滤状态
+        function loadFilterState() {
+            const filterActive = localStorage.getItem('qdii_filter_active');
+            if (filterActive === 'true') {
+                isFilterActive = true;
+            }
+        }
+
+        // 应用QDII过滤：只保留代码以16或5开头的数据
+        function applyQdiiFilter() {
+            if (!isFilterActive) return;
+
+            const originalCount = mockData.qdii.length;
+            mockData.qdii = mockData.qdii.filter(item => {
+                const code = String(item.code);
+                return code.startsWith('16') || code.startsWith('5');
+            });
+
+            console.log(`QDII过滤: ${originalCount} -> ${mockData.qdii.length}`);
+        }
+
+        // 更新过滤按钮状态
+        function updateFilterButton() {
+            if (!isFilterActive) return;
+            const btn = document.querySelector('.clean-btn');
+            if (btn) btn.classList.add('active');
+        }
+
+        // 数据清洗函数 - 点击"数据清洗"按钮时调用
+        function cleanData() {
+            isFilterActive = true;
+
+            // 应用过滤
+            applyQdiiFilter();
+
+            // 更新按钮状态
+            updateFilterButton();
+
+            // 重新渲染表格和统计
+            renderTable('qdii', mockData.qdii);
+            updateQdiiStats(mockData.qdii);
+
+            // 保存状态到localStorage，使刷新后依然生效
+            localStorage.setItem('qdii_filter_active', 'true');
+
+            alert(`数据清洗完成！原有数据已过滤，剩余 ${mockData.qdii.length} 条QDII数据。`);
+        }
+
         const pageState = {
             lof: { page: 1, total: 0, loading: false, hasMore: true },
             qdii: { page: 1, total: 0, loading: false, hasMore: true }
@@ -805,20 +876,32 @@
                 ]);
                 const lofData = await lofRes.json();
                 const qdiiData = await qdiiRes.json();
-                
+
                 if (append) {
+                    let newQdiiData = qdiiData.data || [];
+                    // 如果过滤状态激活，过滤新数据
+                    if (isFilterActive) {
+                        newQdiiData = newQdiiData.filter(item => {
+                            const code = String(item.code);
+                            return code.startsWith('16') || code.startsWith('5');
+                        });
+                    }
                     mockData.lof = mockData.lof.concat(lofData.data || []);
-                    mockData.qdii = mockData.qdii.concat(qdiiData.data || []);
+                    mockData.qdii = mockData.qdii.concat(newQdiiData);
                 } else {
                     mockData.lof = lofData.data || [];
                     mockData.qdii = qdiiData.data || [];
+                    // 如果过滤状态激活，应用过滤
+                    if (isFilterActive) {
+                        applyQdiiFilter();
+                    }
                 }
-                
+
                 pageState.lof.total = lofData.total || 0;
                 pageState.qdii.total = qdiiData.total || 0;
                 pageState.lof.hasMore = mockData.lof.length < pageState.lof.total;
                 pageState.qdii.hasMore = mockData.qdii.length < pageState.qdii.total;
-                
+
                 console.log('LOF:', mockData.lof.length, '/', pageState.lof.total, 'QDII:', mockData.qdii.length, '/', pageState.qdii.total);
             } catch (e) {
                 console.error('Fetch data error:', e);
@@ -828,22 +911,37 @@
         async function loadMore(type) {
             if (pageState[type].loading || !pageState[type].hasMore) return;
             pageState[type].loading = true;
-            
+
             const nextPage = pageState[type].page + 1;
             try {
                 const res = await fetch(`/api/${type}?page=${nextPage}&page_size=50`);
                 const data = await res.json();
-                
+
                 if (data.data && data.data.length > 0) {
-                    mockData[type] = mockData[type].concat(data.data);
+                    let newData = data.data;
+
+                    // 如果是qdii且过滤状态为true，则过滤新数据
+                    if (type === 'qdii' && isFilterActive) {
+                        newData = newData.filter(item => {
+                            const code = String(item.code);
+                            return code.startsWith('16') || code.startsWith('5');
+                        });
+                    }
+
+                    mockData[type] = mockData[type].concat(newData);
                     pageState[type].page = nextPage;
                     pageState[type].hasMore = mockData[type].length < data.total;
                     renderTable(type, mockData[type]);
+
+                    // 如果是qdii，更新统计
+                    if (type === 'qdii') {
+                        updateQdiiStats(mockData.qdii);
+                    }
                 }
             } catch (e) {
                 console.error('Load more error:', e);
             }
-            
+
             pageState[type].loading = false;
         }
 
@@ -888,16 +986,26 @@
                         <td class="premium ${valPremiumClass}">${valPremiumSign}${formatValue(valPremium)}%</td>
                     </tr>`;
                 } else if (type === 'qdii') {
-                    const valuation = parseFloat(item.valuation) || 0;
-                    const price = parseFloat(item.price) || 0;
-                    const valPremium = valuation > 0 ? ((price - valuation) / valuation * 100) : 0;
+                    const valPremium = parseFloat(item.valPremium) || 0;
                     const valPremiumClass = valPremium > 3 ? 'high' : valPremium > 1 ? 'medium' : valPremium < 0 ? 'low' : '';
                     const valPremiumSign = valPremium >= 0 ? '+' : '';
                     const subscribeStatus = item.subscribe_status || '-';
                     const redeemStatus = item.redeem_status || '-';
-                    const subscribeClass = subscribeStatus === '开放' ? 'status-open' : subscribeStatus === '暂停' ? 'status-closed' : 'status-limit';
-                    const redeemClass = redeemStatus === '开放' ? 'status-open' : redeemStatus === '暂停' ? 'status-closed' : 'status-limit';
-                    
+                    const limitAmount = item.limit_amount || '';
+
+                    // 申购状态显示逻辑：有限额显示限额，否则显示申购状态
+                    let subscribeDisplay = '-';
+                    let subscribeClass = '';
+                    if (limitAmount) {
+                        subscribeDisplay = limitAmount;
+                        subscribeClass = 'status-limit';
+                    } else if (item.subscribe_status) {
+                        subscribeDisplay = subscribeStatus;
+                        subscribeClass = subscribeStatus === '开放' ? 'status-open' : subscribeStatus === '暂停' ? 'status-closed' : 'status-limit';
+                    }
+
+                    const redeemClass = !item.redeem_status ? '' : redeemStatus === '开放' ? 'status-open' : redeemStatus === '暂停' ? 'status-closed' : 'status-limit';
+
                     html += `<tr class="${rowClass}">
                         <td><a href="javascript:void(0)" class="code-link" data-code="${item.code}" onclick="showHistory('${item.code}')">${item.code}</a></td>
                         <td title="${item.name}">${item.name}</td>
@@ -907,7 +1015,7 @@
                         <td class="premium ${premiumClass}">${premiumSign}${formatValue(premium)}%</td>
                         <td>${formatValue(item.valuation, 4)}</td>
                         <td class="premium ${valPremiumClass}">${valPremiumSign}${formatValue(valPremium)}%</td>
-                        <td><span class="status-tag ${subscribeClass}">${subscribeStatus}</span></td>
+                        <td><span class="status-tag ${subscribeClass}">${subscribeDisplay}</span></td>
                         <td><span class="status-tag ${redeemClass}">${redeemStatus}</span></td>
                     </tr>`;
                 } else if (type === 'etf') {
@@ -965,7 +1073,17 @@ tbody.innerHTML = html;
         }
         
         async function initTables() {
+            // 先加载过滤状态
+            loadFilterState();
+
+            // 获取数据（fetchData内部会根据isFilterActive决定是否过滤）
             await fetchData();
+
+            // 更新UI状态（按钮、表格、统计）
+            if (isFilterActive) {
+                updateFilterButton();
+            }
+
             renderTable('lof', mockData.lof);
             renderTable('qdii', mockData.qdii);
             renderTable('etf', mockData.etf);
@@ -1051,8 +1169,8 @@ tbody.innerHTML = html;
                     const sorted = [...mockData[type]].sort((a, b) => {
                         let aVal = a[key];
                         let bVal = b[key];
-                        
-                        if (key === 'code' || key === 'name') {
+
+                        if (key === 'code' || key === 'name' || key === 'subscribe_status' || key === 'redeem_status') {
                             aVal = String(aVal || '').toLowerCase();
                             bVal = String(bVal || '').toLowerCase();
                             return order === 'desc' ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal);
@@ -1128,15 +1246,24 @@ tbody.innerHTML = html;
         }
         
         let refreshTimer = null;
+        let currentInterval = 0;
+        
         function startAutoRefresh() {
-            if (refreshTimer) clearInterval(refreshTimer);
             const interval = getRefreshInterval();
-            if (interval > 0) {
-                refreshTimer = setInterval(refreshData, interval);
+            
+            if (interval !== currentInterval) {
+                if (refreshTimer) clearInterval(refreshTimer);
+                currentInterval = interval;
+                
+                if (interval > 0) {
+                    refreshTimer = setInterval(refreshData, interval);
+                    console.log(`定时器已设置: ${interval/1000}秒`);
+                }
             }
         }
         
         initTables().then(() => {
+            loadFilterState();
             loadRefreshConfig();
             initSortHandlers();
             initScrollHandler();

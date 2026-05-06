@@ -9,4 +9,7 @@ flask-cors==6.0.2
 requests==2.32.3
 
 # 数据处理（用于Excel读取，部分脚本需要）
-pandas==3.0.2
+pandas==2.1.4
+
+# 生产环境Web服务器
+gunicorn==23.0.0

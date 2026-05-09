@@ -118,19 +118,25 @@ def get_fund_history_from_detail(code, days=30):
         today_price = price_map.get(today, 0)
         nav = realtime.get('nav', 0) if realtime else 0
         valuation = realtime.get('valuation', 0) if realtime else 0
-        change = realtime.get('change', '') if realtime else ''
-        
+
         result = []
         dates = sorted(price_map.keys(), reverse=True)[:days]
-        for date in dates:
+        for i, date in enumerate(dates):
             price = price_map[date]
             premium = ((price - nav) / nav * 100) if nav > 0 and price > 0 else 0
+
+            if i < len(dates) - 1:
+                prev_price = price_map[dates[i + 1]]
+                chg = round((price - prev_price) / prev_price * 100, 2)
+            else:
+                chg = 0
+
             result.append({
                 'date': date,
                 'nav': round(nav, 4) if nav > 0 else '',
                 'valuation': round(valuation, 4) if valuation > 0 else '',
                 'price': round(price, 4),
-                'change': change,
+                'change': chg,
                 'premium': round(premium, 2) if premium else '',
             })
         

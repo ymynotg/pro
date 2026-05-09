@@ -150,17 +150,23 @@ def generate_fund_history(code, days=365):
     
     dates = sorted(price_map.keys(), reverse=True)[:days]
     history = []
-    for date in dates:
+    for i, date in enumerate(dates):
         price = price_map[date]
-        # ✅ 修复：使用历史净值，而不是当日净值
         nav = nav_map.get(date, 0)
         premium = ((price - nav) / nav * 100) if nav > 0 and price > 0 else 0
+
+        if i < len(dates) - 1:
+            prev_price = price_map[dates[i + 1]]
+            change = round((price - prev_price) / prev_price * 100, 2)
+        else:
+            change = 0
+
         history.append({
             'date': date,
-            'nav': round(nav, 4) if nav > 0 else '',  # ✅ 每日净值不同
+            'nav': round(nav, 4) if nav > 0 else '',
             'valuation': round(valuation, 4) if valuation > 0 else '',
             'price': round(price, 4),
-            'change': realtime.get('change', '') if realtime else '',
+            'change': change,
             'premium': round(premium, 2) if premium else '',
         })
     
@@ -229,15 +235,18 @@ def update_fund_history(code, days=365, incremental=True):
                 logger.info(f"{code}: 今天数据已存在，跳过")
                 return old_data
             
-            # 添加今天的数据（使用正确的净值）
             for date, price in price_map.items():
                 premium = ((price - nav) / nav * 100) if nav > 0 and price > 0 else 0
+
+                prev_price = old_data['history'][0]['price'] if old_data['history'] else price
+                change = round((price - prev_price) / prev_price * 100, 2)
+
                 old_data['history'].insert(0, {
                     'date': date,
-                    'nav': round(nav, 4) if nav > 0 else '',  # ✅ 使用当日净值
+                    'nav': round(nav, 4) if nav > 0 else '',
                     'valuation': round(valuation, 4) if valuation > 0 else '',
                     'price': round(price, 4),
-                    'change': realtime.get('change', '') if realtime else '',
+                    'change': change,
                     'premium': round(premium, 2) if premium else '',
                 })
             

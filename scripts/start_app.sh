@@ -1,7 +1,7 @@
 #!/bin/bash
 # 跨境套利系统启动脚本
 
-APP_DIR="/home/gao/pro"
+APP_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 APP_FILE="$APP_DIR/app.py"
 PORT=4000
 

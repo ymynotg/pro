@@ -1,20 +1,52 @@
 {
   "code": "501312",
   "days": 365,
-  "update_time": "2026-04-29 20:52:15",
+  "update_time": "2026-05-09 17:53:18",
   "history": [
     {
-      "date": "2026-04-29",
+      "date": "2026-05-08",
       "nav": "",
-      "valuation": 2.1486,
-      "price": 2.102,
-      "change": 0.0,
+      "valuation": 2.2219,
+      "price": 2.211,
+      "change": -0.09,
       "premium": ""
+    },
+    {
+      "date": "2026-05-07",
+      "nav": 2.2219,
+      "valuation": 2.2219,
+      "price": 2.213,
+      "change": 2.79,
+      "premium": -0.4
+    },
+    {
+      "date": "2026-05-06",
+      "nav": 2.2588,
+      "valuation": 2.2219,
+      "price": 2.153,
+      "change": 4.21,
+      "premium": -4.68
+    },
+    {
+      "date": "2026-04-30",
+      "nav": 2.1473,
+      "valuation": 2.2219,
+      "price": 2.066,
+      "change": -1.71,
+      "premium": -3.79
+    },
+    {
+      "date": "2026-04-29",
+      "nav": 2.0906,
+      "valuation": 2.2219,
+      "price": 2.102,
+      "change": -0.47,
+      "premium": 0.55
     },
     {
       "date": "2026-04-28",
       "nav": 2.1096,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.112,
       "change": 0.0,
       "premium": 0.11
@@ -22,95 +54,95 @@
     {
       "date": "2026-04-27",
       "nav": 2.1486,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.112,
-      "change": 0.0,
+      "change": 0.28,
       "premium": -1.7
     },
     {
       "date": "2026-04-24",
       "nav": 2.1431,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.106,
-      "change": 0.0,
+      "change": -0.66,
       "premium": -1.73
     },
     {
       "date": "2026-04-23",
       "nav": 2.1133,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.12,
-      "change": 0.0,
+      "change": -0.05,
       "premium": 0.32
     },
     {
       "date": "2026-04-22",
       "nav": 2.1497,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.121,
-      "change": 0.0,
+      "change": 0.19,
       "premium": -1.34
     },
     {
       "date": "2026-04-21",
       "nav": 2.1109,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.117,
-      "change": 0.0,
+      "change": 1.73,
       "premium": 0.29
     },
     {
       "date": "2026-04-20",
       "nav": 2.1335,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.081,
-      "change": 0.0,
+      "change": 0.82,
       "premium": -2.46
     },
     {
       "date": "2026-04-17",
       "nav": 2.1272,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.064,
-      "change": 0.0,
+      "change": -0.39,
       "premium": -2.97
     },
     {
       "date": "2026-04-16",
       "nav": 2.0881,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.072,
-      "change": 0.0,
+      "change": 2.42,
       "premium": -0.77
     },
     {
       "date": "2026-04-15",
       "nav": 2.0771,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.023,
-      "change": 0.0,
+      "change": 2.59,
       "premium": -2.6
     },
     {
       "date": "2026-04-14",
       "nav": 2.0429,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.972,
-      "change": 0.0,
+      "change": 2.82,
       "premium": -3.47
     },
     {
       "date": "2026-04-13",
       "nav": 1.9945,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.918,
-      "change": 0.0,
+      "change": -1.39,
       "premium": -3.84
     },
     {
       "date": "2026-04-10",
       "nav": 1.9478,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.945,
       "change": 0.0,
       "premium": -0.14
@@ -118,167 +150,167 @@
     {
       "date": "2026-04-09",
       "nav": 1.9401,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.945,
-      "change": 0.0,
+      "change": -1.47,
       "premium": 0.25
     },
     {
       "date": "2026-04-08",
       "nav": 1.9544,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.974,
-      "change": 0.0,
+      "change": 5.11,
       "premium": 1.0
     },
     {
       "date": "2026-04-07",
       "nav": 1.8972,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.878,
-      "change": 0.0,
+      "change": 0.27,
       "premium": -1.01
     },
     {
       "date": "2026-04-03",
       "nav": 1.8897,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.873,
-      "change": 0.0,
+      "change": 1.41,
       "premium": -0.88
     },
     {
       "date": "2026-04-02",
       "nav": 1.8885,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.847,
-      "change": 0.0,
+      "change": -2.22,
       "premium": -2.2
     },
     {
       "date": "2026-04-01",
       "nav": 1.8874,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.889,
-      "change": 0.0,
+      "change": 4.83,
       "premium": 0.08
     },
     {
       "date": "2026-03-31",
       "nav": 1.8605,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.802,
-      "change": 0.0,
+      "change": -0.66,
       "premium": -3.14
     },
     {
       "date": "2026-03-30",
       "nav": 1.7743,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.814,
-      "change": 0.0,
+      "change": -2.53,
       "premium": 2.24
     },
     {
       "date": "2026-03-27",
       "nav": 1.805,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.861,
-      "change": 0.0,
+      "change": -1.17,
       "premium": 3.1
     },
     {
       "date": "2026-03-26",
       "nav": 1.8551,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.883,
-      "change": 0.0,
+      "change": -0.32,
       "premium": 1.5
     },
     {
       "date": "2026-03-25",
       "nav": 1.9063,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.889,
-      "change": 0.0,
+      "change": 0.59,
       "premium": -0.91
     },
     {
       "date": "2026-03-24",
       "nav": 1.8869,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.878,
-      "change": 0.0,
+      "change": 2.51,
       "premium": -0.47
     },
     {
       "date": "2026-03-23",
       "nav": 1.9045,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.832,
-      "change": 0.0,
+      "change": -3.98,
       "premium": -3.81
     },
     {
       "date": "2026-03-20",
       "nav": 1.8683,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.908,
-      "change": 0.0,
+      "change": 0.21,
       "premium": 2.12
     },
     {
       "date": "2026-03-19",
       "nav": 1.9156,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.904,
-      "change": 0.0,
+      "change": -2.31,
       "premium": -0.61
     },
     {
       "date": "2026-03-18",
       "nav": 1.9104,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.949,
-      "change": 0.0,
+      "change": 2.58,
       "premium": 2.02
     },
     {
       "date": "2026-03-17",
       "nav": 1.9441,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.9,
-      "change": 0.0,
+      "change": -0.37,
       "premium": -2.27
     },
     {
       "date": "2026-03-16",
       "nav": 1.9252,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.907,
-      "change": 0.0,
+      "change": 0.53,
       "premium": -0.95
     },
     {
       "date": "2026-03-13",
       "nav": 1.896,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.897,
-      "change": 0.0,
+      "change": -1.56,
       "premium": 0.05
     },
     {
       "date": "2026-03-12",
       "nav": 1.9026,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.927,
-      "change": 0.0,
+      "change": -1.03,
       "premium": 1.28
     },
     {
       "date": "2026-03-11",
       "nav": 1.9551,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.947,
       "change": 0.0,
       "premium": -0.41
@@ -286,967 +318,967 @@
     {
       "date": "2026-03-10",
       "nav": 1.9536,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.947,
-      "change": 0.0,
+      "change": 2.53,
       "premium": -0.34
     },
     {
       "date": "2026-03-09",
       "nav": 1.9741,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.899,
-      "change": 0.0,
+      "change": -3.31,
       "premium": -3.8
     },
     {
       "date": "2026-03-06",
       "nav": 1.9322,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.964,
-      "change": 0.0,
+      "change": -0.15,
       "premium": 1.65
     },
     {
       "date": "2026-03-05",
       "nav": 1.97,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.967,
-      "change": 0.0,
+      "change": 1.97,
       "premium": -0.15
     },
     {
       "date": "2026-03-04",
       "nav": 1.9952,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.929,
-      "change": 0.0,
+      "change": -1.88,
       "premium": -3.32
     },
     {
       "date": "2026-03-03",
       "nav": 1.9583,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.966,
-      "change": 0.0,
+      "change": 0.05,
       "premium": 0.39
     },
     {
       "date": "2026-03-02",
       "nav": 2.0119,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.965,
-      "change": 0.0,
+      "change": -2.92,
       "premium": -2.33
     },
     {
       "date": "2026-02-27",
       "nav": 2.0056,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.024,
-      "change": 0.0,
+      "change": 0.45,
       "premium": 0.92
     },
     {
       "date": "2026-02-26",
       "nav": 2.034,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.015,
-      "change": 0.0,
+      "change": 0.65,
       "premium": -0.93
     },
     {
       "date": "2026-02-25",
       "nav": 2.0303,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.002,
-      "change": 0.0,
+      "change": 0.7,
       "premium": -1.39
     },
     {
       "date": "2026-02-24",
       "nav": 2.0127,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.988,
-      "change": 0.0,
+      "change": 0.1,
       "premium": -1.23
     },
     {
       "date": "2026-02-13",
       "nav": 1.9742,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.986,
-      "change": 0.0,
+      "change": -1.24,
       "premium": 0.6
     },
     {
       "date": "2026-02-12",
       "nav": 1.9526,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.011,
-      "change": 0.0,
+      "change": -0.4,
       "premium": 2.99
     },
     {
       "date": "2026-02-11",
       "nav": 1.9984,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.019,
-      "change": 0.0,
+      "change": 0.1,
       "premium": 1.03
     },
     {
       "date": "2026-02-10",
       "nav": 2.0084,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.017,
-      "change": 0.0,
+      "change": 0.25,
       "premium": 0.43
     },
     {
       "date": "2026-02-09",
       "nav": 2.0162,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.012,
-      "change": 0.0,
+      "change": 3.76,
       "premium": -0.21
     },
     {
       "date": "2026-02-06",
       "nav": 1.9841,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.939,
-      "change": 0.0,
+      "change": -2.66,
       "premium": -2.27
     },
     {
       "date": "2026-02-05",
       "nav": 1.8977,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.992,
-      "change": 0.0,
+      "change": -2.06,
       "premium": 4.97
     },
     {
       "date": "2026-02-04",
       "nav": 1.954,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.034,
-      "change": 0.0,
+      "change": -1.36,
       "premium": 4.09
     },
     {
       "date": "2026-02-03",
       "nav": 2.0265,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.062,
-      "change": 0.0,
+      "change": 3.05,
       "premium": 1.75
     },
     {
       "date": "2026-02-02",
       "nav": 2.0451,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.001,
-      "change": 0.0,
+      "change": -4.35,
       "premium": -2.16
     },
     {
       "date": "2026-01-30",
       "nav": 2.0425,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.092,
-      "change": 0.0,
+      "change": -1.46,
       "premium": 2.42
     },
     {
       "date": "2026-01-29",
       "nav": 2.0999,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.123,
-      "change": 0.0,
+      "change": -1.35,
       "premium": 1.1
     },
     {
       "date": "2026-01-28",
       "nav": 2.1188,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.152,
-      "change": 0.0,
+      "change": -0.37,
       "premium": 1.57
     },
     {
       "date": "2026-01-27",
       "nav": 2.1263,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.16,
-      "change": 0.0,
+      "change": 0.28,
       "premium": 1.58
     },
     {
       "date": "2026-01-26",
       "nav": 2.1087,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.154,
-      "change": 0.0,
+      "change": -2.22,
       "premium": 2.15
     },
     {
       "date": "2026-01-23",
       "nav": 2.1221,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.203,
-      "change": 0.0,
+      "change": 1.47,
       "premium": 3.81
     },
     {
       "date": "2026-01-22",
       "nav": 2.1538,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.171,
-      "change": 0.0,
+      "change": 3.83,
       "premium": 0.8
     },
     {
       "date": "2026-01-21",
       "nav": 2.1167,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.091,
-      "change": 0.0,
+      "change": -1.09,
       "premium": -1.21
     },
     {
       "date": "2026-01-20",
       "nav": 2.0837,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.114,
-      "change": 0.0,
+      "change": -0.94,
       "premium": 1.45
     },
     {
       "date": "2026-01-19",
       "nav": 2.131,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.134,
-      "change": 0.0,
+      "change": -1.79,
       "premium": 0.14
     },
     {
       "date": "2026-01-16",
       "nav": 2.132,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.173,
-      "change": 0.0,
+      "change": 1.02,
       "premium": 1.92
     },
     {
       "date": "2026-01-15",
       "nav": 2.1282,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.151,
-      "change": 0.0,
+      "change": 0.61,
       "premium": 1.07
     },
     {
       "date": "2026-01-14",
       "nav": 2.1337,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.138,
-      "change": 0.0,
+      "change": 0.14,
       "premium": 0.2
     },
     {
       "date": "2026-01-13",
       "nav": 2.13,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.135,
-      "change": 0.0,
+      "change": 2.55,
       "premium": 0.23
     },
     {
       "date": "2026-01-12",
       "nav": 2.13,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.082,
-      "change": 0.0,
+      "change": -0.9,
       "premium": -2.25
     },
     {
       "date": "2026-01-09",
       "nav": 2.0967,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.101,
-      "change": 0.0,
+      "change": 0.1,
       "premium": 0.21
     },
     {
       "date": "2026-01-08",
       "nav": 2.0848,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.099,
-      "change": 0.0,
+      "change": -0.33,
       "premium": 0.68
     },
     {
       "date": "2026-01-07",
       "nav": 2.1065,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.106,
-      "change": 0.0,
+      "change": 1.06,
       "premium": -0.02
     },
     {
       "date": "2026-01-06",
       "nav": 2.1084,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.084,
-      "change": 0.0,
+      "change": 0.63,
       "premium": -1.16
     },
     {
       "date": "2026-01-05",
       "nav": 2.0713,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.071,
-      "change": 0.0,
+      "change": 2.37,
       "premium": -0.01
     },
     {
       "date": "2025-12-31",
       "nav": 1.9972,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.023,
-      "change": 0.0,
+      "change": -1.12,
       "premium": 1.29
     },
     {
       "date": "2025-12-30",
       "nav": 2.0143,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.046,
-      "change": 0.0,
+      "change": -0.24,
       "premium": 1.57
     },
     {
       "date": "2025-12-29",
       "nav": 2.0221,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.051,
-      "change": 0.0,
+      "change": -1.54,
       "premium": 1.43
     },
     {
       "date": "2025-12-26",
       "nav": 2.0364,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.083,
-      "change": 0.0,
+      "change": -0.24,
       "premium": 2.29
     },
     {
       "date": "2025-12-25",
       "nav": 2.0505,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.088,
-      "change": 0.0,
+      "change": 0.05,
       "premium": 1.83
     },
     {
       "date": "2025-12-24",
       "nav": 2.0526,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.087,
-      "change": 0.0,
+      "change": -0.33,
       "premium": 1.68
     },
     {
       "date": "2025-12-23",
       "nav": 2.0513,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.094,
-      "change": 0.0,
+      "change": -0.76,
       "premium": 2.08
     },
     {
       "date": "2025-12-22",
       "nav": 2.0595,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.11,
-      "change": 0.0,
+      "change": 1.83,
       "premium": 2.45
     },
     {
       "date": "2025-12-19",
       "nav": 2.0289,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.072,
-      "change": 0.0,
+      "change": 1.42,
       "premium": 2.12
     },
     {
       "date": "2025-12-18",
       "nav": 1.9917,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.043,
-      "change": 0.0,
+      "change": -1.16,
       "premium": 2.58
     },
     {
       "date": "2025-12-17",
       "nav": 1.9688,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.067,
-      "change": 0.0,
+      "change": 1.08,
       "premium": 4.99
     },
     {
       "date": "2025-12-16",
       "nav": 2.0131,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.045,
-      "change": 0.0,
+      "change": -2.57,
       "premium": 1.58
     },
     {
       "date": "2025-12-15",
       "nav": 2.0145,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.099,
-      "change": 0.0,
+      "change": -1.22,
       "premium": 4.19
     },
     {
       "date": "2025-12-12",
       "nav": 2.0331,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.125,
-      "change": 0.0,
+      "change": 0.76,
       "premium": 4.52
     },
     {
       "date": "2025-12-11",
       "nav": 2.0773,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.109,
-      "change": 0.0,
+      "change": -1.13,
       "premium": 1.53
     },
     {
       "date": "2025-12-10",
       "nav": 2.0885,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.133,
-      "change": 0.0,
+      "change": 0.52,
       "premium": 2.13
     },
     {
       "date": "2025-12-09",
       "nav": 2.0752,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.122,
-      "change": 0.0,
+      "change": -1.35,
       "premium": 2.26
     },
     {
       "date": "2025-12-08",
       "nav": 2.0748,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.151,
-      "change": 0.0,
+      "change": -1.42,
       "premium": 3.67
     },
     {
       "date": "2025-12-05",
       "nav": 2.068,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.182,
-      "change": 0.0,
+      "change": 1.49,
       "premium": 5.51
     },
     {
       "date": "2025-12-04",
       "nav": 2.0755,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.15,
-      "change": 0.0,
+      "change": 0.56,
       "premium": 3.59
     },
     {
       "date": "2025-12-03",
       "nav": 2.049,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.138,
-      "change": 0.0,
+      "change": 2.2,
       "premium": 4.34
     },
     {
       "date": "2025-12-02",
       "nav": 2.0156,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.092,
-      "change": 0.0,
+      "change": -0.05,
       "premium": 3.79
     },
     {
       "date": "2025-12-01",
       "nav": 2.0046,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.093,
-      "change": 0.0,
+      "change": -1.69,
       "premium": 4.41
     },
     {
       "date": "2025-11-28",
       "nav": 2.0301,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.129,
-      "change": 0.0,
+      "change": 0.8,
       "premium": 4.87
     },
     {
       "date": "2025-11-27",
       "nav": 2.011,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.112,
-      "change": 0.0,
+      "change": -0.61,
       "premium": 5.02
     },
     {
       "date": "2025-11-26",
       "nav": 2.0116,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.125,
-      "change": 0.0,
+      "change": 1.05,
       "premium": 5.64
     },
     {
       "date": "2025-11-25",
       "nav": 1.9961,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.103,
-      "change": 0.0,
+      "change": 1.89,
       "premium": 5.36
     },
     {
       "date": "2025-11-24",
       "nav": 1.9798,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.064,
-      "change": 0.0,
+      "change": 2.18,
       "premium": 4.25
     },
     {
       "date": "2025-11-21",
       "nav": 1.9225,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.02,
-      "change": 0.0,
+      "change": -3.99,
       "premium": 5.07
     },
     {
       "date": "2025-11-20",
       "nav": 1.8929,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.104,
-      "change": 0.0,
+      "change": 4.62,
       "premium": 11.15
     },
     {
       "date": "2025-11-19",
       "nav": 1.9366,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.011,
-      "change": 0.0,
+      "change": -0.84,
       "premium": 3.84
     },
     {
       "date": "2025-11-18",
       "nav": 1.9287,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.028,
-      "change": 0.0,
+      "change": -3.84,
       "premium": 5.15
     },
     {
       "date": "2025-11-17",
       "nav": 1.9457,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.109,
-      "change": 0.0,
+      "change": 0.29,
       "premium": 8.39
     },
     {
       "date": "2025-11-14",
       "nav": 1.9677,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.103,
-      "change": 0.0,
+      "change": -3.93,
       "premium": 6.88
     },
     {
       "date": "2025-11-13",
       "nav": 1.9712,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.189,
-      "change": 0.0,
+      "change": -0.55,
       "premium": 11.05
     },
     {
       "date": "2025-11-12",
       "nav": 2.0321,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.201,
-      "change": 0.0,
+      "change": 0.64,
       "premium": 8.31
     },
     {
       "date": "2025-11-11",
       "nav": 2.0382,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.187,
-      "change": 0.0,
+      "change": -0.64,
       "premium": 7.3
     },
     {
       "date": "2025-11-10",
       "nav": 2.0498,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.201,
-      "change": 0.0,
+      "change": 3.43,
       "premium": 7.38
     },
     {
       "date": "2025-11-07",
       "nav": 2.0116,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.128,
-      "change": 0.0,
+      "change": -1.34,
       "premium": 5.79
     },
     {
       "date": "2025-11-06",
       "nav": 2.0206,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.157,
-      "change": 0.0,
+      "change": 1.46,
       "premium": 6.75
     },
     {
       "date": "2025-11-05",
       "nav": 2.0799,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.126,
-      "change": 0.0,
+      "change": -2.57,
       "premium": 2.22
     },
     {
       "date": "2025-11-04",
       "nav": 2.0628,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.182,
-      "change": 0.0,
+      "change": -3.92,
       "premium": 5.78
     },
     {
       "date": "2025-11-03",
       "nav": 2.1283,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.271,
-      "change": 0.0,
+      "change": 3.09,
       "premium": 6.7
     },
     {
       "date": "2025-10-31",
       "nav": 2.1312,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.203,
-      "change": 0.0,
+      "change": -1.08,
       "premium": 3.37
     },
     {
       "date": "2025-10-30",
       "nav": 2.0951,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.227,
-      "change": 0.0,
+      "change": -2.84,
       "premium": 6.3
     },
     {
       "date": "2025-10-29",
       "nav": 2.1296,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.292,
-      "change": 0.0,
+      "change": -0.3,
       "premium": 7.63
     },
     {
       "date": "2025-10-28",
       "nav": 2.1229,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.299,
-      "change": 0.0,
+      "change": -1.88,
       "premium": 8.3
     },
     {
       "date": "2025-10-27",
       "nav": 2.132,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.343,
-      "change": 0.0,
+      "change": 2.72,
       "premium": 9.9
     },
     {
       "date": "2025-10-24",
       "nav": 2.1159,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.281,
-      "change": 0.0,
+      "change": 1.15,
       "premium": 7.8
     },
     {
       "date": "2025-10-23",
       "nav": 2.0893,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.255,
-      "change": 0.0,
+      "change": -0.7,
       "premium": 7.93
     },
     {
       "date": "2025-10-22",
       "nav": 2.0531,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.271,
-      "change": 0.0,
+      "change": 3.09,
       "premium": 10.61
     },
     {
       "date": "2025-10-21",
       "nav": 2.1059,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.203,
-      "change": 0.0,
+      "change": 1.99,
       "premium": 4.61
     },
     {
       "date": "2025-10-20",
       "nav": 2.1257,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.16,
-      "change": 0.0,
+      "change": 3.15,
       "premium": 1.61
     },
     {
       "date": "2025-10-17",
       "nav": 2.0629,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.094,
-      "change": 0.0,
+      "change": -1.92,
       "premium": 1.51
     },
     {
       "date": "2025-10-16",
       "nav": 2.0813,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.135,
-      "change": 0.0,
+      "change": 0.99,
       "premium": 2.58
     },
     {
       "date": "2025-10-15",
       "nav": 2.1024,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.114,
-      "change": 0.0,
+      "change": 3.68,
       "premium": 0.55
     },
     {
       "date": "2025-10-14",
       "nav": 2.0609,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.039,
-      "change": 0.0,
+      "change": -3.41,
       "premium": -1.06
     },
     {
       "date": "2025-10-13",
       "nav": 2.0716,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.111,
-      "change": 0.0,
+      "change": -1.31,
       "premium": 1.9
     },
     {
       "date": "2025-10-10",
       "nav": 2.0334,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.139,
-      "change": 0.0,
+      "change": -0.19,
       "premium": 5.19
     },
     {
       "date": "2025-10-09",
       "nav": 2.1234,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.143,
-      "change": 0.0,
+      "change": 6.14,
       "premium": 0.92
     },
     {
       "date": "2025-09-30",
       "nav": 2.0026,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.019,
-      "change": 0.0,
+      "change": 1.1,
       "premium": 0.82
     },
     {
       "date": "2025-09-29",
       "nav": 1.9912,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.997,
-      "change": 0.0,
+      "change": 0.5,
       "premium": 0.29
     },
     {
       "date": "2025-09-26",
       "nav": 1.9687,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.987,
-      "change": 0.0,
+      "change": -1.39,
       "premium": 0.93
     },
     {
       "date": "2025-09-25",
       "nav": 1.9557,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.015,
-      "change": 0.0,
+      "change": -2.84,
       "premium": 3.03
     },
     {
       "date": "2025-09-24",
       "nav": 1.9725,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.074,
-      "change": 0.0,
+      "change": -0.34,
       "premium": 5.15
     },
     {
       "date": "2025-09-23",
       "nav": 1.9858,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.081,
-      "change": 0.0,
+      "change": 3.69,
       "premium": 4.79
     },
     {
       "date": "2025-09-22",
       "nav": 2.001,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 2.007,
-      "change": 0.0,
+      "change": 2.66,
       "premium": 0.3
     },
     {
       "date": "2025-09-19",
       "nav": 1.9824,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.955,
-      "change": 0.0,
+      "change": 2.25,
       "premium": -1.38
     },
     {
       "date": "2025-09-18",
       "nav": 1.967,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.912,
-      "change": 0.0,
+      "change": 0.31,
       "premium": -2.8
     },
     {
       "date": "2025-09-17",
       "nav": 1.9152,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.906,
-      "change": 0.0,
+      "change": 0.63,
       "premium": -0.48
     },
     {
       "date": "2025-09-16",
       "nav": 1.9218,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.894,
-      "change": 0.0,
+      "change": 1.07,
       "premium": -1.45
     },
     {
       "date": "2025-09-15",
       "nav": 1.9065,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.874,
-      "change": 0.0,
+      "change": 0.48,
       "premium": -1.7
     },
     {
       "date": "2025-09-12",
       "nav": 1.8822,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.865,
-      "change": 0.0,
+      "change": 1.75,
       "premium": -0.91
     },
     {
       "date": "2025-09-11",
       "nav": 1.8844,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.833,
-      "change": 0.0,
+      "change": -0.38,
       "premium": -2.73
     },
     {
       "date": "2025-09-10",
       "nav": 1.8449,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.84,
-      "change": 0.0,
+      "change": 0.27,
       "premium": -0.27
     },
     {
       "date": "2025-09-09",
       "nav": 1.8509,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.835,
-      "change": 0.0,
+      "change": 0.44,
       "premium": -0.86
     },
     {
       "date": "2025-09-08",
       "nav": 1.8469,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.827,
-      "change": 0.0,
+      "change": 0.83,
       "premium": -1.08
     },
     {
       "date": "2025-09-05",
       "nav": 1.8361,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.812,
-      "change": 0.0,
+      "change": 0.83,
       "premium": -1.31
     },
     {
       "date": "2025-09-04",
       "nav": 1.8189,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.797,
-      "change": 0.0,
+      "change": -0.33,
       "premium": -1.2
     },
     {
       "date": "2025-09-03",
       "nav": 1.8131,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.803,
       "change": 0.0,
       "premium": -0.56
@@ -1254,703 +1286,703 @@
     {
       "date": "2025-09-02",
       "nav": 1.8111,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.803,
-      "change": 0.0,
+      "change": 0.22,
       "premium": -0.45
     },
     {
       "date": "2025-09-01",
       "nav": 1.8224,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.799,
-      "change": 0.0,
+      "change": -1.26,
       "premium": -1.28
     },
     {
       "date": "2025-08-29",
       "nav": 1.8214,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.822,
-      "change": 0.0,
+      "change": -0.65,
       "premium": 0.03
     },
     {
       "date": "2025-08-28",
       "nav": 1.8463,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.834,
-      "change": 0.0,
+      "change": -0.7,
       "premium": -0.67
     },
     {
       "date": "2025-08-27",
       "nav": 1.8365,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.847,
-      "change": 0.0,
+      "change": 1.37,
       "premium": 0.57
     },
     {
       "date": "2025-08-26",
       "nav": 1.8438,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.822,
-      "change": 0.0,
+      "change": -0.6,
       "premium": -1.18
     },
     {
       "date": "2025-08-25",
       "nav": 1.8311,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.833,
-      "change": 0.0,
+      "change": 2.35,
       "premium": 0.1
     },
     {
       "date": "2025-08-22",
       "nav": 1.8478,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.791,
-      "change": 0.0,
+      "change": -0.67,
       "premium": -3.07
     },
     {
       "date": "2025-08-21",
       "nav": 1.7962,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.803,
-      "change": 0.0,
+      "change": 0.33,
       "premium": 0.38
     },
     {
       "date": "2025-08-20",
       "nav": 1.8012,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.797,
-      "change": 0.0,
+      "change": -2.28,
       "premium": -0.23
     },
     {
       "date": "2025-08-19",
       "nav": 1.8118,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.839,
-      "change": 0.0,
+      "change": -0.27,
       "premium": 1.5
     },
     {
       "date": "2025-08-18",
       "nav": 1.8592,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.844,
-      "change": 0.0,
+      "change": -0.65,
       "premium": -0.82
     },
     {
       "date": "2025-08-15",
       "nav": 1.8601,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.856,
-      "change": 0.0,
+      "change": 0.27,
       "premium": -0.22
     },
     {
       "date": "2025-08-14",
       "nav": 1.8656,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.851,
-      "change": 0.0,
+      "change": 0.87,
       "premium": -0.78
     },
     {
       "date": "2025-08-13",
       "nav": 1.877,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.835,
-      "change": 0.0,
+      "change": 1.61,
       "premium": -2.24
     },
     {
       "date": "2025-08-12",
       "nav": 1.8528,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.806,
-      "change": 0.0,
+      "change": -0.39,
       "premium": -2.53
     },
     {
       "date": "2025-08-11",
       "nav": 1.8153,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.813,
-      "change": 0.0,
+      "change": 0.72,
       "premium": -0.13
     },
     {
       "date": "2025-08-08",
       "nav": 1.8171,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.8,
-      "change": 0.0,
+      "change": -0.44,
       "premium": -0.94
     },
     {
       "date": "2025-08-07",
       "nav": 1.8056,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.808,
-      "change": 0.0,
+      "change": 0.11,
       "premium": 0.13
     },
     {
       "date": "2025-08-06",
       "nav": 1.8004,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.806,
-      "change": 0.0,
+      "change": -0.88,
       "premium": 0.31
     },
     {
       "date": "2025-08-05",
       "nav": 1.7974,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.822,
-      "change": 0.0,
+      "change": 1.84,
       "premium": 1.37
     },
     {
       "date": "2025-08-04",
       "nav": 1.8131,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.789,
-      "change": 0.0,
+      "change": -1.0,
       "premium": -1.33
     },
     {
       "date": "2025-08-01",
       "nav": 1.7731,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.807,
-      "change": 0.0,
+      "change": -3.01,
       "premium": 1.91
     },
     {
       "date": "2025-07-31",
       "nav": 1.8169,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.863,
-      "change": 0.0,
+      "change": 1.03,
       "premium": 2.54
     },
     {
       "date": "2025-07-30",
       "nav": 1.838,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.844,
-      "change": 0.0,
+      "change": -1.5,
       "premium": 0.33
     },
     {
       "date": "2025-07-29",
       "nav": 1.8325,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.872,
-      "change": 0.0,
+      "change": -0.37,
       "premium": 2.16
     },
     {
       "date": "2025-07-28",
       "nav": 1.8596,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.879,
-      "change": 0.0,
+      "change": 1.35,
       "premium": 1.04
     },
     {
       "date": "2025-07-25",
       "nav": 1.858,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.854,
-      "change": 0.0,
+      "change": -0.8,
       "premium": -0.22
     },
     {
       "date": "2025-07-24",
       "nav": 1.8502,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.869,
-      "change": 0.0,
+      "change": 0.38,
       "premium": 1.02
     },
     {
       "date": "2025-07-23",
       "nav": 1.8683,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.862,
-      "change": 0.0,
+      "change": 0.05,
       "premium": -0.34
     },
     {
       "date": "2025-07-22",
       "nav": 1.8431,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.861,
-      "change": 0.0,
+      "change": -0.75,
       "premium": 0.97
     },
     {
       "date": "2025-07-21",
       "nav": 1.8462,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.875,
-      "change": 0.0,
+      "change": 0.11,
       "premium": 1.56
     },
     {
       "date": "2025-07-18",
       "nav": 1.8498,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.873,
-      "change": 0.0,
+      "change": 2.07,
       "premium": 1.25
     },
     {
       "date": "2025-07-17",
       "nav": 1.8378,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.835,
-      "change": 0.0,
+      "change": 1.44,
       "premium": -0.15
     },
     {
       "date": "2025-07-16",
       "nav": 1.8252,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.809,
-      "change": 0.0,
+      "change": -0.77,
       "premium": -0.89
     },
     {
       "date": "2025-07-15",
       "nav": 1.7987,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.823,
-      "change": 0.0,
+      "change": 1.84,
       "premium": 1.35
     },
     {
       "date": "2025-07-14",
       "nav": 1.8082,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.79,
-      "change": 0.0,
+      "change": -1.1,
       "premium": -1.01
     },
     {
       "date": "2025-07-11",
       "nav": 1.7994,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.81,
-      "change": 0.0,
+      "change": 0.61,
       "premium": 0.59
     },
     {
       "date": "2025-07-10",
       "nav": 1.8188,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.799,
-      "change": 0.0,
+      "change": 1.64,
       "premium": -1.09
     },
     {
       "date": "2025-07-09",
       "nav": 1.8107,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.77,
-      "change": 0.0,
+      "change": 0.06,
       "premium": -2.25
     },
     {
       "date": "2025-07-08",
       "nav": 1.7856,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.769,
-      "change": 0.0,
+      "change": 0.23,
       "premium": -0.93
     },
     {
       "date": "2025-07-07",
       "nav": 1.7675,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.765,
-      "change": 0.0,
+      "change": -0.56,
       "premium": -0.14
     },
     {
       "date": "2025-07-04",
       "nav": 1.7955,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.775,
-      "change": 0.0,
+      "change": 0.28,
       "premium": -1.14
     },
     {
       "date": "2025-07-03",
       "nav": 1.7952,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.77,
-      "change": 0.0,
+      "change": 1.32,
       "premium": -1.4
     },
     {
       "date": "2025-07-02",
       "nav": 1.7805,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.747,
-      "change": 0.0,
+      "change": -0.17,
       "premium": -1.88
     },
     {
       "date": "2025-07-01",
       "nav": 1.7478,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.75,
-      "change": 0.0,
+      "change": -0.62,
       "premium": 0.13
     },
     {
       "date": "2025-06-30",
       "nav": 1.7719,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.761,
-      "change": 0.0,
+      "change": -0.4,
       "premium": -0.62
     },
     {
       "date": "2025-06-27",
       "nav": 1.764,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.768,
-      "change": 0.0,
+      "change": 1.43,
       "premium": 0.23
     },
     {
       "date": "2025-06-26",
       "nav": 1.7699,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.743,
-      "change": 0.0,
+      "change": 0.29,
       "premium": -1.52
     },
     {
       "date": "2025-06-25",
       "nav": 1.7464,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.738,
-      "change": 0.0,
+      "change": 0.7,
       "premium": -0.48
     },
     {
       "date": "2025-06-24",
       "nav": 1.7449,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.726,
-      "change": 0.0,
+      "change": 2.49,
       "premium": -1.08
     },
     {
       "date": "2025-06-23",
       "nav": 1.7095,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.684,
-      "change": 0.0,
+      "change": -0.18,
       "premium": -1.49
     },
     {
       "date": "2025-06-20",
       "nav": 1.6949,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.687,
-      "change": 0.0,
+      "change": 0.54,
       "premium": -0.47
     },
     {
       "date": "2025-06-19",
       "nav": 1.7019,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.678,
-      "change": 0.0,
+      "change": 0.12,
       "premium": -1.4
     },
     {
       "date": "2025-06-18",
       "nav": 1.7027,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.676,
-      "change": 0.0,
+      "change": -0.12,
       "premium": -1.57
     },
     {
       "date": "2025-06-17",
       "nav": 1.679,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.678,
-      "change": 0.0,
+      "change": 0.66,
       "premium": -0.06
     },
     {
       "date": "2025-06-16",
       "nav": 1.6981,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.667,
-      "change": 0.0,
+      "change": 2.08,
       "premium": -1.83
     },
     {
       "date": "2025-06-13",
       "nav": 1.6592,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.633,
-      "change": 0.0,
+      "change": -2.39,
       "premium": -1.58
     },
     {
       "date": "2025-06-12",
       "nav": 1.6786,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.673,
-      "change": 0.0,
+      "change": 0.3,
       "premium": -0.33
     },
     {
       "date": "2025-06-11",
       "nav": 1.6931,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.668,
-      "change": 0.0,
+      "change": 0.91,
       "premium": -1.48
     },
     {
       "date": "2025-06-10",
       "nav": 1.6902,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.653,
-      "change": 0.0,
+      "change": 1.04,
       "premium": -2.2
     },
     {
       "date": "2025-06-09",
       "nav": 1.6748,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.636,
-      "change": 0.0,
+      "change": 2.63,
       "premium": -2.32
     },
     {
       "date": "2025-06-06",
       "nav": 1.6514,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.594,
-      "change": 0.0,
+      "change": -0.69,
       "premium": -3.48
     },
     {
       "date": "2025-06-05",
       "nav": 1.6056,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.605,
-      "change": 0.0,
+      "change": 0.44,
       "premium": -0.04
     },
     {
       "date": "2025-06-04",
       "nav": 1.6251,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.598,
-      "change": 0.0,
+      "change": 1.52,
       "premium": -1.67
     },
     {
       "date": "2025-06-03",
       "nav": 1.6136,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.574,
-      "change": 0.0,
+      "change": -0.38,
       "premium": -2.45
     },
     {
       "date": "2025-05-30",
       "nav": 1.571,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.58,
-      "change": 0.0,
+      "change": -2.71,
       "premium": 0.57
     },
     {
       "date": "2025-05-29",
       "nav": 1.5833,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.624,
-      "change": 0.0,
+      "change": 1.69,
       "premium": 2.57
     },
     {
       "date": "2025-05-28",
       "nav": 1.5846,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.597,
-      "change": 0.0,
+      "change": 0.19,
       "premium": 0.78
     },
     {
       "date": "2025-05-27",
       "nav": 1.6006,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.594,
-      "change": 0.0,
+      "change": 2.05,
       "premium": -0.41
     },
     {
       "date": "2025-05-26",
       "nav": 1.5557,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.562,
-      "change": 0.0,
+      "change": 1.23,
       "premium": 0.4
     },
     {
       "date": "2025-05-23",
       "nav": 1.5577,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.543,
-      "change": 0.0,
+      "change": -0.77,
       "premium": -0.94
     },
     {
       "date": "2025-05-22",
       "nav": 1.566,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.555,
-      "change": 0.0,
+      "change": -1.02,
       "premium": -0.7
     },
     {
       "date": "2025-05-21",
       "nav": 1.5613,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.571,
-      "change": 0.0,
+      "change": -0.44,
       "premium": 0.62
     },
     {
       "date": "2025-05-20",
       "nav": 1.5994,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.578,
-      "change": 0.0,
+      "change": 0.64,
       "premium": -1.34
     },
     {
       "date": "2025-05-19",
       "nav": 1.5984,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.568,
-      "change": 0.0,
+      "change": -0.38,
       "premium": -1.9
     },
     {
       "date": "2025-05-16",
       "nav": 1.61,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.574,
-      "change": 0.0,
+      "change": 0.38,
       "premium": -2.24
     },
     {
       "date": "2025-05-15",
       "nav": 1.5912,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.568,
-      "change": 0.0,
+      "change": -1.07,
       "premium": -1.46
     },
     {
       "date": "2025-05-14",
       "nav": 1.5968,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.585,
-      "change": 0.0,
+      "change": 3.59,
       "premium": -0.74
     },
     {
       "date": "2025-05-13",
       "nav": 1.5988,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.53,
-      "change": 0.0,
+      "change": 1.32,
       "premium": -4.3
     },
     {
       "date": "2025-05-12",
       "nav": 1.5647,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.51,
-      "change": 0.0,
+      "change": 1.68,
       "premium": -3.5
     },
     {
       "date": "2025-05-09",
       "nav": 1.4939,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.485,
-      "change": 0.0,
+      "change": 0.75,
       "premium": -0.6
     },
     {
       "date": "2025-05-08",
       "nav": 1.499,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.474,
-      "change": 0.0,
+      "change": 2.57,
       "premium": -1.67
     },
     {
       "date": "2025-05-07",
       "nav": 1.4671,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.437,
-      "change": 0.0,
+      "change": -0.62,
       "premium": -2.05
     },
     {
       "date": "2025-05-06",
       "nav": 1.451,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.446,
-      "change": 0.0,
+      "change": -0.41,
       "premium": -0.34
     },
     {
       "date": "2025-04-30",
       "nav": 1.4649,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.452,
-      "change": 0.0,
+      "change": -0.27,
       "premium": -0.88
     },
     {
       "date": "2025-04-29",
       "nav": 1.4729,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.456,
-      "change": 0.0,
+      "change": 0.21,
       "premium": -1.15
     },
     {
       "date": "2025-04-28",
       "nav": 1.4699,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.453,
       "change": 0.0,
       "premium": -1.15
@@ -1958,970 +1990,938 @@
     {
       "date": "2025-04-25",
       "nav": 1.4703,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.453,
-      "change": 0.0,
+      "change": 4.83,
       "premium": -1.18
     },
     {
       "date": "2025-04-24",
       "nav": 1.454,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.386,
-      "change": 0.0,
+      "change": -1.35,
       "premium": -4.68
     },
     {
       "date": "2025-04-23",
       "nav": 1.4037,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.405,
-      "change": 0.0,
+      "change": 5.64,
       "premium": 0.09
     },
     {
       "date": "2025-04-22",
       "nav": 1.3628,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.33,
-      "change": 0.0,
+      "change": 0.53,
       "premium": -2.41
     },
     {
       "date": "2025-04-21",
       "nav": 1.3259,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.323,
-      "change": 0.0,
+      "change": -1.42,
       "premium": -0.22
     },
     {
       "date": "2025-04-18",
       "nav": 1.3514,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.342,
-      "change": 0.0,
+      "change": -1.25,
       "premium": -0.7
     },
     {
       "date": "2025-04-17",
       "nav": 1.3518,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.359,
-      "change": 0.0,
+      "change": 0.97,
       "premium": 0.53
     },
     {
       "date": "2025-04-16",
       "nav": 1.3556,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.346,
-      "change": 0.0,
+      "change": -2.32,
       "premium": -0.71
     },
     {
       "date": "2025-04-15",
       "nav": 1.3944,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.378,
-      "change": 0.0,
+      "change": -1.78,
       "premium": -1.18
     },
     {
       "date": "2025-04-14",
       "nav": 1.3902,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.403,
-      "change": 0.0,
+      "change": 1.81,
       "premium": 0.92
     },
     {
       "date": "2025-04-11",
       "nav": 1.3792,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.378,
-      "change": 0.0,
+      "change": -0.51,
       "premium": -0.09
     },
     {
       "date": "2025-04-10",
       "nav": 1.3381,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.385,
-      "change": 0.0,
+      "change": 9.92,
       "premium": 3.5
     },
     {
       "date": "2025-04-09",
       "nav": 1.4104,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.26,
-      "change": 0.0,
+      "change": -3.23,
       "premium": -10.66
     },
     {
       "date": "2025-04-08",
       "nav": 1.2441,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.302,
-      "change": 0.0,
+      "change": 3.66,
       "premium": 4.65
     },
     {
       "date": "2025-04-07",
       "nav": 1.2788,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.256,
-      "change": 0.0,
+      "change": -9.96,
       "premium": -1.78
     },
     {
       "date": "2025-04-03",
       "nav": 1.3503,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.395,
-      "change": 0.0,
+      "change": -3.93,
       "premium": 3.31
     },
     {
       "date": "2025-04-02",
       "nav": 1.4442,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.452,
-      "change": 0.0,
+      "change": 0.07,
       "premium": 0.54
     },
     {
       "date": "2025-04-01",
       "nav": 1.4202,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.451,
-      "change": 0.0,
+      "change": 1.75,
       "premium": 2.17
     },
     {
       "date": "2025-03-31",
       "nav": 1.4198,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.426,
-      "change": 0.0,
+      "change": -4.93,
       "premium": 0.44
     },
     {
       "date": "2025-03-28",
       "nav": 1.438,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.5,
-      "change": 0.0,
+      "change": -0.86,
       "premium": 4.31
     },
     {
       "date": "2025-03-27",
       "nav": 1.4821,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.513,
-      "change": 0.0,
+      "change": -3.01,
       "premium": 2.08
     },
     {
       "date": "2025-03-26",
       "nav": 1.5004,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.56,
-      "change": 0.0,
+      "change": -1.08,
       "premium": 3.97
     },
     {
       "date": "2025-03-25",
       "nav": 1.548,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.577,
-      "change": 0.0,
+      "change": 1.87,
       "premium": 1.87
     },
     {
       "date": "2025-03-24",
       "nav": 1.5529,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.548,
-      "change": 0.0,
+      "change": 2.25,
       "premium": -0.32
     },
     {
       "date": "2025-03-21",
       "nav": 1.5075,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.514,
-      "change": 0.0,
+      "change": -1.17,
       "premium": 0.43
     },
     {
       "date": "2025-03-20",
       "nav": 1.4953,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.532,
-      "change": 0.0,
+      "change": 4.08,
       "premium": 2.45
     },
     {
       "date": "2025-03-19",
       "nav": 1.5028,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.472,
-      "change": 0.0,
+      "change": -1.21,
       "premium": -2.05
     },
     {
       "date": "2025-03-18",
       "nav": 1.4768,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.49,
-      "change": 0.0,
+      "change": 2.12,
       "premium": 0.89
     },
     {
       "date": "2025-03-17",
       "nav": 1.508,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.459,
-      "change": 0.0,
+      "change": 0.9,
       "premium": -3.25
     },
     {
       "date": "2025-03-14",
       "nav": 1.4874,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.446,
-      "change": 0.0,
+      "change": 0.07,
       "premium": -2.78
     },
     {
       "date": "2025-03-13",
       "nav": 1.4415,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.445,
-      "change": 0.0,
+      "change": 0.42,
       "premium": 0.24
     },
     {
       "date": "2025-03-12",
       "nav": 1.4787,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.439,
-      "change": 0.0,
+      "change": 0.28,
       "premium": -2.68
     },
     {
       "date": "2025-03-11",
       "nav": 1.4504,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.435,
-      "change": 0.0,
+      "change": -4.4,
       "premium": -1.06
     },
     {
       "date": "2025-03-10",
       "nav": 1.4461,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.501,
-      "change": 0.0,
+      "change": -0.33,
       "premium": 3.8
     },
     {
       "date": "2025-03-07",
       "nav": 1.527,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.506,
-      "change": 0.0,
+      "change": -2.65,
       "premium": -1.38
     },
     {
       "date": "2025-03-06",
       "nav": 1.5117,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.547,
-      "change": 0.0,
+      "change": 0.19,
       "premium": 2.34
     },
     {
       "date": "2025-03-05",
       "nav": 1.5668,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.544,
-      "change": 0.0,
+      "change": 0.98,
       "premium": -1.46
     },
     {
       "date": "2025-03-04",
       "nav": 1.5365,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.529,
-      "change": 0.0,
+      "change": -3.53,
       "premium": -0.49
     },
     {
       "date": "2025-03-03",
       "nav": 1.5305,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.585,
-      "change": 0.0,
+      "change": 2.86,
       "premium": 3.56
     },
     {
       "date": "2025-02-28",
       "nav": 1.5884,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.541,
-      "change": 0.0,
+      "change": -5.11,
       "premium": -2.98
     },
     {
       "date": "2025-02-27",
       "nav": 1.5713,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.624,
-      "change": 0.0,
+      "change": -0.12,
       "premium": 3.35
     },
     {
       "date": "2025-02-26",
       "nav": 1.6284,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.626,
-      "change": 0.0,
+      "change": -0.79,
       "premium": -0.15
     },
     {
       "date": "2025-02-25",
       "nav": 1.6092,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.639,
-      "change": 0.0,
+      "change": -2.56,
       "premium": 1.85
     },
     {
       "date": "2025-02-24",
       "nav": 1.6553,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.682,
-      "change": 0.0,
+      "change": -2.94,
       "premium": 1.61
     },
     {
       "date": "2025-02-21",
       "nav": 1.685,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.733,
-      "change": 0.0,
+      "change": -0.91,
       "premium": 2.85
     },
     {
       "date": "2025-02-20",
       "nav": 1.7521,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.749,
-      "change": 0.0,
+      "change": -1.19,
       "premium": -0.18
     },
     {
       "date": "2025-02-19",
       "nav": 1.778,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.77,
-      "change": 0.0,
+      "change": -0.45,
       "premium": -0.45
     },
     {
       "date": "2025-02-18",
       "nav": 1.7794,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.778,
-      "change": 0.0,
+      "change": 0.97,
       "premium": -0.08
     },
     {
       "date": "2025-02-17",
       "nav": 1.7716,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.761,
-      "change": 0.0,
+      "change": 2.03,
       "premium": -0.6
     },
     {
       "date": "2025-02-14",
       "nav": 1.7718,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.726,
-      "change": 0.0,
+      "change": 1.65,
       "premium": -2.58
     },
     {
       "date": "2025-02-13",
       "nav": 1.7407,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.698,
-      "change": 0.0,
+      "change": 0.95,
       "premium": -2.45
     },
     {
       "date": "2025-02-12",
       "nav": 1.7081,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.682,
-      "change": 0.0,
+      "change": -0.47,
       "premium": -1.53
     },
     {
       "date": "2025-02-11",
       "nav": 1.6949,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.69,
-      "change": 0.0,
+      "change": -0.76,
       "premium": -0.29
     },
     {
       "date": "2025-02-10",
       "nav": 1.712,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.703,
-      "change": 0.0,
+      "change": -0.53,
       "premium": -0.53
     },
     {
       "date": "2025-02-07",
       "nav": 1.7017,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.712,
-      "change": 0.0,
+      "change": -1.04,
       "premium": 0.61
     },
     {
       "date": "2025-02-06",
       "nav": 1.7145,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.73,
-      "change": 0.0,
+      "change": 2.37,
       "premium": 0.9
     },
     {
       "date": "2025-02-05",
       "nav": 1.7284,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.69,
-      "change": 0.0,
+      "change": -0.53,
       "premium": -2.22
     },
     {
       "date": "2025-01-27",
       "nav": 1.6665,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.699,
-      "change": 0.0,
+      "change": -2.24,
       "premium": 1.95
     },
     {
       "date": "2025-01-24",
       "nav": 1.7309,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.738,
-      "change": 0.0,
+      "change": 0.99,
       "premium": 0.41
     },
     {
       "date": "2025-01-23",
       "nav": 1.7457,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.721,
-      "change": 0.0,
+      "change": -0.98,
       "premium": -1.41
     },
     {
       "date": "2025-01-22",
       "nav": 1.7353,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.738,
-      "change": 0.0,
+      "change": 1.52,
       "premium": 0.16
     },
     {
       "date": "2025-01-21",
       "nav": 1.7075,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.712,
-      "change": 0.0,
+      "change": -0.64,
       "premium": 0.26
     },
     {
       "date": "2025-01-20",
       "nav": 1.6657,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.723,
-      "change": 0.0,
+      "change": 1.06,
       "premium": 3.44
     },
     {
       "date": "2025-01-17",
       "nav": 1.6659,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.705,
-      "change": 0.0,
+      "change": 0.06,
       "premium": 2.35
     },
     {
       "date": "2025-01-16",
       "nav": 1.6471,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.704,
-      "change": 0.0,
+      "change": 2.96,
       "premium": 3.45
     },
     {
       "date": "2025-01-15",
       "nav": 1.6484,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.655,
-      "change": 0.0,
+      "change": -0.84,
       "premium": 0.4
     },
     {
       "date": "2025-01-14",
       "nav": 1.606,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.669,
-      "change": 0.0,
+      "change": 1.21,
       "premium": 3.92
     },
     {
       "date": "2025-01-13",
       "nav": 1.6132,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.649,
-      "change": 0.0,
+      "change": -2.83,
       "premium": 2.22
     },
     {
       "date": "2025-01-10",
       "nav": 1.627,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.697,
-      "change": 0.0,
+      "change": -0.24,
       "premium": 4.3
     },
     {
       "date": "2025-01-09",
       "nav": 1.6634,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.701,
-      "change": 0.0,
+      "change": -0.29,
       "premium": 2.26
     },
     {
       "date": "2025-01-08",
       "nav": 1.6635,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.706,
-      "change": 0.0,
+      "change": -1.16,
       "premium": 2.55
     },
     {
       "date": "2025-01-07",
       "nav": 1.6678,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.726,
-      "change": 0.0,
+      "change": -0.98,
       "premium": 3.49
     },
     {
       "date": "2025-01-06",
       "nav": 1.7042,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.743,
-      "change": 0.0,
+      "change": 4.06,
       "premium": 2.28
     },
     {
       "date": "2025-01-03",
       "nav": 1.6755,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.675,
-      "change": 0.0,
+      "change": -0.71,
       "premium": -0.03
     },
     {
       "date": "2025-01-02",
       "nav": 1.6231,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.687,
-      "change": 0.0,
+      "change": 1.75,
       "premium": 3.94
     },
     {
       "date": "2024-12-31",
       "nav": 1.6117,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.658,
-      "change": 0.0,
+      "change": -1.25,
       "premium": 2.87
     },
     {
       "date": "2024-12-30",
       "nav": 1.6268,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.679,
-      "change": 0.0,
+      "change": -2.21,
       "premium": 3.21
     },
     {
       "date": "2024-12-27",
       "nav": 1.6584,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.717,
-      "change": 0.0,
+      "change": -0.98,
       "premium": 3.53
     },
     {
       "date": "2024-12-26",
       "nav": 1.6841,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.734,
-      "change": 0.0,
+      "change": 1.7,
       "premium": 2.96
     },
     {
       "date": "2024-12-25",
       "nav": 1.6809,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.705,
-      "change": 0.0,
+      "change": 2.71,
       "premium": 1.43
     },
     {
       "date": "2024-12-24",
       "nav": 1.6811,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.66,
-      "change": 0.0,
+      "change": -0.84,
       "premium": -1.26
     },
     {
       "date": "2024-12-23",
       "nav": 1.6522,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.674,
-      "change": 0.0,
+      "change": 3.08,
       "premium": 1.32
     },
     {
       "date": "2024-12-20",
       "nav": 1.6497,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.624,
-      "change": 0.0,
+      "change": -2.7,
       "premium": -1.56
     },
     {
       "date": "2024-12-19",
       "nav": 1.6236,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.669,
-      "change": 0.0,
+      "change": -5.12,
       "premium": 2.8
     },
     {
       "date": "2024-12-18",
       "nav": 1.633,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.759,
-      "change": 0.0,
+      "change": 0.23,
       "premium": 7.72
     },
     {
       "date": "2024-12-17",
       "nav": 1.7285,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.755,
-      "change": 0.0,
+      "change": 1.68,
       "premium": 1.53
     },
     {
       "date": "2024-12-16",
       "nav": 1.7355,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.726,
-      "change": 0.0,
+      "change": 0.41,
       "premium": -0.55
     },
     {
       "date": "2024-12-13",
       "nav": 1.7034,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.719,
-      "change": 0.0,
+      "change": -0.29,
       "premium": 0.92
     },
     {
       "date": "2024-12-12",
       "nav": 1.6985,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.724,
-      "change": 0.0,
+      "change": 0.41,
       "premium": 1.5
     },
     {
       "date": "2024-12-11",
       "nav": 1.7168,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.717,
-      "change": 0.0,
+      "change": -0.75,
       "premium": 0.01
     },
     {
       "date": "2024-12-10",
       "nav": 1.6912,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.73,
-      "change": 0.0,
+      "change": -2.09,
       "premium": 2.29
     },
     {
       "date": "2024-12-09",
       "nav": 1.709,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.767,
-      "change": 0.0,
+      "change": 3.39,
       "premium": 3.39
     },
     {
       "date": "2024-12-06",
       "nav": 1.7378,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.709,
-      "change": 0.0,
+      "change": -1.33,
       "premium": -1.66
     },
     {
       "date": "2024-12-05",
       "nav": 1.696,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.732,
-      "change": 0.0,
+      "change": 2.97,
       "premium": 2.12
     },
     {
       "date": "2024-12-04",
       "nav": 1.7112,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.682,
-      "change": 0.0,
+      "change": -0.71,
       "premium": -1.71
     },
     {
       "date": "2024-12-03",
       "nav": 1.6781,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.694,
-      "change": 0.0,
+      "change": 1.19,
       "premium": 0.95
     },
     {
       "date": "2024-12-02",
       "nav": 1.6815,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.674,
-      "change": 0.0,
+      "change": 0.9,
       "premium": -0.45
     },
     {
       "date": "2024-11-29",
       "nav": 1.6597,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.659,
-      "change": 0.0,
+      "change": -0.06,
       "premium": -0.04
     },
     {
       "date": "2024-11-28",
       "nav": 1.6458,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.66,
-      "change": 0.0,
+      "change": 1.03,
       "premium": 0.86
     },
     {
       "date": "2024-11-27",
       "nav": 1.6485,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.643,
-      "change": 0.0,
+      "change": -0.6,
       "premium": -0.33
     },
     {
       "date": "2024-11-26",
       "nav": 1.6344,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.653,
-      "change": 0.0,
+      "change": -0.12,
       "premium": 1.14
     },
     {
       "date": "2024-11-25",
       "nav": 1.6487,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.655,
-      "change": 0.0,
+      "change": 2.8,
       "premium": 0.38
     },
     {
       "date": "2024-11-22",
       "nav": 1.6334,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.61,
-      "change": 0.0,
+      "change": 0.44,
       "premium": -1.43
     },
     {
       "date": "2024-11-21",
       "nav": 1.6115,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.603,
-      "change": 0.0,
+      "change": -0.8,
       "premium": -0.53
     },
     {
       "date": "2024-11-20",
       "nav": 1.6071,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.616,
-      "change": 0.0,
+      "change": 0.25,
       "premium": 0.55
     },
     {
       "date": "2024-11-19",
       "nav": 1.6129,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.612,
-      "change": 0.0,
+      "change": -0.62,
       "premium": -0.06
     },
     {
       "date": "2024-11-18",
       "nav": 1.5931,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.622,
-      "change": 0.0,
+      "change": 2.98,
       "premium": 1.81
     },
     {
       "date": "2024-11-15",
       "nav": 1.57,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.575,
-      "change": 0.0,
+      "change": -3.9,
       "premium": 0.32
     },
     {
       "date": "2024-11-14",
       "nav": 1.5875,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.639,
-      "change": 0.0,
+      "change": -1.21,
       "premium": 3.24
     },
     {
       "date": "2024-11-13",
       "nav": 1.6224,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.659,
-      "change": 0.0,
+      "change": -3.71,
       "premium": 2.26
     },
     {
       "date": "2024-11-12",
       "nav": 1.6348,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.723,
-      "change": 0.0,
+      "change": 5.77,
       "premium": 5.4
     },
     {
       "date": "2024-11-11",
       "nav": 1.6389,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.629,
-      "change": 0.0,
+      "change": 6.89,
       "premium": -0.6
     },
     {
       "date": "2024-11-08",
       "nav": 1.5647,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.524,
-      "change": 0.0,
+      "change": 0.46,
       "premium": -2.6
     },
     {
       "date": "2024-11-07",
       "nav": 1.5479,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.517,
-      "change": 0.0,
+      "change": 3.13,
       "premium": -2.0
     },
     {
       "date": "2024-11-06",
       "nav": 1.5176,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.471,
-      "change": 0.0,
+      "change": 5.37,
       "premium": -3.07
     },
     {
       "date": "2024-11-05",
       "nav": 1.4389,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.396,
-      "change": 0.0,
+      "change": -0.5,
       "premium": -2.98
     },
     {
       "date": "2024-11-04",
       "nav": 1.4086,
-      "valuation": 2.1486,
+      "valuation": 2.2219,
       "price": 1.403,
-      "change": 0.0,
+      "change": 0,
       "premium": -0.4
-    },
-    {
-      "date": "2024-11-01",
-      "nav": 1.4098,
-      "valuation": 2.1486,
-      "price": 1.393,
-      "change": 0.0,
-      "premium": -1.19
-    },
-    {
-      "date": "2024-10-31",
-      "nav": 1.3971,
-      "valuation": 2.1486,
-      "price": 1.423,
-      "change": 0.0,
-      "premium": 1.85
-    },
-    {
-      "date": "2024-10-30",
-      "nav": 1.4525,
-      "valuation": 2.1486,
-      "price": 1.45,
-      "change": 0.0,
-      "premium": -0.17
-    },
-    {
-      "date": "2024-10-29",
-      "nav": 1.4581,
-      "valuation": 2.1486,
-      "price": 1.442,
-      "change": 0.0,
-      "premium": -1.1
     }
   ]
 }

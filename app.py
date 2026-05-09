@@ -148,7 +148,7 @@ def get_market_price(code):
         code: 基金代码, 以1开头为深市, 5开头为沪市
     
     Returns:
-        float: 当前交易价格, 获取失败返回0
+        dict: 包含price和change_percent字段, 获取失败返回{'price': 0, 'change_percent': 0}
     """
     import re
     market = 'sz' if code.startswith('1') else 'sh'
@@ -183,7 +183,7 @@ def get_market_price(code):
                     current_price = float(fields[3]) if fields[3] else 0
                     change_percent = float(fields[32]) if fields[32] else 0
                     logger.info(f"[SUCCESS] 基金{code} - 当前价:{current_price}, 涨跌幅:{change_percent}%")
-                    return current_price if current_price > 0 else 0
+                    return {'price': current_price if current_price > 0 else 0, 'change_percent': change_percent}
                 else:
                     logger.warning(f"[WARNING] 基金{code} - 字段数量不足: {len(fields)}")
             else:
@@ -195,7 +195,7 @@ def get_market_price(code):
         elapsed = round((time.time() - start_time) * 1000, 2)
         logger.error(f"[ERROR] 基金{code} - 请求失败: {str(e)}, 耗时: {elapsed}ms")
         
-    return 0
+    return {'price': 0, 'change_percent': 0}
 
 def fetch_fund_data(code):
     """
@@ -216,16 +216,16 @@ def fetch_fund_data(code):
     
     # 获取实时数据
     realtime = get_fund_realtime(code)
-    market_price = get_market_price(code)
+    market_price_data = get_market_price(code)
     
     data = {
         'realtime': realtime,
-        'market_price': market_price,
+        'market_price': market_price_data,
         'time': now
     }
     
     # 有数据才缓存
-    if realtime or market_price > 0:
+    if realtime or market_price_data.get('price', 0) > 0:
         CACHE[cache_key] = data
     
     return data
@@ -335,13 +335,14 @@ def format_fund_data(funds):
 
         fund_data = fund_data_map.get(code, {})
         realtime = fund_data.get('realtime')
-        market_price = fund_data.get('market_price', 0)
+        market_price_data = fund_data.get('market_price', {})
 
         nav = realtime.get('nav', 0) if realtime else 0
         valuation = realtime.get('valuation', 0) if realtime else 0
         change = realtime.get('change', '') if realtime else ''
 
-        price = market_price if market_price > 0 else 0
+        price = market_price_data.get('price', 0)
+        change_percent = market_price_data.get('change_percent', 0)
 
 
         premium = ((price - nav) / nav * 100) if nav > 0 and price > 0 else 0
@@ -353,6 +354,7 @@ def format_fund_data(funds):
             'name': f.get('name', ''),
             'price': price if price > 0 else '',
             'change': change,
+            'change_percent': change_percent if change_percent != 0 else '',
             'premium': round(premium, 2) if premium else '',
             'nav': nav if nav > 0 else '',
             'space': round(premium, 1) if premium else '',

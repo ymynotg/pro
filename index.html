@@ -958,7 +958,7 @@
 
             let html = '';
             data.forEach(item => {
-                const change = parseFloat(item.change) || 0;
+                const change = item.change_percent !== null && item.change_percent !== undefined && item.change_percent !== '' ? parseFloat(item.change_percent) : null;
                 const changeClass = change > 0 ? 'up' : change < 0 ? 'down' : '';
                 const changeSign = change > 0 ? '+' : '';
                 const premium = parseFloat(item.premium) || 0;
@@ -979,7 +979,7 @@
                         <td><a href="javascript:void(0)" class="code-link" data-code="${item.code}" onclick="showHistory('${item.code}')">${item.code}</a></td>
                         <td title="${item.name}">${item.name}</td>
                         <td class="price ${changeClass}">${formatValue(item.price, 4)}</td>
-                        <td><span class="change ${changeClass}">${changeSign}${formatValue(change)}%</span></td>
+                        <td><span class="change ${changeClass}">${change !== null ? changeSign + formatValue(change) + '%' : '-'}</span></td>
                         <td>${formatValue(item.nav, 4)}</td>
                         <td class="premium ${premiumClass}">${premiumSign}${formatValue(premium)}%</td>
                         <td>${formatValue(item.valuation, 4)}</td>
@@ -1010,7 +1010,7 @@
                         <td><a href="javascript:void(0)" class="code-link" data-code="${item.code}" onclick="showHistory('${item.code}')">${item.code}</a></td>
                         <td title="${item.name}">${item.name}</td>
                         <td class="price ${changeClass}">${formatValue(item.price, 4)}</td>
-                        <td><span class="change ${changeClass}">${changeSign}${formatValue(change)}%</span></td>
+                        <td><span class="change ${changeClass}">${change !== null ? changeSign + formatValue(change) + '%' : '-'}</span></td>
                         <td>${formatValue(item.nav, 4)}</td>
                         <td class="premium ${premiumClass}">${premiumSign}${formatValue(premium)}%</td>
                         <td>${formatValue(item.valuation, 4)}</td>
@@ -1023,7 +1023,7 @@
                         <td>${item.code}</td>
                         <td>${item.name}</td>
                         <td class="price ${changeClass}">${formatValue(item.price, 4)}</td>
-                        <td><span class="change ${changeClass}">${changeSign}${formatValue(change)}%</span></td>
+                        <td><span class="change ${changeClass}">${change !== null ? changeSign + formatValue(change) + '%' : '-'}</span></td>
                         <td>${formatValue(item.iopv, 4)}</td>
                         <td class="premium ${premiumClass}">${premiumSign}${formatValue(premium)}%</td>
                         <td class="premium ${premiumClass}">${formatValue(item.space, 1)}%</td>

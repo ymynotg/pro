@@ -2160,18 +2160,11 @@
     },
     {
       "code": "160719",
-      "name": "嘉实原油LOF",
+      "name": "嘉实黄金OF",
       "type": "QDII_LOF",
       "source": "user_provided",
       "update_time": "2026-04-21 22:40:00"
-    },
-    {
-      "code": "160719",
-      "name": "嘉实黄金",
-      "type": "QDII",
-      "source": "eastmoney/rankhandler",
-      "update_time": "2026-04-21 23:16:28"
-    },
+    },    
     {
       "code": "160722",
       "name": "嘉实恒生科技LOF",
@@ -2227,14 +2220,7 @@
       "type": "QDII_LOF",
       "source": "user_provided",
       "update_time": "2026-04-21 22:40:00"
-    },
-    {
-      "code": "161116",
-      "name": "易方达黄金主题人民币A",
-      "type": "QDII",
-      "source": "eastmoney/rankhandler",
-      "update_time": "2026-04-21 23:16:28"
-    },
+    },    
     {
       "code": "161125",
       "name": "标普500LOF",
@@ -2269,14 +2255,7 @@
       "type": "QDII_LOF",
       "source": "user_provided",
       "update_time": "2026-04-21 22:40:00"
-    },
-    {
-      "code": "161129",
-      "name": "易方达原油A类人民币",
-      "type": "QDII",
-      "source": "eastmoney/rankhandler",
-      "update_time": "2026-04-21 23:16:28"
-    },
+    },    
     {
       "code": "161130",
       "name": "纳指生物LOF",
@@ -2461,17 +2440,10 @@
     },
     {
       "code": "163208",
-      "name": "华安标普石油LOF",
+      "name": "全球油气能源LOF",
       "type": "QDII_LOF",
       "source": "user_provided",
       "update_time": "2026-04-21 22:40:00"
-    },
-    {
-      "code": "163208",
-      "name": "诺安油气能源",
-      "type": "QDII",
-      "source": "eastmoney/rankhandler",
-      "update_time": "2026-04-21 23:16:28"
     },
     {
       "code": "163209",
@@ -2916,17 +2888,10 @@
     },
     {
       "code": "501018",
-      "name": "华夏标普消费QDII",
+      "name": "南方原油lof",
       "type": "QDII_LOF",
       "source": "user_provided",
       "update_time": "2026-04-21 22:40:00"
-    },
-    {
-      "code": "501018",
-      "name": "南方原油A",
-      "type": "QDII",
-      "source": "eastmoney/rankhandler",
-      "update_time": "2026-04-21 23:16:28"
     },
     {
       "code": "501021",

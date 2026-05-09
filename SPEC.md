@@ -54,7 +54,26 @@
 - RESTful API接口
 - 日志管理（支持级别配置）
 
-### 3.3 数据获取脚本
+### 3.3 API接口说明
+- **GET /api/lof**: 返回 LOF 基金列表数据
+  - `code`: 基金代码
+  - `name`: 基金名称
+  - `price`: 场内交易当前价格
+  - `nav`: 基金单位净值（NET ASSET VALUE）
+  - `valuation`: 估算价 / 场外估值（与 `price` 同源）
+  - `change`: 基金净值涨跌幅，来自天天基金返回的 `gszzl`
+  - `change_percent`: 场内交易价格涨跌幅，来自天天基金返回的 `gsz` 估算价
+  - `premium`: 价格相对净值的溢价率
+  - `valPremium`: 价格相对估值的溢价率
+  - `space`: 溢价率简化显示
+  - QDII_LOF 还包含 `subscribe_status`、`redeem_status`
+- **GET /api/qdii**: 返回 QDII 基金列表数据，字段结构与 `/api/lof` 类似
+- **GET /api/history/<code>**: 返回单只基金历史数据，来源于 `fund_history/{code}.json`
+
+> 注意：`get_fund_realtime()` 使用天天基金 `fundgz.1234567.com.cn` 接口获取实时数据。
+> 返回结果中的 `jzrq` 是当前净值日期，`gztime` 是估算价更新时间。当前系统若显示 5 月 7 日净值，说明数据源当时只提供该日期的正式 NAV。
+
+### 3.4 数据获取脚本
 - 多数据源fallback机制
 - 日志记录（记录每次调用的接口来源）
 - 配置文件备份

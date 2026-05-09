@@ -8,6 +8,10 @@ env/
 venv/
 ENV/
 
+# Test scripts
+tes.py
+test.py
+
 # Logs
 logs/
 *.log

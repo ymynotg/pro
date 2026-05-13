@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 测试方案1：增加净值数据获取量，验证日期匹配
+测试方案2：pytdx 获取 LOF 历史估值数据验证
 """
 import requests
 import re
@@ -212,3 +213,73 @@ if __name__ == '__main__':
     print(f"\n{'='*80}")
     print("验证完成")
     print(f"{'='*80}")
+
+# ============================================================
+# 测试方案2：pytdx 获取 LOF 历史估值数据
+# ============================================================
+def test_pytdx():
+    """验证 pytdx 能否获取 LOF 基金历史估值（净值）数据"""
+    print(f"\n{'='*80}")
+    print("测试方案2: pytdx LOF 历史估值数据")
+    print(f"{'='*80}")
+    
+    from pytdx.hq import TdxHq_API
+    from pytdx.params import TDXParams
+    
+    api = TdxHq_API()
+    try:
+        ok = api.connect('180.153.18.170', 7709)
+        if not ok:
+            print("连接失败")
+            return
+        print("通达信行情服务器连接成功\n")
+        
+        # 1. 获取 LOF 日K线（场内交易价格）
+        codes = [
+            ('162411', 0, '华宝油气'),
+            ('160632', 0, '鹏华酒'),
+            ('501018', 1, '南方原油'),
+            ('164705', 0, '添富恒生'),
+        ]
+        
+        print("1. 日K线数据（交易价格）:")
+        for code, market, name in codes:
+            data = api.get_security_bars(
+                category=TDXParams.KLINE_TYPE_DAILY,
+                market=market, code=code, start=0, count=3
+            )
+            if data:
+                for bar in data:
+                    dt = bar.get('datetime', '')
+                    close = bar.get('close', 0)
+                    print(f"  {name}({code}): {dt} 收盘={close}")
+            else:
+                print(f"  {name}({code}): 无K线数据")
+        
+        # 2. 获取财务信息（含最新每股净资产 = 净值）
+        print("\n2. 财务信息（最新每股净资产）:")
+        for code, market, name in codes:
+            info = api.get_finance_info(market, code)
+            nav = info.get('meigujingzichan', 0) if info else 0
+            date = info.get('updated_date', 0) if info else 0
+            print(f"  {name}({code}): 每股净资产={nav} (更新日期={date})")
+        
+        # 3. 结论
+        print("\n=== 结论 ===")
+        print("pytdx 可获取: LOF 场内交易日K线（开高低收量额）+ 最新每股净资产")
+        print("pytdx 不可获取: 历史净值数据（仅有最新值，无历史序列）")
+        print("历史净值仍需通过东方财富 API (api.fund.eastmoney.com/f10/lsjz) 获取")
+        
+        api.disconnect()
+    except Exception as e:
+        print(f"异常: {e}")
+
+if __name__ == '__main__':
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == 'pytdx':
+        test_pytdx()
+    else:
+        # 默认运行方案1
+        test_date_matching('162411')
+        test_date_matching('501018')
+        test_date_matching('160105')

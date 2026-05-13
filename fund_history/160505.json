@@ -1,8 +1,24 @@
 {
   "code": "160505",
-  "days": 365,
-  "update_time": "2026-05-09 20:14:20",
+  "days": 367,
+  "update_time": "2026-05-12 20:04:17",
   "history": [
+    {
+      "date": "2026-05-12",
+      "nav": 1.331,
+      "valuation": 1.3293,
+      "price": 1.321,
+      "change": -0.68,
+      "premium": -0.75
+    },
+    {
+      "date": "2026-05-08",
+      "nav": "",
+      "valuation": 1.3345,
+      "price": 1.33,
+      "change": 0.0,
+      "premium": ""
+    },
     {
       "date": "2026-05-08",
       "nav": 1.328,

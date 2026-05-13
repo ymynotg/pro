@@ -1,8 +1,10 @@
+#!/usr/bin/env python3
 # 跨境套利系统后端
-# 安装依赖: pip install flask flask-cors requests
-# 运行: python app.py
+# 安装依赖: pip install -r requirements.txt
+# 运行: python3 app.py
 
 import os
+import sys
 import json
 import requests
 import time
@@ -39,8 +41,12 @@ console_handler.setFormatter(console_formatter)
 logger.addHandler(console_handler)
 
 # 缓存配置
-CACHE = {}                    # 基金实时数据缓存
-CACHE_EXPIRE = 300            # 缓存有效期(秒), 5分钟
+CACHE = {}                    # 市场数据缓存(场内价格/估值)
+CACHE_EXPIRE = 300            # 市场数据缓存有效期(秒), 5分钟
+NAV_CACHE = {}                # 净值缓存(实时净值)
+NAV_CACHE_EXPIRE = 28800      # 净值缓存有效期(秒), 8小时
+STATUS_CACHE = {}             # 申购/赎回/限额状态缓存
+STATUS_CACHE_EXPIRE = 28800   # 状态缓存有效期(秒), 8小时
 HISTORY_CACHE = {}            # 历史数据内存缓存
 HISTORY_LOCK = threading.Lock() # 历史缓存线程锁
 
@@ -55,12 +61,6 @@ BASE_DIR = os.path.dirname(__file__)
 LOF_CONFIG = os.path.join(BASE_DIR, 'lof_config.json')
 QDII_CONFIG = os.path.join(BASE_DIR, 'qdii_config.json')
 FUND_HISTORY_DIR = os.path.join(BASE_DIR, 'fund_history')
-
-# 缓存配置
-CACHE = {}                    # 基金实时数据缓存
-CACHE_EXPIRE = 300            # 缓存有效期(秒), 5分钟
-HISTORY_CACHE = {}            # 历史数据内存缓存
-HISTORY_LOCK = threading.Lock() # 历史缓存线程锁
 
 # 并发控制: 20个工作线程
 EXECUTOR = ThreadPoolExecutor(max_workers=20)
@@ -200,6 +200,7 @@ def get_market_price(code):
 def fetch_fund_data(code):
     """
     获取单只基金完整数据(带缓存)
+    净值缓存8小时, 场内价格/估值缓存300秒
     
     Args:
         code: 基金代码
@@ -208,31 +209,54 @@ def fetch_fund_data(code):
         dict: 包含realtime/market_price/time
     """
     cache_key = f'fund_{code}'
+    nav_cache_key = f'nav_{code}'
     now = time.time()
     
-    # 检查缓存, 未过期直接返回
-    if cache_key in CACHE and now - CACHE[cache_key].get('time', 0) < CACHE_EXPIRE:
-        return CACHE[cache_key]
+    nav_cached = nav_cache_key in NAV_CACHE and now - NAV_CACHE[nav_cache_key].get('time', 0) < NAV_CACHE_EXPIRE
+    market_cached = cache_key in CACHE and now - CACHE[cache_key].get('time', 0) < CACHE_EXPIRE
     
-    # 获取实时数据
+    if nav_cached and market_cached:
+        nav_entry = NAV_CACHE[nav_cache_key]
+        market_entry = CACHE[cache_key]
+        realtime = {
+            'nav': nav_entry.get('nav', 0),
+            'valuation': market_entry.get('valuation', 0),
+            'change': market_entry.get('change', ''),
+            'update_time': nav_entry.get('update_time', ''),
+        }
+        return {
+            'realtime': realtime,
+            'market_price': market_entry.get('market_price', {}),
+            'time': now
+        }
+    
     realtime = get_fund_realtime(code)
     market_price_data = get_market_price(code)
     
-    data = {
-        'realtime': realtime,
-        'market_price': market_price_data,
+    if realtime:
+        NAV_CACHE[nav_cache_key] = {
+            'nav': realtime.get('nav', 0),
+            'update_time': realtime.get('update_time', ''),
+            'time': now
+        }
+    
+    if realtime or market_price_data.get('price', 0) > 0:
+        CACHE[cache_key] = {
+            'valuation': realtime.get('valuation', 0) if realtime else 0,
+            'change': realtime.get('change', '') if realtime else '',
+            'market_price': market_price_data,
+            'time': now
+        }
+    
+    return {
+        'realtime': realtime if realtime else {'nav': 0, 'valuation': 0, 'change': '', 'update_time': ''},
+        'market_price': market_price_data if market_price_data else {'price': 0, 'change_percent': 0},
         'time': now
     }
-    
-    # 有数据才缓存
-    if realtime or market_price_data.get('price', 0) > 0:
-        CACHE[cache_key] = data
-    
-    return data
 
 def get_fund_status(code):
     """
-    获取基金申购/赎回状态（天天基金基本信息页面）
+    获取基金申购/赎回状态（天天基金基本信息页面，带缓存）
     
     Args:
         code: 基金代码
@@ -240,6 +264,14 @@ def get_fund_status(code):
     Returns:
         dict: 包含subscribe_status/redeem_status/limit_amount
     """
+    cache_key = f'status_{code}'
+    now = time.time()
+    
+    # 检查缓存, 未过期直接返回
+    if cache_key in STATUS_CACHE and now - STATUS_CACHE[cache_key].get('time', 0) < STATUS_CACHE_EXPIRE:
+        logger.debug(f"[CACHE] 基金{code} - 命中状态缓存")
+        return STATUS_CACHE[cache_key]
+    
     url = f'https://fundf10.eastmoney.com/jbgk_{code}.html'
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
@@ -283,8 +315,10 @@ def get_fund_status(code):
             result = {
                 'subscribe_status': subscribe_status,
                 'redeem_status': redeem_status,
-                'limit_amount': limit_amount
+                'limit_amount': limit_amount,
+                'time': now
             }
+            STATUS_CACHE[cache_key] = result
             logger.info(f"[SUCCESS] 基金{code} - 申购:{subscribe_status}, 赎回:{redeem_status}, 限额:{limit_amount}")
             return result
         else:
@@ -344,8 +378,10 @@ def format_fund_data(funds):
         price = market_price_data.get('price', 0)
         change_percent = market_price_data.get('change_percent', 0)
 
+        # 场内交易价不可用时，用估值作为有效价格代理（用于计算折溢价）
+        effective_price = price if price > 0 else (valuation if valuation > 0 else 0)
 
-        premium = ((price - nav) / nav * 100) if nav > 0 and price > 0 else 0
+        premium = ((effective_price - nav) / nav * 100) if nav > 0 and effective_price > 0 else 0
 
         valPremium = ((price - valuation) / valuation * 100) if valuation > 0 and price > 0 else 0
         
@@ -451,9 +487,11 @@ def api_qdii():
 
 @app.route('/api/refresh', methods=['POST'])
 def api_refresh():
-    """清空实时数据缓存, 强制重新获取"""
-    global CACHE
+    """清空所有缓存, 强制重新获取"""
+    global CACHE, NAV_CACHE, STATUS_CACHE
     CACHE = {}
+    NAV_CACHE = {}
+    STATUS_CACHE = {}
     return jsonify({
         'success': True,
         'message': 'Cache cleared',
@@ -610,6 +648,53 @@ def api_history_refresh():
         'timestamp': datetime.datetime.now().isoformat()
     })
 
+@app.route('/api/history/generate/<code>', methods=['POST'])
+def api_history_generate(code):
+    """
+    调用 generate_fund_history.py 重新生成基金历史数据（默认2000天）
+    完成后清除该基金的内存缓存
+    """
+    import subprocess
+    script_path = os.path.join(os.path.dirname(__file__), 'scripts', 'generate_fund_history.py')
+    try:
+        logger.info(f"开始重新生成 {code} 历史数据(2000天)...")
+        result = subprocess.run(
+            [sys.executable, script_path, code, '--days', '2000'],
+            capture_output=True, text=True, timeout=120
+        )
+        if result.returncode == 0:
+            with HISTORY_LOCK:
+                HISTORY_CACHE.pop(code, None)
+            logger.info(f"{code} 历史数据生成成功")
+            return jsonify({
+                'success': True,
+                'message': f'{code} 历史数据已重新生成',
+                'output': result.stdout.strip(),
+                'timestamp': datetime.datetime.now().isoformat()
+            })
+        else:
+            logger.warning(f"{code} 历史数据生成失败: {result.stderr}")
+            return jsonify({
+                'success': False,
+                'message': '脚本执行失败',
+                'error': result.stderr.strip(),
+                'timestamp': datetime.datetime.now().isoformat()
+            }), 500
+    except subprocess.TimeoutExpired:
+        logger.warning(f"{code} 历史数据生成超时")
+        return jsonify({
+            'success': False,
+            'message': '生成超时',
+            'timestamp': datetime.datetime.now().isoformat()
+        }), 504
+    except Exception as e:
+        logger.error(f"{code} 历史数据生成异常: {e}")
+        return jsonify({
+            'success': False,
+            'message': str(e),
+            'timestamp': datetime.datetime.now().isoformat()
+        }), 500
+
 @app.route('/api/stats')
 def api_stats():
     """获取统计信息(模拟数据)"""
@@ -660,15 +745,101 @@ def preload_funds():
     
     threading.Thread(target=_preload, daemon=True).start()
 
+def check_port_in_use(port, host='0.0.0.0'):
+    """检测端口是否已被占用"""
+    import socket
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        try:
+            s.bind((host, port))
+            return False
+        except OSError:
+            return True
+
+def find_pid_on_port(port):
+    """查找占用端口的进程PID"""
+    try:
+        import psutil
+        for conn in psutil.net_connections():
+            if conn.laddr and conn.laddr.port == port and conn.pid:
+                return conn.pid
+    except ImportError:
+        import subprocess
+        try:
+            result = subprocess.run(
+                ['lsof', '-ti', f':{port}'],
+                capture_output=True, text=True, timeout=5
+            )
+            if result.stdout.strip():
+                return int(result.stdout.strip().split('\n')[0])
+        except Exception:
+            pass
+    return None
+
+def is_ancestor(pid):
+    """判断 pid 是否为当前进程的祖先进程（含自身）"""
+    import os
+    current = os.getpid()
+    if pid == current:
+        return True
+    try:
+        import psutil
+        current_proc = psutil.Process(current)
+        for parent in current_proc.parents():
+            if parent.pid == pid:
+                return True
+    except ImportError:
+        pass
+    return False
+
+def kill_process_on_port(port):
+    """强制关闭占用端口的非自身/非祖先进程"""
+    import signal
+    conflict_pid = find_pid_on_port(port)
+    if conflict_pid is None:
+        return False
+
+    if is_ancestor(conflict_pid):
+        logger.info(f'端口 {port} 由祖先进程 PID={conflict_pid} 持有，等待其释放...')
+        return False
+
+    try:
+        import psutil
+        proc = psutil.Process(conflict_pid)
+        logger.warning(f"强制关闭进程 PID={conflict_pid} ({proc.name()})，释放端口 {port}")
+        proc.send_signal(signal.SIGKILL)
+        return True
+    except ImportError:
+        import subprocess
+        try:
+            result = subprocess.run(
+                ['fuser', '-k', f'{port}/tcp'],
+                capture_output=True, timeout=5
+            )
+            return result.returncode == 0
+        except Exception:
+            pass
+    return False
+
 if __name__ == '__main__':
-    # 日志已在文件开头配置，此处只需记录启动信息
     logger.info('=' * 50)
     logger.info('启动套利系统服务')
     logger.info('=' * 50)
-    
-    # 启动后台预加载任务
-    preload_history()
-    preload_funds()
+
+    # 检测端口冲突并自动清理（仅在非热重载子进程时执行）
+    if not os.environ.get('WERKZEUG_RUN_MAIN'):
+        if check_port_in_use(4000):
+            logger.warning(f'端口 4000 已被占用，尝试自动释放...')
+            if kill_process_on_port(4000):
+                time.sleep(1)
+            else:
+                logger.error(f'端口 4000 被占用且无法自动释放，请手动关闭: kill -9 $(lsof -ti:4000)')
+                logger.error(f'或使用脚本启动: bash scripts/start_app.sh')
+                exit(1)
+
+    # 启动后台预加载任务（仅在非热重载子进程时执行）
+    if not os.environ.get('WERKZEUG_RUN_MAIN'):
+        preload_history()
+        preload_funds()
     
     logger.info(f'服务地址: http://0.0.0.0:4000')
     logger.info(f'LOF配置: {LOF_CONFIG}')

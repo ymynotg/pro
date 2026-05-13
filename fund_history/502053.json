@@ -1,8 +1,40 @@
 {
   "code": "502053",
-  "days": 365,
-  "update_time": "2026-05-09 20:29:59",
+  "days": 369,
+  "update_time": "2026-05-12 20:02:25",
   "history": [
+    {
+      "date": "2026-05-12",
+      "nav": 1.0949,
+      "valuation": 1.0952,
+      "price": 1.09,
+      "change": 1.58,
+      "premium": -0.45
+    },
+    {
+      "date": "2020-12-31",
+      "nav": 1.0949,
+      "valuation": 1.0952,
+      "price": 1.073,
+      "change": 0.28,
+      "premium": -2.0
+    },
+    {
+      "date": "2026-05-08",
+      "nav": "",
+      "valuation": 1.0753,
+      "price": 1.07,
+      "change": -0.28,
+      "premium": ""
+    },
+    {
+      "date": "2020-12-31",
+      "nav": "",
+      "valuation": 1.0753,
+      "price": 1.073,
+      "change": 0.28,
+      "premium": ""
+    },
     {
       "date": "2026-05-08",
       "nav": 1.0762,

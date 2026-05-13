@@ -12,8 +12,8 @@
             --secondary: #ffffff;
             --accent: #2196F3;
             --highlight: #1976D2;
-            --up: #4CAF50;
-            --down: #f44336;
+            --up: #f44336;
+            --down: #4CAF50;
             --text-primary: #212121;
             --text-secondary: #757575;
             --border: #e0e0e0;
@@ -48,19 +48,54 @@
             margin-top: 5px;
         }
         
-        .close-btn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        
-        .close-btn:hover {
-            background: var(--highlight);
-        }
+            .close-btn, .refresh-btn {
+                background: var(--accent);
+                color: white;
+                border: none;
+                padding: 8px 20px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 14px;
+            }
+
+            .refresh-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+            }
+            
+            .close-btn:hover, .refresh-btn:hover {
+                background: var(--highlight);
+            }
+
+            .refresh-btn:disabled {
+                background: #90caf9;
+                cursor: not-allowed;
+            }
+
+            .refresh-btn .spinner {
+                display: none;
+                width: 14px;
+                height: 14px;
+                border: 2px solid rgba(255,255,255,0.3);
+                border-top-color: white;
+                border-radius: 50%;
+                animation: spin 0.6s linear infinite;
+                flex-shrink: 0;
+            }
+
+            .refresh-btn.loading .spinner {
+                display: block;
+            }
+
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+
+            .header-actions {
+                display: flex;
+                gap: 8px;
+            }
         
         .stats {
             display: flex;
@@ -117,6 +152,27 @@
             color: var(--text-secondary);
             position: sticky;
             top: 0;
+            user-select: none;
+        }
+
+        th.sortable {
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        th.sortable:hover {
+            background: #e8e8e8;
+        }
+
+        th .sort-arrow {
+            display: inline-block;
+            width: 16px;
+            margin-left: 4px;
+            opacity: 0.3;
+        }
+
+        th.sort-active .sort-arrow {
+            opacity: 1;
         }
         
         tbody tr:hover {
@@ -132,16 +188,64 @@
         }
         
         .change {
-            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            background: rgba(0, 0, 0, 0.04);
         }
-        
+
+        .change.up {
+            background: rgba(244, 67, 54, 0.12);
+            color: #d32f2f;
+        }
+
+        .change.down {
+            background: rgba(76, 175, 80, 0.12);
+            color: #388e3c;
+        }
+
         .premium {
-            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            background: rgba(0, 0, 0, 0.04);
         }
-        
-        .premium.high { color: var(--down); }
-        .premium.medium { color: #ff9800; }
-        .premium.low { color: var(--up); }
+
+        .premium.high {
+            background: rgba(244, 67, 54, 0.12);
+            color: #d32f2f;
+        }
+
+        .premium.medium {
+            background: rgba(255, 152, 0, 0.12);
+            color: #e65100;
+        }
+
+        .premium.cyan {
+            background: rgba(0, 188, 212, 0.12);
+            color: #00838f;
+        }
+
+        .premium.low {
+            background: rgba(76, 175, 80, 0.12);
+            color: #388e3c;
+        }
+
+        .premium.up {
+            background: rgba(244, 67, 54, 0.08);
+            color: #c62828;
+        }
+
+        .premium.down {
+            background: rgba(76, 175, 80, 0.08);
+            color: #2e7d32;
+        }
         
         .loading, .empty, .error {
             text-align: center;
@@ -162,7 +266,12 @@
             <div class="title" id="title">历史数据</div>
             <div class="subtitle" id="subtitle"></div>
         </div>
-        <button class="close-btn" onclick="window.close()">关闭窗口</button>
+        <div class="header-actions">
+            <button class="refresh-btn" id="refreshBtn" onclick="refreshData()">
+                <span class="spinner"></span>刷新数据
+            </button>
+            <button class="close-btn" onclick="window.close()">关闭窗口</button>
+        </div>
     </div>
     
     <div class="stats" id="stats"></div>
@@ -171,11 +280,11 @@
         <table>
             <thead>
                 <tr>
-                    <th>日期</th>
-                    <th>收盘价</th>
-                    <th>涨跌幅</th>
-                    <th>净值</th>
-                    <th>溢价率</th>
+                    <th class="sortable" onclick="sortHistory('date')">日期<span class="sort-arrow" id="sort-date">▽</span></th>
+                    <th class="sortable" onclick="sortHistory('price')">收盘价<span class="sort-arrow" id="sort-price">▽</span></th>
+                    <th class="sortable" onclick="sortHistory('change')">涨跌幅<span class="sort-arrow" id="sort-change">▽</span></th>
+                    <th class="sortable" onclick="sortHistory('nav')">净值<span class="sort-arrow" id="sort-nav">▽</span></th>
+                    <th class="sortable" onclick="sortHistory('premium')">溢价率<span class="sort-arrow" id="sort-premium">▽</span></th>
                 </tr>
             </thead>
             <tbody id="tbody">
@@ -188,36 +297,103 @@
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code') || '';
     const type = params.get('type') || 'lof';
-    
+
+    let historyData = [];
+    let sortField = 'date';
+    let sortAsc = false;
+
+    function renderTable() {
+        if (!historyData.length) return;
+
+        const sorted = [...historyData].sort((a, b) => {
+            let va, vb;
+            if (sortField === 'date') {
+                va = a.date;
+                vb = b.date;
+            } else {
+                va = parseFloat(a[sortField]) || 0;
+                vb = parseFloat(b[sortField]) || 0;
+            }
+            if (va < vb) return sortAsc ? -1 : 1;
+            if (va > vb) return sortAsc ? 1 : -1;
+            return 0;
+        });
+
+        // update sort arrows
+        document.querySelectorAll('th.sortable .sort-arrow').forEach(el => {
+            el.parentElement.classList.remove('sort-active');
+        });
+        const activeArrow = document.getElementById(`sort-${sortField}`);
+        if (activeArrow) {
+            activeArrow.parentElement.classList.add('sort-active');
+            activeArrow.textContent = sortAsc ? '△' : '▽';
+        }
+
+        let html = '';
+        sorted.forEach(item => {
+            const change = parseFloat(item.change) || 0;
+            const premium = parseFloat(item.premium) || 0;
+
+            let changeClass = '';
+            let changeSign = '';
+            if (change > 0) { changeClass = 'up'; changeSign = '+'; }
+            else if (change < 0) { changeClass = 'down'; }
+
+            let premiumClass = '';
+            if (premium > 5) { premiumClass = 'high'; }
+            else if (premium > 1) { premiumClass = 'medium'; }
+            else if (premium > 0) { premiumClass = 'up'; }
+            else if (premium < -5) { premiumClass = 'low'; }
+            else if (premium < -1) { premiumClass = 'cyan'; }
+            else if (premium < 0) { premiumClass = 'down'; }
+
+            html += `<tr>
+                <td>${item.date}</td>
+                <td class="price">${(parseFloat(item.price) || 0).toFixed(4)}</td>
+                <td><span class="change ${changeClass}">${changeSign}${change.toFixed(2)}%</span></td>
+                <td class="price">${(parseFloat(item.nav) || 0).toFixed(4)}</td>
+                <td><span class="premium ${premiumClass}">${premium >= 0 ? '+' : ''}${premium.toFixed(2)}%</span></td>
+            </tr>`;
+        });
+
+        document.getElementById('tbody').innerHTML = html;
+    }
+
+    function sortHistory(field) {
+        if (sortField === field) {
+            sortAsc = !sortAsc;
+        } else {
+            sortField = field;
+            sortAsc = false;
+        }
+        renderTable();
+    }
+
     async function loadHistory() {
         if (!code) {
             document.getElementById('tbody').innerHTML = '<tr><td colspan="5" class="error">无效的基金代码</td></tr>';
             return;
         }
-        
-        const apiType = type === 'qdii' ? 'qdii' : 'lof';
-        
+
         try {
             const res = await fetch(`/api/history/${code}`);
             const data = await res.json();
-            
+
             if (data.success && data.data && data.data.history && data.data.history.length > 0) {
                 const fund = data.data;
-                const history = fund.history;
-                
+                historyData = fund.history;
+
                 document.getElementById('title').textContent = `${code} - ${fund.name || '历史数据'}`;
                 document.getElementById('subtitle').textContent = `数据来源: ${fund.source || '东方财富'} | 更新时间: ${fund.update_time || ''}`;
-                
-                // Statistics
-                const latest = history[0];
-                const premiums = history.map(h => parseFloat(h.premium) || 0);
+
+                const premiums = historyData.map(h => parseFloat(h.premium) || 0);
                 const maxPremium = Math.max(...premiums);
                 const minPremium = Math.min(...premiums);
-                
+
                 document.getElementById('stats').innerHTML = `
                     <div class="stat">
                         <div class="stat-label">数据天数</div>
-                        <div class="stat-value">${history.length}天</div>
+                        <div class="stat-value">${historyData.length}天</div>
                     </div>
                     <div class="stat">
                         <div class="stat-label">最高溢价率</div>
@@ -228,36 +404,10 @@
                         <div class="stat-value">${minPremium.toFixed(2)}%</div>
                     </div>
                 `;
-                
-                // Render table - sorted by date descending (new to old)
-                const sorted = [...history].sort((a, b) => new Date(b.date) - new Date(a.date));
-                let html = '';
-                sorted.forEach(item => {
-                    const change = parseFloat(item.change) || 0;
-                    const premium = parseFloat(item.premium) || 0;
-                    
-                    let changeClass = '';
-                    let changeSign = '';
-                    if (change > 0) { changeClass = 'up'; changeSign = '+'; }
-                    else if (change < 0) { changeClass = 'down'; }
-                    
-                    let premiumClass = '';
-                    let premiumSign = '';
-                    if (premium > 3) { premiumClass = 'high'; premiumSign = ''; }
-                    else if (premium > 1) { premiumClass = 'medium'; premiumSign = ''; }
-                    else if (premium > 0) { premiumClass = 'up'; premiumSign = ''; }
-                    else if (premium < 0) { premiumClass = 'low'; premiumSign = ''; }
-                    
-                    html += `<tr>
-                        <td>${item.date}</td>
-                        <td class="price">${(parseFloat(item.price) || 0).toFixed(4)}</td>
-                        <td class="change ${changeClass}">${changeSign}${change.toFixed(2)}%</td>
-                        <td class="price">${(parseFloat(item.nav) || 0).toFixed(4)}</td>
-                        <td class="premium ${premiumClass}">${premium >= 0 ? '+' : ''}${premium.toFixed(2)}%</td>
-                    </tr>`;
-                });
-                
-                document.getElementById('tbody').innerHTML = html;
+
+                sortField = 'date';
+                sortAsc = false;
+                renderTable();
             } else {
                 document.getElementById('title').textContent = `${code} - 历史数据`;
                 document.getElementById('tbody').innerHTML = '<tr><td colspan="5" class="empty">暂无历史数据</td></tr>';
@@ -267,7 +417,30 @@
             document.getElementById('tbody').innerHTML = '<tr><td colspan="5" class="error">加载失败: ' + e.message + '</td></tr>';
         }
     }
-    
+
+    async function refreshData() {
+        const btn = document.getElementById('refreshBtn');
+        btn.disabled = true;
+        btn.classList.add('loading');
+        btn.innerHTML = '<span class="spinner"></span>生成中...';
+
+        try {
+            const res = await fetch(`/api/history/generate/${code}`, { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+                loadHistory();
+            } else {
+                alert('刷新失败: ' + (data.error || data.message));
+            }
+        } catch (e) {
+            alert('请求失败: ' + e.message);
+        } finally {
+            btn.disabled = false;
+            btn.classList.remove('loading');
+            btn.innerHTML = '<span class="spinner"></span>刷新数据';
+        }
+    }
+
     loadHistory();
     </script>
 </body>

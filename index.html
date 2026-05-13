@@ -13,8 +13,8 @@
             --secondary: #ffffff;
             --accent: #2196F3;
             --highlight: #1976D2;
-            --up: #4CAF50;
-            --down: #f44336;
+            --up: #f44336;
+            --down: #4CAF50;
             --text-primary: #212121;
             --text-secondary: #757575;
             --border: #e0e0e0;
@@ -355,16 +355,57 @@
             padding: 4px 8px;
             border-radius: 4px;
             font-size: 13px;
+            background: rgba(0, 0, 0, 0.04);
         }
 
         .change.up {
-            background: rgba(124, 179, 66, 0.15);
-            color: var(--up);
+            background: rgba(244, 67, 54, 0.12);
+            color: #d32f2f;
         }
 
-.change.down {
-            background: rgba(239, 83, 80, 0.15);
-            color: var(--down);
+        .change.down {
+            background: rgba(76, 175, 80, 0.12);
+            color: #388e3c;
+        }
+
+        .premium {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        .premium.high {
+            background: rgba(244, 67, 54, 0.12);
+            color: #d32f2f;
+        }
+
+        .premium.medium {
+            background: rgba(255, 152, 0, 0.12);
+            color: #e65100;
+        }
+
+        .premium.cyan {
+            background: rgba(0, 188, 212, 0.12);
+            color: #00838f;
+        }
+
+        .premium.low {
+            background: rgba(76, 175, 80, 0.12);
+            color: #388e3c;
+        }
+
+        .premium.up {
+            background: rgba(244, 67, 54, 0.08);
+            color: #c62828;
+        }
+
+        .premium.down {
+            background: rgba(76, 175, 80, 0.08);
+            color: #2e7d32;
         }
 
         .status-tag {
@@ -797,11 +838,11 @@
             lof: [],
             qdii: [],
             etf: [
-                { code: '513050', name: '中证500ETF', price: 3.4523, change: 1.23, iopv: 3.4612, premium: -0.26, space: 0.8 },
-                { code: '513300', name: '沪深300ETF', price: 4.1234, change: 0.89, iopv: 4.1356, premium: -0.30, space: 0.9 },
-                { code: '159919', name: '创业板ETF', price: 2.5678, change: 2.34, iopv: 2.5712, premium: -0.13, space: 0.5 },
-                { code: '513500', name: '中证100ETF', price: 1.8923, change: -0.45, iopv: 1.8901, premium: 0.12, space: 0.3 },
-                { code: '510300', name: '沪深300ETF', price: 4.5678, change: 1.56, iopv: 4.5523, premium: 0.34, space: 0.6 },
+                { code: '513050', name: '中证500ETF', price: 3.4523, change_percent: 1.23, iopv: 3.4612, premium: 2.15, space: 0.8 },
+                { code: '513300', name: '沪深300ETF', price: 4.1234, change_percent: -0.89, iopv: 4.1356, premium: -0.30, space: 0.9 },
+                { code: '159919', name: '创业板ETF', price: 2.5678, change_percent: 2.34, iopv: 2.5712, premium: -0.13, space: 0.5 },
+                { code: '513500', name: '中证100ETF', price: 1.8923, change_percent: -0.45, iopv: 1.8901, premium: -2.12, space: 0.3 },
+                { code: '510300', name: '沪深300ETF', price: 4.5678, change_percent: 0.56, iopv: 4.5523, premium: 6.34, space: 0.6 },
             ],
             option: [
                 { code: '510050', name: '50ETF', call: 3.10, put: 2.98, future: 6.08, space: 1.8, level: 'high' },
@@ -958,13 +999,11 @@
 
             let html = '';
             data.forEach(item => {
-                const change = item.change_percent !== null && item.change_percent !== undefined && item.change_percent !== '' ? parseFloat(item.change_percent) : null;
+                const change = item.change_percent !== null && item.change_percent !== undefined && item.change_percent !== '' ? parseFloat(item.change_percent) : (item.change !== null && item.change !== undefined && item.change !== '' ? parseFloat(item.change) : null);
                 const changeClass = change > 0 ? 'up' : change < 0 ? 'down' : '';
                 const changeSign = change > 0 ? '+' : '';
                 const premium = parseFloat(item.premium) || 0;
-                const premiumClass = type === 'etf' 
-                    ? (premium >= 0 ? 'high' : 'low')
-                    : (premium > 3 ? 'high' : premium > 1 ? 'medium' : 'low');
+                const premiumClass = premium > 5 ? 'high' : premium > 1 ? 'medium' : premium > 0 ? 'up' : premium < -5 ? 'low' : premium < -1 ? 'cyan' : premium < 0 ? 'down' : '';
                 const premiumSign = premium >= 0 ? '+' : '';
                 const rowClass = change > 0 ? 'up-row' : change < 0 ? 'down-row' : '';
 
@@ -972,7 +1011,7 @@
                     const valuation = parseFloat(item.valuation) || 0;
                     const price = parseFloat(item.price) || 0;
                     const valPremium = valuation > 0 ? ((price - valuation) / valuation * 100) : 0;
-                    const valPremiumClass = valPremium > 3 ? 'high' : valPremium > 1 ? 'medium' : valPremium < 0 ? 'low' : '';
+                    const valPremiumClass = valPremium > 5 ? 'high' : valPremium > 1 ? 'medium' : valPremium > 0 ? 'up' : valPremium < -5 ? 'low' : valPremium < -1 ? 'cyan' : valPremium < 0 ? 'down' : '';
                     const valPremiumSign = valPremium >= 0 ? '+' : '';
                     
                     html += `<tr class="${rowClass}">
@@ -981,23 +1020,23 @@
                         <td class="price ${changeClass}">${formatValue(item.price, 4)}</td>
                         <td><span class="change ${changeClass}">${change !== null ? changeSign + formatValue(change) + '%' : '-'}</span></td>
                         <td>${formatValue(item.nav, 4)}</td>
-                        <td class="premium ${premiumClass}">${premiumSign}${formatValue(premium)}%</td>
+                        <td><span class="premium ${premiumClass}">${premiumSign}${formatValue(premium)}%</span></td>
                         <td>${formatValue(item.valuation, 4)}</td>
-                        <td class="premium ${valPremiumClass}">${valPremiumSign}${formatValue(valPremium)}%</td>
+                        <td><span class="premium ${valPremiumClass}">${valPremiumSign}${formatValue(valPremium)}%</span></td>
                     </tr>`;
                 } else if (type === 'qdii') {
                     const valPremium = parseFloat(item.valPremium) || 0;
-                    const valPremiumClass = valPremium > 3 ? 'high' : valPremium > 1 ? 'medium' : valPremium < 0 ? 'low' : '';
+                    const valPremiumClass = valPremium > 5 ? 'high' : valPremium > 1 ? 'medium' : valPremium > 0 ? 'up' : valPremium < -5 ? 'low' : valPremium < -1 ? 'cyan' : valPremium < 0 ? 'down' : '';
                     const valPremiumSign = valPremium >= 0 ? '+' : '';
                     const subscribeStatus = item.subscribe_status || '-';
                     const redeemStatus = item.redeem_status || '-';
                     const limitAmount = item.limit_amount || '';
 
-                    // 申购状态显示逻辑：有限额显示限额，否则显示申购状态
+                    // 申购状态显示逻辑：有限额同时显示状态和限额，否则只显示状态
                     let subscribeDisplay = '-';
                     let subscribeClass = '';
                     if (limitAmount) {
-                        subscribeDisplay = limitAmount;
+                        subscribeDisplay = `${subscribeStatus}/${limitAmount}`;
                         subscribeClass = 'status-limit';
                     } else if (item.subscribe_status) {
                         subscribeDisplay = subscribeStatus;
@@ -1012,9 +1051,9 @@
                         <td class="price ${changeClass}">${formatValue(item.price, 4)}</td>
                         <td><span class="change ${changeClass}">${change !== null ? changeSign + formatValue(change) + '%' : '-'}</span></td>
                         <td>${formatValue(item.nav, 4)}</td>
-                        <td class="premium ${premiumClass}">${premiumSign}${formatValue(premium)}%</td>
+                        <td><span class="premium ${premiumClass}">${premiumSign}${formatValue(premium)}%</span></td>
                         <td>${formatValue(item.valuation, 4)}</td>
-                        <td class="premium ${valPremiumClass}">${valPremiumSign}${formatValue(valPremium)}%</td>
+                        <td><span class="premium ${valPremiumClass}">${valPremiumSign}${formatValue(valPremium)}%</span></td>
                         <td><span class="status-tag ${subscribeClass}">${subscribeDisplay}</span></td>
                         <td><span class="status-tag ${redeemClass}">${redeemStatus}</span></td>
                     </tr>`;
@@ -1025,8 +1064,8 @@
                         <td class="price ${changeClass}">${formatValue(item.price, 4)}</td>
                         <td><span class="change ${changeClass}">${change !== null ? changeSign + formatValue(change) + '%' : '-'}</span></td>
                         <td>${formatValue(item.iopv, 4)}</td>
-                        <td class="premium ${premiumClass}">${premiumSign}${formatValue(premium)}%</td>
-                        <td class="premium ${premiumClass}">${formatValue(item.space, 1)}%</td>
+                        <td><span class="premium ${premiumClass}">${premiumSign}${formatValue(premium)}%</span></td>
+                        <td><span class="premium ${premiumClass}">${formatValue(item.space, 1)}%</span></td>
                         <td><button class="action-btn">详情</button></td>
                     </tr>`;
                 } else if (type === 'option') {

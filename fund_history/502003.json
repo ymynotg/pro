@@ -1,8 +1,24 @@
 {
   "code": "502003",
-  "days": 365,
-  "update_time": "2026-05-09 17:42:47",
+  "days": 367,
+  "update_time": "2026-05-10 01:16:47",
   "history": [
+    {
+      "date": "2026-05-08",
+      "nav": "",
+      "valuation": 1.7744,
+      "price": 1.76,
+      "change": 23.25,
+      "premium": ""
+    },
+    {
+      "date": "2020-12-31",
+      "nav": "",
+      "valuation": 1.7744,
+      "price": 1.428,
+      "change": -18.86,
+      "premium": ""
+    },
     {
       "date": "2026-05-08",
       "nav": 1.7732,

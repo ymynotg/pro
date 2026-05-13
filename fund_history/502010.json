@@ -1,8 +1,24 @@
 {
   "code": "502010",
-  "days": 365,
-  "update_time": "2026-05-09 20:02:32",
+  "days": 367,
+  "update_time": "2026-05-10 01:06:11",
   "history": [
+    {
+      "date": "2026-05-08",
+      "nav": "",
+      "valuation": 1.2514,
+      "price": 1.26,
+      "change": -5.41,
+      "premium": ""
+    },
+    {
+      "date": "2020-12-31",
+      "nav": "",
+      "valuation": 1.2514,
+      "price": 1.332,
+      "change": 5.71,
+      "premium": ""
+    },
     {
       "date": "2026-05-08",
       "nav": 1.252,

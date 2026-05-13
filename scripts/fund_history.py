@@ -319,5 +319,5 @@ if __name__ == '__main__':
         else:
             print("未获取到数据")
     else:
-        print("用法: python fund_history.py <基金代码> [天数]")
-        print("示例: python fund_history.py 161039 30")
+        print("用法: python3 fund_history.py <基金代码> [天数]")
+        print("示例: python3 fund_history.py 161039 30")

@@ -1,8 +1,24 @@
 {
   "code": "501017",
-  "days": 365,
-  "update_time": "2026-05-09 17:32:43",
+  "days": 367,
+  "update_time": "2026-05-10 01:22:35",
   "history": [
+    {
+      "date": "2026-05-08",
+      "nav": "",
+      "valuation": 1.3417,
+      "price": 1.33,
+      "change": 65.22,
+      "premium": ""
+    },
+    {
+      "date": "2019-07-03",
+      "nav": "",
+      "valuation": 1.3417,
+      "price": 0.805,
+      "change": -39.47,
+      "premium": ""
+    },
     {
       "date": "2026-05-08",
       "nav": 1.3431,

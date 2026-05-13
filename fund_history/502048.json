@@ -1,8 +1,24 @@
 {
   "code": "502048",
-  "days": 365,
-  "update_time": "2026-05-09 20:32:10",
+  "days": 367,
+  "update_time": "2026-05-10 00:11:51",
   "history": [
+    {
+      "date": "2026-05-08",
+      "nav": "",
+      "valuation": 1.2637,
+      "price": 1.26,
+      "change": -0.32,
+      "premium": ""
+    },
+    {
+      "date": "2020-12-31",
+      "nav": "",
+      "valuation": 1.2637,
+      "price": 1.264,
+      "change": 0.32,
+      "premium": ""
+    },
     {
       "date": "2026-05-08",
       "nav": 1.2644,

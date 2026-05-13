@@ -1,8 +1,32 @@
 {
   "code": "161222",
-  "days": 365,
-  "update_time": "2026-05-09 17:26:39",
+  "days": 368,
+  "update_time": "2026-05-12 20:01:51",
   "history": [
+    {
+      "date": "2026-05-12",
+      "nav": 2.8643,
+      "valuation": 2.8609,
+      "price": 2.84,
+      "change": -0.21,
+      "premium": -0.85
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 2.8643,
+      "valuation": 2.8609,
+      "price": 2.846,
+      "change": 0.07,
+      "premium": -0.64
+    },
+    {
+      "date": "2026-05-08",
+      "nav": "",
+      "valuation": 2.8702,
+      "price": 2.844,
+      "change": 0.0,
+      "premium": ""
+    },
     {
       "date": "2026-05-08",
       "nav": 2.8652,

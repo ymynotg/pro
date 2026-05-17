@@ -1,15 +1,47 @@
 {
   "code": "000988",
-  "days": 366,
-  "update_time": "2026-05-10 00:46:47",
+  "days": 370,
+  "update_time": "2026-05-14 16:15:27",
   "history": [
     {
-      "date": "2026-05-08",
+      "date": "2026-05-14",
       "nav": "",
-      "valuation": 2.4704,
+      "valuation": 2.4231,
+      "price": 4551.48,
+      "change": -2.56,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-13",
+      "nav": "",
+      "valuation": 2.4231,
+      "price": 4671.08,
+      "change": 1.44,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 2.425,
+      "valuation": 2.4231,
+      "price": 4604.96,
+      "change": -1.09,
+      "premium": 189795.26
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 2.468,
+      "valuation": 2.4231,
+      "price": 4655.54,
+      "change": 1.51,
+      "premium": 188536.14
+    },
+    {
+      "date": "2026-05-08",
+      "nav": 2.48,
+      "valuation": 2.4231,
       "price": 4586.29,
       "change": 0.0,
-      "premium": ""
+      "premium": 184831.05
     },
     {
       "date": "2026-05-08",
@@ -22,7 +54,7 @@
     {
       "date": "2026-05-07",
       "nav": 2.47,
-      "valuation": 2.4704,
+      "valuation": 2.4231,
       "price": 4615.05,
       "change": 0.57,
       "premium": 186744.13

@@ -1,15 +1,47 @@
 {
   "code": "501201",
-  "days": 366,
-  "update_time": "2026-05-10 01:39:00",
+  "days": 370,
+  "update_time": "2026-05-14 16:32:56",
   "history": [
     {
-      "date": "2026-05-08",
+      "date": "2026-05-14",
       "nav": "",
-      "valuation": 2.5478,
+      "valuation": 2.7095,
+      "price": 2.716,
+      "change": -2.9,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-13",
+      "nav": 2.745,
+      "valuation": 2.7095,
+      "price": 2.797,
+      "change": 1.41,
+      "premium": 1.89
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 2.7039,
+      "valuation": 2.7095,
+      "price": 2.758,
+      "change": 3.1,
+      "premium": 2.0
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 2.6516,
+      "valuation": 2.7095,
+      "price": 2.675,
+      "change": 4.82,
+      "premium": 0.88
+    },
+    {
+      "date": "2026-05-08",
+      "nav": 2.5814,
+      "valuation": 2.7095,
       "price": 2.552,
       "change": 0.0,
-      "premium": ""
+      "premium": -1.14
     },
     {
       "date": "2026-05-08",

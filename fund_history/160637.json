@@ -1,15 +1,47 @@
 {
   "code": "160637",
-  "days": 366,
-  "update_time": "2026-05-10 00:02:34",
+  "days": 370,
+  "update_time": "2026-05-14 17:16:37",
   "history": [
     {
-      "date": "2026-05-08",
+      "date": "2026-05-14",
       "nav": "",
-      "valuation": 1.7378,
+      "valuation": 1.8047,
+      "price": 1.799,
+      "change": -2.12,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-13",
+      "nav": 1.8445,
+      "valuation": 1.8047,
+      "price": 1.838,
+      "change": 2.4,
+      "premium": -0.35
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 1.7995,
+      "valuation": 1.8047,
+      "price": 1.795,
+      "change": 0.28,
+      "premium": -0.25
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 1.7966,
+      "valuation": 1.8047,
+      "price": 1.79,
+      "change": 3.71,
+      "premium": -0.37
+    },
+    {
+      "date": "2026-05-08",
+      "nav": 1.7385,
+      "valuation": 1.8047,
       "price": 1.726,
       "change": 0.0,
-      "premium": ""
+      "premium": -0.72
     },
     {
       "date": "2026-05-08",

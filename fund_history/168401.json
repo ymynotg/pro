@@ -1,15 +1,47 @@
 {
   "code": "168401",
-  "days": 366,
-  "update_time": "2026-05-10 00:51:16",
+  "days": 370,
+  "update_time": "2026-05-15 07:27:05",
   "history": [
     {
+      "date": "2026-05-14",
+      "nav": 6.8461,
+      "valuation": 6.8186,
+      "price": 6.809,
+      "change": -2.2,
+      "premium": -0.54
+    },
+    {
+      "date": "2026-05-13",
+      "nav": 6.8657,
+      "valuation": 6.8186,
+      "price": 6.962,
+      "change": 1.5,
+      "premium": 1.4
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 6.7484,
+      "valuation": 6.8186,
+      "price": 6.859,
+      "change": 2.37,
+      "premium": 1.64
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 6.6521,
+      "valuation": 6.8186,
+      "price": 6.7,
+      "change": 4.05,
+      "premium": 0.72
+    },
+    {
       "date": "2026-05-08",
-      "nav": "",
-      "valuation": 6.4566,
+      "nav": 6.4894,
+      "valuation": 6.8186,
       "price": 6.439,
       "change": 0.0,
-      "premium": ""
+      "premium": -0.78
     },
     {
       "date": "2026-05-08",

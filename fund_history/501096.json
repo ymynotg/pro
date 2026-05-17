@@ -1,20 +1,28 @@
 {
   "code": "501096",
-  "days": 1390,
-  "update_time": "2026-05-13 14:51:19",
+  "days": 1391,
+  "update_time": "2026-05-14 16:08:20",
   "history": [
     {
-      "date": "2026-05-13",
+      "date": "2026-05-14",
       "nav": "",
-      "valuation": 1.7235,
-      "price": 1.757,
-      "change": 4.4,
+      "valuation": 1.7003,
+      "price": 1.754,
+      "change": -0.79,
       "premium": ""
+    },
+    {
+      "date": "2026-05-13",
+      "nav": 1.7316,
+      "valuation": 1.7003,
+      "price": 1.768,
+      "change": 5.05,
+      "premium": 2.1
     },
     {
       "date": "2026-05-12",
       "nav": 1.6438,
-      "valuation": 1.7235,
+      "valuation": 1.7003,
       "price": 1.683,
       "change": -1.29,
       "premium": 2.38
@@ -22,7 +30,7 @@
     {
       "date": "2026-05-11",
       "nav": 1.6557,
-      "valuation": 1.7235,
+      "valuation": 1.7003,
       "price": 1.705,
       "change": 10.0,
       "premium": 2.98
@@ -30,7 +38,7 @@
     {
       "date": "2026-05-08",
       "nav": 1.5298,
-      "valuation": 1.7235,
+      "valuation": 1.7003,
       "price": 1.55,
       "change": -6.0,
       "premium": 1.32
@@ -38,7 +46,7 @@
     {
       "date": "2026-05-07",
       "nav": 1.5719,
-      "valuation": 1.7235,
+      "valuation": 1.7003,
       "price": 1.649,
       "change": 5.84,
       "premium": 4.9

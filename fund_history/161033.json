@@ -1,15 +1,47 @@
 {
   "code": "161033",
-  "days": 366,
-  "update_time": "2026-05-10 01:32:19",
+  "days": 370,
+  "update_time": "2026-05-14 16:54:39",
   "history": [
     {
-      "date": "2026-05-08",
+      "date": "2026-05-14",
       "nav": "",
-      "valuation": 2.073,
+      "valuation": 2.0592,
+      "price": 2.059,
+      "change": -2.14,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-13",
+      "nav": 2.12,
+      "valuation": 2.0592,
+      "price": 2.104,
+      "change": 1.64,
+      "premium": -0.75
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 2.092,
+      "valuation": 2.0592,
+      "price": 2.07,
+      "change": -0.58,
+      "premium": -1.05
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 2.1,
+      "valuation": 2.0592,
+      "price": 2.082,
+      "change": 0.97,
+      "premium": -0.86
+    },
+    {
+      "date": "2026-05-08",
+      "nav": 2.074,
+      "valuation": 2.0592,
       "price": 2.062,
       "change": 0.0,
-      "premium": ""
+      "premium": -0.58
     },
     {
       "date": "2026-05-08",

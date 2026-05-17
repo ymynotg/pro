@@ -1,15 +1,47 @@
 {
   "code": "000927",
-  "days": 366,
-  "update_time": "2026-05-09 22:40:31",
+  "days": 370,
+  "update_time": "2026-05-14 17:39:09",
   "history": [
     {
-      "date": "2026-05-08",
+      "date": "2026-05-14",
       "nav": "",
+      "valuation": "",
+      "price": 2038.85,
+      "change": -1.33,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-13",
+      "nav": "",
+      "valuation": "",
+      "price": 2066.28,
+      "change": 0.34,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 0.2123,
+      "valuation": "",
+      "price": 2059.23,
+      "change": -0.16,
+      "premium": 969862.32
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 0.2144,
+      "valuation": "",
+      "price": 2062.53,
+      "change": 0.75,
+      "premium": 961900.93
+    },
+    {
+      "date": "2026-05-08",
+      "nav": 0.2117,
       "valuation": "",
       "price": 2047.22,
       "change": 0.0,
-      "premium": ""
+      "premium": 966938.26
     },
     {
       "date": "2026-05-08",

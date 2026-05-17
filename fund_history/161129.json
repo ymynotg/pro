@@ -1,15 +1,47 @@
 {
   "code": "161129",
-  "days": 366,
-  "update_time": "2026-05-10 00:08:22",
+  "days": 370,
+  "update_time": "2026-05-14 17:03:13",
   "history": [
     {
-      "date": "2026-05-08",
+      "date": "2026-05-14",
       "nav": "",
+      "valuation": "",
+      "price": 1.895,
+      "change": -1.97,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-13",
+      "nav": 1.8352,
+      "valuation": "",
+      "price": 1.933,
+      "change": -1.63,
+      "premium": 5.33
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 1.856,
+      "valuation": "",
+      "price": 1.965,
+      "change": 0.98,
+      "premium": 5.87
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 1.8007,
+      "valuation": "",
+      "price": 1.946,
+      "change": 1.83,
+      "premium": 8.07
+    },
+    {
+      "date": "2026-05-08",
+      "nav": 1.7478,
       "valuation": "",
       "price": 1.911,
       "change": 0.0,
-      "premium": ""
+      "premium": 9.34
     },
     {
       "date": "2026-05-08",

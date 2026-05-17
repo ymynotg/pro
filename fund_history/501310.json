@@ -1,15 +1,47 @@
 {
   "code": "501310",
-  "days": 366,
-  "update_time": "2026-05-10 00:28:39",
+  "days": 370,
+  "update_time": "2026-05-14 17:46:16",
   "history": [
     {
-      "date": "2026-05-08",
+      "date": "2026-05-14",
       "nav": "",
+      "valuation": "",
+      "price": 1.397,
+      "change": -1.2,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-13",
+      "nav": 1.4119,
+      "valuation": "",
+      "price": 1.414,
+      "change": 0.0,
+      "premium": 0.15
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 1.4163,
+      "valuation": "",
+      "price": 1.414,
+      "change": 0.35,
+      "premium": -0.16
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 1.4129,
+      "valuation": "",
+      "price": 1.409,
+      "change": 0.64,
+      "premium": -0.28
+    },
+    {
+      "date": "2026-05-08",
+      "nav": 1.3994,
       "valuation": "",
       "price": 1.4,
       "change": 0.0,
-      "premium": ""
+      "premium": 0.04
     },
     {
       "date": "2026-05-08",

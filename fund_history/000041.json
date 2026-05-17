@@ -1,15 +1,47 @@
 {
   "code": "000041",
-  "days": 366,
-  "update_time": "2026-05-10 00:13:46",
+  "days": 370,
+  "update_time": "2026-05-15 07:37:09",
   "history": [
     {
-      "date": "2026-05-08",
+      "date": "2026-05-14",
       "nav": "",
-      "valuation": 1.5023,
+      "valuation": 1.5475,
+      "price": 2738.87,
+      "change": -1.78,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-13",
+      "nav": 1.5399,
+      "valuation": 1.5475,
+      "price": 2788.44,
+      "change": 1.4,
+      "premium": 180979.29
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 1.5183,
+      "valuation": 1.5475,
+      "price": 2750.02,
+      "change": 0.84,
+      "premium": 181024.94
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 1.5364,
+      "valuation": 1.5475,
+      "price": 2727.16,
+      "change": 1.4,
+      "premium": 177403.25
+    },
+    {
+      "date": "2026-05-08",
+      "nav": 1.5236,
+      "valuation": 1.5475,
       "price": 2689.52,
       "change": 0.0,
-      "premium": ""
+      "premium": 176424.02
     },
     {
       "date": "2026-05-08",

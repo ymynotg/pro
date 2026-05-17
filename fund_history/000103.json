@@ -1,15 +1,47 @@
 {
   "code": "000103",
-  "days": 366,
-  "update_time": "2026-05-10 00:18:02",
+  "days": 370,
+  "update_time": "2026-05-14 17:27:21",
   "history": [
     {
-      "date": "2026-05-08",
+      "date": "2026-05-14",
       "nav": "",
+      "valuation": "",
+      "price": 7313.59,
+      "change": -1.76,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-13",
+      "nav": "",
+      "valuation": "",
+      "price": 7444.62,
+      "change": -0.82,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 0.8014,
+      "valuation": "",
+      "price": 7506.03,
+      "change": -0.74,
+      "premium": 936514.67
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 0.8018,
+      "valuation": "",
+      "price": 7561.91,
+      "change": 1.26,
+      "premium": 943016.74
+    },
+    {
+      "date": "2026-05-08",
+      "nav": 0.8013,
       "valuation": "",
       "price": 7467.86,
       "change": 0.0,
-      "premium": ""
+      "premium": 931868.05
     },
     {
       "date": "2026-05-08",

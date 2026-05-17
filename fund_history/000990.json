@@ -1,15 +1,47 @@
 {
   "code": "000990",
-  "days": 366,
-  "update_time": "2026-05-10 01:45:03",
+  "days": 370,
+  "update_time": "2026-05-15 07:20:53",
   "history": [
     {
-      "date": "2026-05-08",
+      "date": "2026-05-14",
       "nav": "",
-      "valuation": 2.1993,
+      "valuation": 2.2087,
+      "price": 11599.49,
+      "change": 0.11,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-13",
+      "nav": 2.199,
+      "valuation": 2.2087,
+      "price": 11586.8,
+      "change": -0.76,
+      "premium": 526812.23
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 2.161,
+      "valuation": 2.2087,
+      "price": 11675.42,
+      "change": -1.38,
+      "premium": 540178.57
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 2.198,
+      "valuation": 2.2087,
+      "price": 11838.88,
+      "change": 0.18,
+      "premium": 538520.56
+    },
+    {
+      "date": "2026-05-08",
+      "nav": 2.208,
+      "valuation": 2.2087,
       "price": 11818.17,
       "change": 0.0,
-      "premium": ""
+      "premium": 535143.21
     },
     {
       "date": "2026-05-08",

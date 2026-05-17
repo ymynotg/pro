@@ -1,8 +1,16 @@
 {
   "code": "502053",
-  "days": 369,
-  "update_time": "2026-05-12 20:02:25",
+  "days": 370,
+  "update_time": "2026-05-15 07:49:19",
   "history": [
+    {
+      "date": "2026-05-14",
+      "nav": 1.0678,
+      "valuation": 1.0661,
+      "price": 1.07,
+      "change": -1.83,
+      "premium": 0.21
+    },
     {
       "date": "2026-05-12",
       "nav": 1.0949,
@@ -13,11 +21,11 @@
     },
     {
       "date": "2020-12-31",
-      "nav": 1.0949,
-      "valuation": 1.0952,
+      "nav": 1.1,
+      "valuation": 1.0661,
       "price": 1.073,
       "change": 0.28,
-      "premium": -2.0
+      "premium": -2.45
     },
     {
       "date": "2026-05-08",
@@ -54,7 +62,7 @@
     {
       "date": "2020-12-30",
       "nav": 1.054,
-      "valuation": 1.0753,
+      "valuation": 1.0661,
       "price": 1.03,
       "change": 0.39,
       "premium": -2.28
@@ -62,7 +70,7 @@
     {
       "date": "2020-12-29",
       "nav": 1.032,
-      "valuation": 1.0753,
+      "valuation": 1.0661,
       "price": 1.026,
       "change": 2.19,
       "premium": -0.58
@@ -70,7 +78,7 @@
     {
       "date": "2020-12-28",
       "nav": 1.028,
-      "valuation": 1.0753,
+      "valuation": 1.0661,
       "price": 1.004,
       "change": -0.79,
       "premium": -2.33
@@ -78,7 +86,7 @@
     {
       "date": "2020-12-25",
       "nav": 1.031,
-      "valuation": 1.0753,
+      "valuation": 1.0661,
       "price": 1.012,
       "change": 0.6,
       "premium": -1.84

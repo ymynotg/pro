@@ -1,15 +1,47 @@
 {
   "code": "160140",
-  "days": 366,
-  "update_time": "2026-05-09 22:37:00",
+  "days": 370,
+  "update_time": "2026-05-14 17:58:11",
   "history": [
     {
-      "date": "2026-05-08",
+      "date": "2026-05-14",
       "nav": "",
-      "valuation": 1.4109,
+      "valuation": 1.4191,
+      "price": 1.408,
+      "change": -0.28,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-13",
+      "nav": "",
+      "valuation": 1.4191,
+      "price": 1.412,
+      "change": 0.64,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 1.4207,
+      "valuation": 1.4191,
+      "price": 1.403,
+      "change": 0.0,
+      "premium": -1.25
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 1.4179,
+      "valuation": 1.4191,
+      "price": 1.403,
+      "change": 0.14,
+      "premium": -1.05
+    },
+    {
+      "date": "2026-05-08",
+      "nav": 1.4173,
+      "valuation": 1.4191,
       "price": 1.401,
       "change": 0.0,
-      "premium": ""
+      "premium": -1.15
     },
     {
       "date": "2026-05-08",

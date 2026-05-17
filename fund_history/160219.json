@@ -1,15 +1,47 @@
 {
   "code": "160219",
-  "days": 366,
-  "update_time": "2026-05-09 22:25:12",
+  "days": 370,
+  "update_time": "2026-05-14 16:40:42",
   "history": [
     {
-      "date": "2026-05-08",
+      "date": "2026-05-14",
       "nav": "",
-      "valuation": 0.5549,
+      "valuation": 0.5457,
+      "price": 0.55,
+      "change": -1.43,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-13",
+      "nav": 0.5594,
+      "valuation": 0.5457,
+      "price": 0.558,
+      "change": 0.0,
+      "premium": -0.25
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 0.5624,
+      "valuation": 0.5457,
+      "price": 0.558,
+      "change": -0.36,
+      "premium": -0.78
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 0.5635,
+      "valuation": 0.5457,
+      "price": 0.56,
+      "change": 1.27,
+      "premium": -0.62
+    },
+    {
+      "date": "2026-05-08",
+      "nav": 0.5553,
+      "valuation": 0.5457,
       "price": 0.553,
       "change": 0.0,
-      "premium": ""
+      "premium": -0.41
     },
     {
       "date": "2026-05-08",

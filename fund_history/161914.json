@@ -1,15 +1,47 @@
 {
   "code": "161914",
-  "days": 366,
-  "update_time": "2026-05-09 23:27:04",
+  "days": 370,
+  "update_time": "2026-05-14 15:45:32",
   "history": [
     {
-      "date": "2026-05-08",
+      "date": "2026-05-14",
       "nav": "",
-      "valuation": 0.905,
+      "valuation": 0.9359,
+      "price": 0.884,
+      "change": -1.78,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-13",
+      "nav": 0.952,
+      "valuation": 0.9359,
+      "price": 0.9,
+      "change": 1.24,
+      "premium": -5.46
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 0.945,
+      "valuation": 0.9359,
+      "price": 0.889,
+      "change": 1.02,
+      "premium": -5.93
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 0.9323,
+      "valuation": 0.9359,
+      "price": 0.88,
+      "change": 3.77,
+      "premium": -5.61
+    },
+    {
+      "date": "2026-05-08",
+      "nav": 0.9009,
+      "valuation": 0.9359,
       "price": 0.848,
       "change": 0.0,
-      "premium": ""
+      "premium": -5.87
     },
     {
       "date": "2026-05-08",
@@ -22,7 +54,7 @@
     {
       "date": "2026-05-07",
       "nav": 0.9061,
-      "valuation": 0.905,
+      "valuation": 0.9359,
       "price": 0.842,
       "change": 2.81,
       "premium": -7.07

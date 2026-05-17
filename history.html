@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>历史数据</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -125,6 +126,81 @@
         
         .up { color: var(--up); }
         .down { color: var(--down); }
+
+        .tab-nav {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tab-btn {
+            padding: 10px 24px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            cursor: pointer;
+            font-size: 15px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+            background: rgba(33, 150, 243, 0.04);
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .chart-time-range {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            justify-content: flex-end;
+        }
+
+        .chart-time-range button {
+            padding: 4px 14px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-secondary);
+            transition: all 0.15s;
+        }
+
+        .chart-time-range button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .chart-time-range button.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .chart-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
         
         .table-wrapper {
             background: white;
@@ -275,22 +351,41 @@
     </div>
     
     <div class="stats" id="stats"></div>
-    
-    <div class="table-wrapper">
-        <table>
-            <thead>
-                <tr>
-                    <th class="sortable" onclick="sortHistory('date')">日期<span class="sort-arrow" id="sort-date">▽</span></th>
-                    <th class="sortable" onclick="sortHistory('price')">收盘价<span class="sort-arrow" id="sort-price">▽</span></th>
-                    <th class="sortable" onclick="sortHistory('change')">涨跌幅<span class="sort-arrow" id="sort-change">▽</span></th>
-                    <th class="sortable" onclick="sortHistory('nav')">净值<span class="sort-arrow" id="sort-nav">▽</span></th>
-                    <th class="sortable" onclick="sortHistory('premium')">溢价率<span class="sort-arrow" id="sort-premium">▽</span></th>
-                </tr>
-            </thead>
-            <tbody id="tbody">
-                <tr><td colspan="5" class="loading">加载中...</td></tr>
-            </tbody>
-        </table>
+
+    <div class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('table')">📋 表格数据</button>
+        <button class="tab-btn" onclick="switchTab('chart')">📊 图形数据</button>
+    </div>
+
+    <div id="tab-table" class="tab-content active">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="sortable" onclick="sortHistory('date')">日期<span class="sort-arrow" id="sort-date">▽</span></th>
+                        <th class="sortable" onclick="sortHistory('price')">收盘价<span class="sort-arrow" id="sort-price">▽</span></th>
+                        <th class="sortable" onclick="sortHistory('change')">涨跌幅<span class="sort-arrow" id="sort-change">▽</span></th>
+                        <th class="sortable" onclick="sortHistory('nav')">净值<span class="sort-arrow" id="sort-nav">▽</span></th>
+                        <th class="sortable" onclick="sortHistory('premium')">溢价率<span class="sort-arrow" id="sort-premium">▽</span></th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <tr><td colspan="5" class="loading">加载中...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="tab-chart" class="tab-content">
+        <div class="chart-time-range" id="timeRangeBtns">
+            <button data-range="1M" onclick="setTimeRange('1M')">1月</button>
+            <button data-range="3M" onclick="setTimeRange('3M')">3月</button>
+            <button data-range="6M" onclick="setTimeRange('6M')" class="active">6月</button>
+            <button data-range="1Y" onclick="setTimeRange('1Y')">1年</button>
+            <button data-range="all" onclick="setTimeRange('all')">全部</button>
+        </div>
+        <div class="chart-box" id="chartPrice" style="width:100%;height:380px;"></div>
+        <div class="chart-box" id="chartPremium" style="width:100%;height:280px;"></div>
     </div>
     
     <script>
@@ -301,6 +396,12 @@
     let historyData = [];
     let sortField = 'date';
     let sortAsc = false;
+
+    let chart1 = null;
+    let chart2 = null;
+    let chartDates = [];
+    let isSyncing = false;
+    let selectedIdx = -1;
 
     function renderTable() {
         if (!historyData.length) return;
@@ -319,7 +420,6 @@
             return 0;
         });
 
-        // update sort arrows
         document.querySelectorAll('th.sortable .sort-arrow').forEach(el => {
             el.parentElement.classList.remove('sort-active');
         });
@@ -369,6 +469,328 @@
         renderTable();
     }
 
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        if (tab === 'table') {
+            document.querySelector('.tab-btn:first-child').classList.add('active');
+            document.getElementById('tab-table').classList.add('active');
+        } else {
+            document.querySelector('.tab-btn:last-child').classList.add('active');
+            document.getElementById('tab-chart').classList.add('active');
+            setTimeout(() => {
+                if (chart1) chart1.resize();
+                if (chart2) chart2.resize();
+            }, 50);
+        }
+    }
+
+    function prepareChartData(rawData) {
+        const dateMap = {};
+        rawData.forEach(item => {
+            dateMap[item.date] = item;
+        });
+        const dates = Object.keys(dateMap).sort();
+
+        const prices = [];
+        const navs = [];
+        const valuations = [];
+        const premiums = [];
+        const changes = [];
+
+        dates.forEach(d => {
+            const item = dateMap[d];
+            prices.push(parseFloat(item.price) || null);
+
+            const nav = item.nav === '' ? null : parseFloat(item.nav);
+            navs.push(nav);
+
+            const val = item.valuation === '' || item.valuation === undefined ? null : parseFloat(item.valuation);
+            valuations.push(val);
+
+            let p = item.premium === '' ? null : parseFloat(item.premium);
+            if (p !== null && Math.abs(p) > 1000000) p = null;
+            premiums.push(p);
+
+            const chg = item.change === '' || item.change === undefined ? null : parseFloat(item.change);
+            changes.push(chg);
+        });
+
+        return { dates, prices, navs, valuations, premiums, changes };
+    }
+
+    function initCharts(cleanData) {
+        const { dates, prices, navs, valuations, premiums, changes } = cleanData;
+        chartDates = dates;
+
+        if (!chart1) {
+            chart1 = echarts.init(document.getElementById('chartPrice'));
+        }
+        if (!chart2) {
+            chart2 = echarts.init(document.getElementById('chartPremium'));
+        }
+
+        const hasNav = navs.some(v => v !== null);
+        const hasValuation = valuations.some(v => v !== null);
+
+        chart1.setOption({
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderColor: '#e0e0e0',
+                borderWidth: 1,
+                textStyle: { color: '#212121', fontSize: 13 }
+            },
+            legend: {
+                data: [
+                    { name: '收盘价', icon: 'line' },
+                    ...(hasNav ? [{ name: '净值', icon: 'line' }] : []),
+                    ...(hasValuation ? [{ name: '估值', icon: 'line' }] : [])
+                ],
+                top: 8,
+                right: 16
+            },
+            grid: { left: 60, right: 16, top: 48, bottom: 60 },
+            xAxis: {
+                type: 'category',
+                data: dates,
+                axisLine: { lineStyle: { color: '#e0e0e0' } },
+                axisLabel: { color: '#757575', fontSize: 11 },
+                splitLine: { show: false }
+            },
+            yAxis: {
+                type: 'value',
+                name: '价格 / 净值',
+                nameTextStyle: { color: '#757575', fontSize: 12 },
+                axisLabel: { color: '#757575', fontSize: 11 },
+                splitLine: { lineStyle: { color: '#f5f5f5' } }
+            },
+            series: [
+                {
+                    name: '收盘价',
+                    type: 'line',
+                    data: prices,
+                    smooth: true,
+                    symbol: 'none',
+                    lineStyle: { color: '#f44336', width: 2 },
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: 'rgba(244,67,54,0.15)' },
+                                { offset: 1, color: 'rgba(244,67,54,0.02)' }
+                            ]
+                        }
+                    }
+                },
+                ...(hasNav ? [{
+                    name: '净值',
+                    type: 'line',
+                    data: navs,
+                    smooth: true,
+                    symbol: 'none',
+                    lineStyle: { color: '#2196F3', width: 2, type: 'dashed' },
+                    connectNulls: false
+                }] : []),
+                ...(hasValuation ? [{
+                    name: '估值',
+                    type: 'line',
+                    data: valuations,
+                    smooth: true,
+                    symbol: 'none',
+                    lineStyle: { color: '#9E9E9E', width: 1.5, type: 'dotted' },
+                    connectNulls: false
+                }] : [])
+            ],
+            dataZoom: [
+                {
+                    type: 'slider',
+                    xAxisIndex: 0,
+                    start: 0,
+                    end: 100,
+                    bottom: 8,
+                    height: 24,
+                    borderColor: '#e0e0e0',
+                    fillerColor: 'rgba(33,150,243,0.15)',
+                    handleStyle: { color: '#2196F3' },
+                    textStyle: { fontSize: 11 }
+                },
+                {
+                    type: 'inside',
+                    xAxisIndex: 0,
+                    start: 0,
+                    end: 100
+                }
+            ]
+        }, true);
+
+        const premiumColors = premiums.map(v => {
+            if (v === null) return 'transparent';
+            return v >= 0 ? '#f44336' : '#4CAF50';
+        });
+
+        chart2.setOption({
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderColor: '#e0e0e0',
+                borderWidth: 1,
+                textStyle: { color: '#212121', fontSize: 13 },
+                formatter: function(params) {
+                    if (!params || !params.length) return '';
+                    const p = params[0];
+                    const val = p.value;
+                    let html = `<strong>${p.axisValue}</strong><br/>`;
+                    params.forEach((s, i) => {
+                        const sv = s.value;
+                        if (s.seriesName === '溢价率') {
+                            html += `溢价率: ${sv !== null && sv !== undefined ? (sv >= 0 ? '+' : '') + sv.toFixed(2) + '%' : '无数据'}`;
+                        } else if (s.seriesName === '涨跌幅') {
+                            html += `<br/>涨跌幅: ${sv !== null && sv !== undefined ? (sv >= 0 ? '+' : '') + sv.toFixed(2) + '%' : '无数据'}`;
+                        }
+                    });
+                    return html;
+                }
+            },
+            legend: {
+                data: [
+                    { name: '溢价率', icon: 'rect' },
+                    { name: '涨跌幅', icon: 'line' }
+                ],
+                top: 8,
+                right: 16
+            },
+            grid: { left: 60, right: 40, top: 48, bottom: 60 },
+            xAxis: {
+                type: 'category',
+                data: dates,
+                axisLine: { lineStyle: { color: '#e0e0e0' } },
+                axisLabel: { color: '#757575', fontSize: 11 },
+                splitLine: { show: false }
+            },
+            yAxis: {
+                type: 'value',
+                name: '百分比(%)',
+                nameTextStyle: { color: '#757575', fontSize: 12 },
+                axisLabel: {
+                    color: '#757575',
+                    fontSize: 11,
+                    formatter: function(v) {
+                        if (Math.abs(v) >= 10000) {
+                            return (v / 10000).toFixed(1) + '万';
+                        }
+                        return v.toFixed(0);
+                    }
+                },
+                splitLine: { lineStyle: { color: '#f5f5f5' } }
+            },
+            series: [
+                {
+                    name: '溢价率',
+                    type: 'bar',
+                    data: premiums.map((v, i) => ({
+                        value: v,
+                        itemStyle: {
+                            color: v === null ? 'transparent' : (v >= 0 ? '#f44336' : '#4CAF50'),
+                            borderRadius: [1, 1, 0, 0]
+                        }
+                    })),
+                    barMaxWidth: 8
+                },
+                {
+                    name: '涨跌幅',
+                    type: 'line',
+                    data: changes.map(v => v !== null ? v : null),
+                    smooth: true,
+                    symbol: 'none',
+                    lineStyle: { color: '#FF9800', width: 2 },
+                    z: 5
+                }
+            ],
+            dataZoom: [
+                {
+                    id: 'dz-premium',
+                    type: 'slider',
+                    xAxisIndex: 0,
+                    start: 0,
+                    end: 100,
+                    bottom: 8,
+                    height: 24,
+                    borderColor: '#e0e0e0',
+                    fillerColor: 'rgba(33,150,243,0.15)',
+                    handleStyle: { color: '#2196F3' },
+                    textStyle: { fontSize: 11 }
+                },
+                {
+                    type: 'inside',
+                    xAxisIndex: 0,
+                    start: 0,
+                    end: 100
+                }
+            ]
+        }, true);
+
+        chart1.on('dataZoom', syncDataZoom);
+        chart2.on('dataZoom', syncDataZoom);
+    }
+
+    function syncDataZoom(params) {
+        if (isSyncing) return;
+        isSyncing = true;
+
+        const start = params.start !== undefined ? params.start : params.batch?.[0]?.start;
+        const end = params.end !== undefined ? params.end : params.batch?.[0]?.end;
+        if (start === undefined || end === undefined) {
+            isSyncing = false;
+            return;
+        }
+
+        const other = this === chart1 ? chart2 : chart1;
+        other.dispatchAction({
+            type: 'dataZoom',
+            start: start,
+            end: end
+        });
+
+        document.querySelectorAll('#timeRangeBtns button').forEach(b => b.classList.remove('active'));
+        const total = chartDates.length;
+        const visibleCount = Math.round(total * (end - start) / 100);
+        let label = 'all';
+        if (visibleCount <= 22) label = '1M';
+        else if (visibleCount <= 66) label = '3M';
+        else if (visibleCount <= 130) label = '6M';
+        else if (visibleCount <= 250) label = '1Y';
+        const btn = document.querySelector(`#timeRangeBtns button[data-range="${label}"]`);
+        if (btn) btn.classList.add('active');
+
+        isSyncing = false;
+    }
+
+    function setTimeRange(range) {
+        const total = chartDates.length;
+        let startPct = 0;
+        switch (range) {
+            case '1M': startPct = Math.max(0, (total - 22) / total * 100); break;
+            case '3M': startPct = Math.max(0, (total - 66) / total * 100); break;
+            case '6M': startPct = Math.max(0, (total - 130) / total * 100); break;
+            case '1Y': startPct = Math.max(0, (total - 250) / total * 100); break;
+            case 'all': startPct = 0; break;
+        }
+
+        document.querySelectorAll('#timeRangeBtns button').forEach(b => b.classList.remove('active'));
+        const btn = document.querySelector(`#timeRangeBtns button[data-range="${range}"]`);
+        if (btn) btn.classList.add('active');
+
+        [chart1, chart2].forEach(chart => {
+            chart.dispatchAction({
+                type: 'dataZoom',
+                start: startPct,
+                end: 100
+            });
+        });
+    }
+
     async function loadHistory() {
         if (!code) {
             document.getElementById('tbody').innerHTML = '<tr><td colspan="5" class="error">无效的基金代码</td></tr>';
@@ -376,14 +798,20 @@
         }
 
         try {
-            const res = await fetch(`/api/history/${code}`);
-            const data = await res.json();
+            const [histRes, cfgRes] = await Promise.all([
+                fetch(`/api/history/${code}`),
+                fetch(type === 'qdii' ? '/qdii_config.json' : '/lof_config.json').then(r => r.json()).catch(() => ({}))
+            ]);
+            const data = await histRes.json();
 
             if (data.success && data.data && data.data.history && data.data.history.length > 0) {
                 const fund = data.data;
                 historyData = fund.history;
 
-                document.getElementById('title').textContent = `${code} - ${fund.name || '历史数据'}`;
+                const cfgFunds = cfgRes.funds || [];
+                const cfgFund = cfgFunds.find(f => f.code === code);
+                const fundName = cfgFund ? cfgFund.name : (fund.name || '');
+                document.getElementById('title').textContent = `${code} - ${fundName || '历史数据'}`;
                 document.getElementById('subtitle').textContent = `数据来源: ${fund.source || '东方财富'} | 更新时间: ${fund.update_time || ''}`;
 
                 const premiums = historyData.map(h => parseFloat(h.premium) || 0);
@@ -408,6 +836,9 @@
                 sortField = 'date';
                 sortAsc = false;
                 renderTable();
+
+                const cleanData = prepareChartData(historyData);
+                initCharts(cleanData);
             } else {
                 document.getElementById('title').textContent = `${code} - 历史数据`;
                 document.getElementById('tbody').innerHTML = '<tr><td colspan="5" class="empty">暂无历史数据</td></tr>';
@@ -440,6 +871,43 @@
             btn.innerHTML = '<span class="spinner"></span>刷新数据';
         }
     }
+
+    function navigateChart(direction) {
+        if (!chartDates.length) return;
+        const total = chartDates.length;
+        if (selectedIdx < 0) {
+            selectedIdx = direction > 0 ? 0 : total - 1;
+        } else {
+            selectedIdx = Math.max(0, Math.min(total - 1, selectedIdx + direction));
+        }
+        [chart1, chart2].forEach(chart => {
+            if (!chart) return;
+            chart.dispatchAction({ type: 'downplay' });
+            chart.dispatchAction({
+                type: 'highlight',
+                dataIndex: selectedIdx
+            });
+            chart.dispatchAction({
+                type: 'showTip',
+                dataIndex: selectedIdx
+            });
+        });
+    }
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+        const tag = document.activeElement?.tagName || '';
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'BUTTON' || tag === 'SELECT') return;
+        const chartTab = document.getElementById('tab-chart');
+        if (!chartTab || !chartTab.classList.contains('active')) return;
+        e.preventDefault();
+        navigateChart(e.key === 'ArrowLeft' ? -1 : 1);
+    });
+
+    window.addEventListener('resize', () => {
+        if (chart1) chart1.resize();
+        if (chart2) chart2.resize();
+    });
 
     loadHistory();
     </script>

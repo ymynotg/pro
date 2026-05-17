@@ -1,15 +1,47 @@
 {
   "code": "501032",
-  "days": 366,
-  "update_time": "2026-05-09 22:58:00",
+  "days": 370,
+  "update_time": "2026-05-15 07:39:24",
   "history": [
     {
+      "date": "2026-05-14",
+      "nav": 1.9197,
+      "valuation": 1.8905,
+      "price": 1.895,
+      "change": -1.97,
+      "premium": -1.29
+    },
+    {
+      "date": "2026-05-13",
+      "nav": 1.9488,
+      "valuation": 1.8905,
+      "price": 1.933,
+      "change": 1.52,
+      "premium": -0.81
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 1.9187,
+      "valuation": 1.8905,
+      "price": 1.904,
+      "change": -0.21,
+      "premium": -0.77
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 1.9172,
+      "valuation": 1.8905,
+      "price": 1.908,
+      "change": 1.38,
+      "premium": -0.48
+    },
+    {
       "date": "2026-05-08",
-      "nav": "",
-      "valuation": 1.9045,
+      "nav": 1.9087,
+      "valuation": 1.8905,
       "price": 1.882,
       "change": 0.0,
-      "premium": ""
+      "premium": -1.4
     },
     {
       "date": "2026-05-08",

@@ -1,15 +1,47 @@
 {
   "code": "501200",
-  "days": 366,
-  "update_time": "2026-05-10 00:09:13",
+  "days": 370,
+  "update_time": "2026-05-14 17:38:16",
   "history": [
     {
-      "date": "2026-05-08",
+      "date": "2026-05-14",
       "nav": "",
-      "valuation": 1.1259,
+      "valuation": 1.1875,
+      "price": 1.171,
+      "change": -3.54,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-13",
+      "nav": 1.2208,
+      "valuation": 1.1875,
+      "price": 1.214,
+      "change": 2.88,
+      "premium": -0.56
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 1.1916,
+      "valuation": 1.1875,
+      "price": 1.18,
+      "change": 1.9,
+      "premium": -0.97
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 1.1673,
+      "valuation": 1.1875,
+      "price": 1.158,
+      "change": 4.8,
+      "premium": -0.8
+    },
+    {
+      "date": "2026-05-08",
+      "nav": 1.1017,
+      "valuation": 1.1875,
       "price": 1.105,
       "change": 0.0,
-      "premium": ""
+      "premium": 0.3
     },
     {
       "date": "2026-05-08",

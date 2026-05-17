@@ -1,15 +1,47 @@
 {
   "code": "160633",
-  "days": 366,
-  "update_time": "2026-05-09 22:59:07",
+  "days": 370,
+  "update_time": "2026-05-14 17:12:07",
   "history": [
     {
-      "date": "2026-05-08",
+      "date": "2026-05-14",
       "nav": "",
-      "valuation": 1.0656,
+      "valuation": 1.0565,
+      "price": 1.056,
+      "change": -1.4,
+      "premium": ""
+    },
+    {
+      "date": "2026-05-13",
+      "nav": 1.0805,
+      "valuation": 1.0565,
+      "price": 1.071,
+      "change": -0.93,
+      "premium": -0.88
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 1.0857,
+      "valuation": 1.0565,
+      "price": 1.081,
+      "change": 0.75,
+      "premium": -0.43
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 1.0829,
+      "valuation": 1.0565,
+      "price": 1.073,
+      "change": 1.04,
+      "premium": -0.91
+    },
+    {
+      "date": "2026-05-08",
+      "nav": 1.0662,
+      "valuation": 1.0565,
       "price": 1.062,
       "change": 0.0,
-      "premium": ""
+      "premium": -0.39
     },
     {
       "date": "2026-05-08",

@@ -315,24 +315,24 @@ def load_fund_codes(lof_only=False):
 
 def update_fund_history(code, days=365, incremental=True):
     """
-    更新单只基金历史数据（增量或全量）
-    
-    增量模式:
-        - 读取现有 fund_history/{code}.json
-        - 只获取最新 1 天的价格和净值
-        - 如果今天数据已存在则跳过
-        - 否则插入到历史数据最前面
-    
-    全量模式:
-        - 重新从 API 拉取全部数据
-        - 覆盖写入文件
-    
-    参数:
-        code: 基金代码
-        days: 全量生成时的天数
-        incremental: True 增量更新，False 全量替换
-    返回:
-        数据字典或 None
+    Update single fund historical data (incremental or full rebuild).
+
+    Incremental mode:
+        - Read existing fund_history/{code}.json
+        - Fetch latest 5 days of price + NAV
+        - For each date: if exists, update fields in-place; if not, insert new record
+        - Recalculate change% for affected entries
+
+    Full mode:
+        - Re-fetch all data from APIs
+        - Overwrite file
+
+    Args:
+        code: Fund code (6-digit string)
+        days: Number of days for full generation
+        incremental: True for incremental update, False for full rebuild
+    Returns:
+        Data dict on success, None on failure
     """
     history_file = os.path.join(DATA_DIR, f'{code}.json')
     logger.info(f"{code}: 开始{'增量更新' if incremental else '全量更新'}")
@@ -343,44 +343,66 @@ def update_fund_history(code, days=365, incremental=True):
                 old_data = json.load(f)
             logger.info(f"{code}: 读取现有数据，共 {old_data['days']} 条")
 
-            # 获取最新一天的价格
-            price_map = get_tencent_kline(code, 1)
+            # Fetch latest 5 days of price, NAV and realtime valuation
+            INCREMENTAL_DAYS = 5
+            price_map = get_tencent_kline(code, INCREMENTAL_DAYS)
             if not price_map:
                 logger.warning(f"{code}: 增量更新未获取到新价格数据")
                 return None
 
-            # 获取最新一天的净值
-            today = datetime.now().strftime('%Y-%m-%d')
-            nav_map = get_historical_nav(code, 1)
-            nav = nav_map.get(today, 0)
-
-            # 获取实时估值
+            nav_map = get_historical_nav(code, INCREMENTAL_DAYS)
             realtime = get_fund_realtime(code)
             valuation = realtime.get('valuation', 0) if realtime else 0
 
-            # 检查今天数据是否已存在
-            if old_data['history'] and old_data['history'][0]['date'] == today:
-                logger.info(f"{code}: 今天({today})数据已存在，跳过增量更新")
-                return old_data
+            history = old_data['history']
+            new_dates = sorted(price_map.keys(), reverse=True)
+            max_touched = -1
 
-            # 将新数据插入到历史最前面
-            for date, price in price_map.items():
-                premium = ((price - nav) / nav * 100) if nav > 0 and price > 0 else 0
-                prev_price = old_data['history'][0]['price'] if old_data['history'] else price
-                change = round((price - prev_price) / prev_price * 100, 2)
+            for date in new_dates:
+                price = price_map.get(date, 0)
+                nav = nav_map.get(date, 0)
+                premium = round((price - nav) / nav * 100, 2) if nav > 0 and price > 0 else ''
 
-                old_data['history'].insert(0, {
-                    'date': date,
-                    'nav': round(nav, 4) if nav > 0 else '',
-                    'valuation': round(valuation, 4) if valuation > 0 else '',
-                    'price': round(price, 4),
-                    'change': change,
-                    'premium': round(premium, 2) if premium else '',
-                })
+                existing_idx = next((i for i, r in enumerate(history) if r['date'] == date), None)
+
+                if existing_idx is not None:
+                    history[existing_idx].update({
+                        'nav': round(nav, 4) if nav > 0 else '',
+                        'valuation': round(valuation, 4) if valuation > 0 else '',
+                        'price': round(price, 4),
+                        'premium': premium,
+                    })
+                    max_touched = max(max_touched, existing_idx)
+                    logger.info(f"{code}: {date} 已更新 (price={price}, nav={nav}, premium={premium}%)")
+                else:
+                    insert_idx = next((i for i, r in enumerate(history) if r['date'] < date), len(history))
+                    history.insert(insert_idx, {
+                        'date': date,
+                        'nav': round(nav, 4) if nav > 0 else '',
+                        'valuation': round(valuation, 4) if valuation > 0 else '',
+                        'price': round(price, 4),
+                        'change': 0,
+                        'premium': premium,
+                    })
+                    max_touched = max(max_touched, insert_idx)
+                    logger.info(f"{code}: {date} 新增 (price={price}, nav={nav}, premium={premium}%)")
+
+            # Recalculate change for affected entries (0 to max_touched + 1)
+            recalc_end = min(max_touched + 2, len(history))
+            for i in range(recalc_end):
+                if i < len(history) - 1:
+                    prev_price = history[i + 1]['price']
+                    curr_price = history[i]['price']
+                    if prev_price > 0 and curr_price > 0:
+                        history[i]['change'] = round((curr_price - prev_price) / prev_price * 100, 2)
+                    else:
+                        history[i]['change'] = 0
+                else:
+                    history[i]['change'] = 0
 
             old_data['update_time'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            old_data['days'] = len(old_data['history'])
-            logger.info(f"{code}: 增量更新完成，新增 1 条，共 {old_data['days']} 条")
+            old_data['days'] = len(history)
+            logger.info(f"{code}: 增量更新完成，共 {old_data['days']} 条")
             return old_data
 
         except Exception as e:

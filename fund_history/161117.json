@@ -1,15 +1,47 @@
 {
   "code": "161117",
-  "days": 366,
-  "update_time": "2026-05-09 23:00:35",
+  "days": 370,
+  "update_time": "2026-05-15 08:34:29",
   "history": [
     {
-      "date": "2026-05-08",
-      "nav": "",
-      "valuation": 1.0411,
+      "date": "2026-05-14",
+      "nav": 1.042,
+      "valuation": 1.042,
       "price": 1.04,
       "change": 0.0,
-      "premium": ""
+      "premium": -0.19
+    },
+    {
+      "date": "2026-05-13",
+      "nav": 1.042,
+      "valuation": 1.042,
+      "price": 1.04,
+      "change": 0.1,
+      "premium": -0.19
+    },
+    {
+      "date": "2026-05-12",
+      "nav": 1.042,
+      "valuation": 1.042,
+      "price": 1.039,
+      "change": -0.1,
+      "premium": -0.29
+    },
+    {
+      "date": "2026-05-11",
+      "nav": 1.041,
+      "valuation": 1.042,
+      "price": 1.04,
+      "change": 0.0,
+      "premium": -0.1
+    },
+    {
+      "date": "2026-05-08",
+      "nav": 1.041,
+      "valuation": 1.042,
+      "price": 1.04,
+      "change": 0.0,
+      "premium": -0.1
     },
     {
       "date": "2026-05-08",

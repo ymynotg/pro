@@ -1014,9 +1014,14 @@
                     const valPremiumClass = valPremium > 5 ? 'high' : valPremium > 1 ? 'medium' : valPremium > 0 ? 'up' : valPremium < -5 ? 'low' : valPremium < -1 ? 'cyan' : valPremium < 0 ? 'down' : '';
                     const valPremiumSign = valPremium >= 0 ? '+' : '';
                     
+                    // 名称列：如果有url则显示为超链接，否则显示纯文本
+                    const nameCell = item.url ? 
+                        `<td title="${item.name}"><a href="${item.url}" target="_blank" class="code-link">${item.name}</a></td>` : 
+                        `<td title="${item.name}">${item.name}</td>`;
+                    
                     html += `<tr class="${rowClass}">
                         <td><a href="javascript:void(0)" class="code-link" data-code="${item.code}" onclick="showHistory('${item.code}')">${item.code}</a></td>
-                        <td title="${item.name}">${item.name}</td>
+                        ${nameCell}
                         <td class="price ${changeClass}">${formatValue(item.price, 4)}</td>
                         <td><span class="change ${changeClass}">${change !== null ? changeSign + formatValue(change) + '%' : '-'}</span></td>
                         <td>${formatValue(item.nav, 4)}</td>
@@ -1045,9 +1050,14 @@
 
                     const redeemClass = !item.redeem_status ? '' : redeemStatus === '开放' ? 'status-open' : redeemStatus === '暂停' ? 'status-closed' : 'status-limit';
 
+                    // 名称列：如果有url则显示为超链接，否则显示纯文本
+                    const nameCell = item.url ? 
+                        `<td title="${item.name}"><a href="${item.url}" target="_blank" class="code-link">${item.name}</a></td>` : 
+                        `<td title="${item.name}">${item.name}</td>`;
+
                     html += `<tr class="${rowClass}">
                         <td><a href="javascript:void(0)" class="code-link" data-code="${item.code}" onclick="showHistory('${item.code}')">${item.code}</a></td>
-                        <td title="${item.name}">${item.name}</td>
+                        ${nameCell}
                         <td class="price ${changeClass}">${formatValue(item.price, 4)}</td>
                         <td><span class="change ${changeClass}">${change !== null ? changeSign + formatValue(change) + '%' : '-'}</span></td>
                         <td>${formatValue(item.nav, 4)}</td>

@@ -61,6 +61,7 @@ BASE_DIR = os.path.dirname(__file__)
 LOF_CONFIG = os.path.join(BASE_DIR, 'lof_config.json')
 QDII_CONFIG = os.path.join(BASE_DIR, 'qdii_config.json')
 FUND_HISTORY_DIR = os.path.join(BASE_DIR, 'fund_history')
+FUND_MAPPING_FILE = os.path.join(BASE_DIR, 'config', 'fund_mapping.json')
 
 # 并发控制: 20个工作线程
 EXECUTOR = ThreadPoolExecutor(max_workers=20)
@@ -82,6 +83,15 @@ def load_config(config_file):
         except:
             pass
     return None
+
+def load_fund_mapping():
+    """
+    加载基金映射文件(fund_mapping.json)
+    
+    Returns:
+        dict: 基金映射数据 {code: {fund_name, company, url, fund_type}}
+    """
+    return load_config(FUND_MAPPING_FILE) or {}
 
 def get_fund_realtime(code):
     """
@@ -362,6 +372,9 @@ def format_fund_data(funds):
             code = f.get('code', '')
             fund_status_map[code] = get_fund_status(code)
 
+    # 加载基金映射数据(用于获取url)
+    fund_mapping = load_fund_mapping()
+
     # 格式化输出
     result = []
     for f in funds:
@@ -385,9 +398,14 @@ def format_fund_data(funds):
 
         valPremium = ((price - valuation) / valuation * 100) if valuation > 0 and price > 0 else 0
         
+        # 从fund_mapping中获取url
+        fund_info = fund_mapping.get(code, {})
+        url = fund_info.get('url', '')
+        
         item = {
             'code': code,
             'name': f.get('name', ''),
+            'url': url,
             'price': price if price > 0 else '',
             'change': change,
             'change_percent': change_percent if change_percent != 0 else '',

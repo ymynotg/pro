@@ -1,23 +1,31 @@
 {
   "code": "000927",
-  "days": 370,
-  "update_time": "2026-05-14 17:39:09",
+  "days": 365,
+  "update_time": "2026-05-17 20:38:55",
   "history": [
     {
-      "date": "2026-05-14",
+      "date": "2026-05-15",
       "nav": "",
       "valuation": "",
-      "price": 2038.85,
-      "change": -1.33,
+      "price": 2020.28,
+      "change": -0.91,
       "premium": ""
     },
     {
+      "date": "2026-05-14",
+      "nav": 0.2105,
+      "valuation": "",
+      "price": 2038.85,
+      "change": -1.33,
+      "premium": 968474.82
+    },
+    {
       "date": "2026-05-13",
-      "nav": "",
+      "nav": 0.2115,
       "valuation": "",
       "price": 2066.28,
       "change": 0.34,
-      "premium": ""
+      "premium": 976864.54
     },
     {
       "date": "2026-05-12",
@@ -40,16 +48,8 @@
       "nav": 0.2117,
       "valuation": "",
       "price": 2047.22,
-      "change": 0.0,
-      "premium": 966938.26
-    },
-    {
-      "date": "2026-05-08",
-      "nav": "",
-      "valuation": "",
-      "price": 2047.22,
       "change": 0.09,
-      "premium": ""
+      "premium": 966938.26
     },
     {
       "date": "2026-05-07",
@@ -2920,48 +2920,8 @@
       "nav": 0.1229,
       "valuation": "",
       "price": 1976.55,
-      "change": -0.11,
-      "premium": 1608158.75
-    },
-    {
-      "date": "2024-11-08",
-      "nav": 0.1235,
-      "valuation": "",
-      "price": 1978.67,
-      "change": -0.68,
-      "premium": 1602061.94
-    },
-    {
-      "date": "2024-11-07",
-      "nav": 0.1234,
-      "valuation": "",
-      "price": 1992.12,
-      "change": 2.69,
-      "premium": 1614259.81
-    },
-    {
-      "date": "2024-11-06",
-      "nav": 0.1237,
-      "valuation": "",
-      "price": 1939.95,
-      "change": -0.14,
-      "premium": 1568170.01
-    },
-    {
-      "date": "2024-11-05",
-      "nav": 0.1225,
-      "valuation": "",
-      "price": 1942.67,
-      "change": 2.13,
-      "premium": 1585753.06
-    },
-    {
-      "date": "2024-11-04",
-      "nav": 0.1232,
-      "valuation": "",
-      "price": 1902.21,
       "change": 0,
-      "premium": 1543901.62
+      "premium": 1608158.75
     }
   ]
 }

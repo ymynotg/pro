@@ -1,0 +1,270 @@
+/* pages/index/index.wxss */
+
+.container {
+  padding: 0;
+  background: var(--bg-primary);
+  min-height: 100vh;
+}
+
+/* 标签栏 */
+.tabs {
+  display: flex;
+  background: var(--bg-secondary);
+  border-bottom: 1rpx solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24rpx 0;
+  color: var(--text-secondary);
+  font-size: 28rpx;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.tab-item.active {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60rpx;
+  height: 4rpx;
+  background: var(--primary-color);
+  border-radius: 2rpx;
+}
+
+.tab-count {
+  font-size: 24rpx;
+  margin-left: 4rpx;
+  opacity: 0.8;
+}
+
+/* 搜索栏 */
+.search-bar {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  background: var(--bg-secondary);
+  gap: 16rpx;
+}
+
+.search-input-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: var(--bg-tertiary);
+  border-radius: 8rpx;
+  padding: 16rpx 24rpx;
+  gap: 16rpx;
+}
+
+.search-input {
+  flex: 1;
+  color: var(--text-primary);
+  font-size: 28rpx;
+}
+
+.filter-btn {
+  padding: 16rpx 24rpx;
+  background: var(--bg-tertiary);
+  border-radius: 8rpx;
+  color: var(--text-secondary);
+  font-size: 24rpx;
+  border: 1rpx solid var(--border-color);
+}
+
+.filter-btn.active {
+  background: rgba(0, 212, 255, 0.2);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.refresh-btn {
+  padding: 16rpx;
+  background: var(--bg-tertiary);
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 统计栏 */
+.stats-bar {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 24rpx;
+  background: var(--bg-tertiary);
+  border-bottom: 1rpx solid var(--border-color);
+  gap: 24rpx;
+  overflow-x: auto;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  white-space: nowrap;
+}
+
+.stat-label {
+  color: var(--text-muted);
+  font-size: 24rpx;
+}
+
+.stat-value {
+  color: var(--text-primary);
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+/* 数据列表 */
+.data-list {
+  padding: 24rpx;
+}
+
+/* 数据项 */
+.data-item {
+  background: var(--bg-card);
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  border: 1rpx solid var(--border-color);
+  transition: all 0.3s;
+}
+
+.data-item:active {
+  transform: scale(0.98);
+  opacity: 0.8;
+}
+
+/* 项目头部 */
+.item-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  gap: 16rpx;
+}
+
+.item-code {
+  color: var(--primary-color);
+  font-size: 32rpx;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.item-name {
+  flex: 1;
+  color: var(--text-primary);
+  font-size: 28rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-tags {
+  display: flex;
+  gap: 8rpx;
+}
+
+/* 项目主体 */
+.item-body {
+  margin-bottom: 20rpx;
+}
+
+.price-info {
+  display: flex;
+  gap: 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.price-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.price-label {
+  color: var(--text-muted);
+  font-size: 24rpx;
+}
+
+.price-value {
+  color: var(--text-primary);
+  font-size: 28rpx;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.rate-info {
+  display: flex;
+  gap: 24rpx;
+}
+
+.rate-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.rate-label {
+  color: var(--text-muted);
+  font-size: 24rpx;
+}
+
+.rate-value {
+  font-size: 28rpx;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+/* 项目底部 */
+.item-footer {
+  display: flex;
+  gap: 24rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid var(--border-color);
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.status-label {
+  color: var(--text-muted);
+  font-size: 24rpx;
+}
+
+.status-value {
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+/* 加载和空状态 */
+.loading,
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 0;
+  color: var(--text-muted);
+}
+
+.empty-icon {
+  font-size: 96rpx;
+  margin-bottom: 24rpx;
+}

@@ -1,0 +1,183 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 顶部标签栏 -->
+  <view class="tabs">
+    <view 
+      class="tab-item {{activeTab === 'lof' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="lof"
+    >
+      <text>LOF</text>
+      <text class="tab-count">({{lofCount}})</text>
+    </view>
+    <view 
+      class="tab-item {{activeTab === 'qdii' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="qdii"
+    >
+      <text>QDII</text>
+      <text class="tab-count">({{qdiiCount}})</text>
+    </view>
+    <view 
+      class="tab-item {{activeTab === 'etf' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="etf"
+    >
+      <text>ETF</text>
+      <text class="tab-count">({{etfCount}})</text>
+    </view>
+    <view 
+      class="tab-item {{activeTab === 'option' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="option"
+    >
+      <text>期权</text>
+      <text class="tab-count">({{optionCount}})</text>
+    </view>
+  </view>
+
+  <!-- 搜索和筛选栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrapper">
+      <icon type="search" size="16" color="#8a8a8a"></icon>
+      <input 
+        class="search-input"
+        placeholder="搜索基金代码或名称"
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        confirm-type="search"
+        bindconfirm="onSearch"
+      />
+      <icon 
+        wx:if="{{searchKeyword}}"
+        type="clear" 
+        size="16" 
+        color="#8a8a8a"
+        bindtap="clearSearch"
+      ></icon>
+    </view>
+    
+    <!-- QDII筛选按钮 -->
+    <view 
+      wx:if="{{activeTab === 'qdii'}}"
+      class="filter-btn {{showCleanedData ? 'active' : ''}}"
+      bindtap="toggleCleanFilter"
+    >
+      <text>{{showCleanedData ? '已清洗' : '全部'}}</text>
+    </view>
+    
+    <!-- 刷新按钮 -->
+    <view class="refresh-btn" bindtap="refreshData">
+      <icon type="refresh" size="20" color="#00d4ff"></icon>
+    </view>
+  </view>
+
+  <!-- 数据统计栏 -->
+  <view class="stats-bar">
+    <view class="stat-item">
+      <text class="stat-label">总数：</text>
+      <text class="stat-value">{{filteredData.length}}</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-label">溢价>0：</text>
+      <text class="stat-value text-success">{{positiveCount}}</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-label">溢价<0：</text>
+      <text class="stat-value text-danger">{{negativeCount}}</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-label">更新：</text>
+      <text class="stat-value">{{updateTime}}</text>
+    </view>
+  </view>
+
+  <!-- 数据列表 -->
+  <view class="data-list">
+    <!-- 加载中 -->
+    <view wx:if="{{loading}}" class="loading">
+      <text>加载中...</text>
+    </view>
+    
+    <!-- 空状态 -->
+    <view wx:elif="{{filteredData.length === 0}}" class="empty">
+      <text class="empty-icon">📊</text>
+      <text>暂无数据</text>
+    </view>
+    
+    <!-- 数据项 -->
+    <view wx:else>
+      <view 
+        class="data-item"
+        wx:for="{{filteredData}}"
+        wx:key="code"
+        bindtap="viewDetail"
+        data-item="{{item}}"
+      >
+        <!-- 基金代码和名称 -->
+        <view class="item-header">
+          <view class="item-code">{{item.code}}</view>
+          <view class="item-name">{{item.name}}</view>
+          <view class="item-tags">
+            <text 
+              wx:if="{{item.status}}" 
+              class="tag {{item.status === '正常' ? 'tag-success' : 'tag-danger'}}"
+            >
+              {{item.status}}
+            </text>
+          </view>
+        </view>
+        
+        <!-- 价格信息 -->
+        <view class="item-body">
+          <view class="price-info">
+            <view class="price-item">
+              <text class="price-label">现价：</text>
+              <text class="price-value">{{item.price || '--'}}</text>
+            </view>
+            <view class="price-item">
+              <text class="price-label">净值：</text>
+              <text class="price-value">{{item.nav || '--'}}</text>
+            </view>
+            <view class="price-item">
+              <text class="price-label">估值：</text>
+              <text class="price-value">{{item.estimate || '--'}}</text>
+            </view>
+          </view>
+          
+          <!-- 涨跌幅和溢价率 -->
+          <view class="rate-info">
+            <view class="rate-item">
+              <text class="rate-label">涨跌幅：</text>
+              <text class="rate-value {{item.changePercent > 0 ? 'number-positive' : item.changePercent < 0 ? 'number-negative' : ''}}">
+                {{item.changePercent > 0 ? '+' : ''}}{{item.changePercent || '--'}}%
+              </text>
+            </view>
+            <view class="rate-item">
+              <text class="rate-label">溢价率：</text>
+              <text class="rate-value {{item.premiumRate > 0 ? 'number-positive' : item.premiumRate < 0 ? 'number-negative' : ''}}">
+                {{item.premiumRate > 0 ? '+' : ''}}{{item.premiumRate || '--'}}%
+              </text>
+            </view>
+          </view>
+        </view>
+        
+        <!-- 申购赎回状态 -->
+        <view class="item-footer">
+          <view class="status-item">
+            <text class="status-label">申购：</text>
+            <text class="status-value {{item.purchaseStatus === '开放' ? 'text-success' : 'text-danger'}}">
+              {{item.purchaseStatus || '--'}}
+            </text>
+          </view>
+          <view class="status-item">
+            <text class="status-label">赎回：</text>
+            <text class="status-value {{item.redeemStatus === '开放' ? 'text-success' : 'text-danger'}}">
+              {{item.redeemStatus || '--'}}
+            </text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

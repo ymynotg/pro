@@ -1,0 +1,38 @@
+{
+  "description": "基金套利监控小程序",
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "preloadBackgroundData": false,
+    "minified": true,
+    "newFeature": false,
+    "coverView": true,
+    "nodeModules": false,
+    "autoAudits": false,
+    "showShadowRootInWxmlPanel": true,
+    "scopeDataEvalAfterAppendUseFlag": false,
+    "generateCodeInAbs": false,
+    "checkInvalidKeyOfCatchArgs": false,
+    "checkResTagToRequest": false,
+    "babelSetting": {
+      "exclude": [],
+      "outputPath": ""
+    },
+    "useCompilerPlugins": false
+  },
+  "compileType": "miniprogram",
+  "libVersion": "3.3.4",
+  "appid": "touristappid",
+  "projectname": "fund-arbitrage-monitor",
+  "condition": {},
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
+  }
+}

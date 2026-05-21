@@ -1,0 +1,129 @@
+<!--pages/history/history.wxml-->
+<view class="container">
+  <!-- 基金信息 -->
+  <view class="fund-info">
+    <view class="fund-header">
+      <text class="fund-code">{{fundCode}}</text>
+      <text class="fund-name">{{fundName}}</text>
+    </view>
+    
+    <!-- 时间范围选择 -->
+    <view class="time-range">
+      <view 
+        class="range-item {{activeRange === 7 ? 'active' : ''}}"
+        bindtap="changeRange"
+        data-range="7"
+      >
+        <text>7天</text>
+      </view>
+      <view 
+        class="range-item {{activeRange === 30 ? 'active' : ''}}"
+        bindtap="changeRange"
+        data-range="30"
+      >
+        <text>30天</text>
+      </view>
+      <view 
+        class="range-item {{activeRange === 90 ? 'active' : ''}}"
+        bindtap="changeRange"
+        data-range="90"
+      >
+        <text>90天</text>
+      </view>
+      <view 
+        class="range-item {{activeRange === 365 ? 'active' : ''}}"
+        bindtap="changeRange"
+        data-range="365"
+      >
+        <text>1年</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 图表区域 -->
+  <view class="chart-section">
+    <view class="chart-title">溢价率走势</view>
+    
+    <!-- 加载中 -->
+    <view wx:if="{{loading}}" class="loading">
+      <text>加载中...</text>
+    </view>
+    
+    <!-- 空状态 -->
+    <view wx:elif="{{historyData.length === 0}}" class="empty">
+      <text class="empty-icon">📊</text>
+      <text>暂无历史数据</text>
+    </view>
+    
+    <!-- 图表 -->
+    <view wx:else class="chart-container">
+      <canvas 
+        canvas-id="premiumChart"
+        class="chart-canvas"
+        bindtouchstart="onChartTouchStart"
+        bindtouchmove="onChartTouchMove"
+        bindtouchend="onChartTouchEnd"
+      ></canvas>
+      
+      <!-- 图表提示 -->
+      <view wx:if="{{showTooltip}}" class="chart-tooltip" style="left: {{tooltipX}}px; top: {{tooltipY}}px;">
+        <view class="tooltip-date">{{tooltipDate}}</view>
+        <view class="tooltip-value">溢价率：{{tooltipValue}}%</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 统计信息 -->
+  <view wx:if="{{historyData.length > 0}}" class="stats-section">
+    <view class="stats-title">统计信息</view>
+    <view class="stats-grid">
+      <view class="stat-card">
+        <text class="stat-label">平均溢价率</text>
+        <text class="stat-value {{avgPremium > 0 ? 'number-positive' : avgPremium < 0 ? 'number-negative' : ''}}">
+          {{avgPremium > 0 ? '+' : ''}}{{avgPremium}}%
+        </text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-label">最高溢价率</text>
+        <text class="stat-value number-positive">{{maxPremium > 0 ? '+' : ''}}{{maxPremium}}%</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-label">最低溢价率</text>
+        <text class="stat-value number-negative">{{minPremium > 0 ? '+' : ''}}{{minPremium}}%</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-label">波动率</text>
+        <text class="stat-value">{{volatility}}%</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 历史数据列表 -->
+  <view wx:if="{{historyData.length > 0}}" class="history-list">
+    <view class="list-title">历史记录</view>
+    
+    <view 
+      class="history-item"
+      wx:for="{{historyData}}"
+      wx:key="date"
+    >
+      <view class="item-date">{{item.date}}</view>
+      <view class="item-data">
+        <view class="data-row">
+          <text class="data-label">价格：</text>
+          <text class="data-value">{{item.price}}</text>
+        </view>
+        <view class="data-row">
+          <text class="data-label">净值：</text>
+          <text class="data-value">{{item.nav}}</text>
+        </view>
+        <view class="data-row">
+          <text class="data-label">溢价率：</text>
+          <text class="data-value {{item.premium > 0 ? 'number-positive' : item.premium < 0 ? 'number-negative' : ''}}">
+            {{item.premium > 0 ? '+' : ''}}{{item.premium}}%
+          </text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

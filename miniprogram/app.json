@@ -1,0 +1,40 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/history/history"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#1a1a2e",
+    "navigationBarTitleText": "基金套利监控",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#0f0f1e",
+    "enablePullDownRefresh": true
+  },
+  "tabBar": {
+    "color": "#8a8a8a",
+    "selectedColor": "#00d4ff",
+    "backgroundColor": "#1a1a2e",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "监控",
+        "iconPath": "images/monitor.png",
+        "selectedIconPath": "images/monitor-active.png"
+      },
+      {
+        "pagePath": "pages/history/history",
+        "text": "历史",
+        "iconPath": "images/history.png",
+        "selectedIconPath": "images/history-active.png"
+      }
+    ]
+  },
+  "networkTimeout": {
+    "request": 30000,
+    "downloadFile": 30000
+  },
+  "debug": false,
+  "sitemapLocation": "sitemap.json"
+}

@@ -95,6 +95,17 @@
         <text class="stat-label">波动率</text>
         <text class="stat-value">{{volatility}}%</text>
       </view>
+      <view class="stat-card">
+        <text class="stat-label">历史最高价</text>
+        <text class="stat-value">{{highestPrice}}</text>
+        <text class="stat-date">{{highestPriceDate}}</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-label">最高价涨跌幅</text>
+        <text class="stat-value {{highestPriceChange > 0 ? 'number-positive' : highestPriceChange < 0 ? 'number-negative' : ''}}">
+          {{highestPriceChange > 0 ? '+' : ''}}{{highestPriceChange}}%
+        </text>
+      </view>
     </view>
   </view>
 

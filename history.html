@@ -364,13 +364,16 @@
                     <tr>
                         <th class="sortable" onclick="sortHistory('date')">日期<span class="sort-arrow" id="sort-date">▽</span></th>
                         <th class="sortable" onclick="sortHistory('price')">收盘价<span class="sort-arrow" id="sort-price">▽</span></th>
+                        <th class="sortable" onclick="sortHistory('high')">最高价<span class="sort-arrow" id="sort-high">▽</span></th>
                         <th class="sortable" onclick="sortHistory('change')">涨跌幅<span class="sort-arrow" id="sort-change">▽</span></th>
+                        <th class="sortable" onclick="sortHistory('high_change')">最高涨跌幅<span class="sort-arrow" id="sort-high_change">▽</span></th>
                         <th class="sortable" onclick="sortHistory('nav')">净值<span class="sort-arrow" id="sort-nav">▽</span></th>
                         <th class="sortable" onclick="sortHistory('premium')">溢价率<span class="sort-arrow" id="sort-premium">▽</span></th>
+                        <th class="sortable" onclick="sortHistory('high_premium')">最高价溢价率<span class="sort-arrow" id="sort-high_premium">▽</span></th>
                     </tr>
                 </thead>
                 <tbody id="tbody">
-                    <tr><td colspan="5" class="loading">加载中...</td></tr>
+                    <tr><td colspan="8" class="loading">加载中...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -433,11 +436,18 @@
         sorted.forEach(item => {
             const change = parseFloat(item.change) || 0;
             const premium = parseFloat(item.premium) || 0;
+            const high_change = parseFloat(item.high_change) || 0;
+            const high_premium = parseFloat(item.high_premium) || 0;
 
             let changeClass = '';
             let changeSign = '';
             if (change > 0) { changeClass = 'up'; changeSign = '+'; }
             else if (change < 0) { changeClass = 'down'; }
+
+            let highChangeClass = '';
+            let highChangeSign = '';
+            if (high_change > 0) { highChangeClass = 'up'; highChangeSign = '+'; }
+            else if (high_change < 0) { highChangeClass = 'down'; }
 
             let premiumClass = '';
             if (premium > 5) { premiumClass = 'high'; }
@@ -447,12 +457,23 @@
             else if (premium < -1) { premiumClass = 'cyan'; }
             else if (premium < 0) { premiumClass = 'down'; }
 
+            let highPremiumClass = '';
+            if (high_premium > 5) { highPremiumClass = 'high'; }
+            else if (high_premium > 1) { highPremiumClass = 'medium'; }
+            else if (high_premium > 0) { highPremiumClass = 'up'; }
+            else if (high_premium < -5) { highPremiumClass = 'low'; }
+            else if (high_premium < -1) { highPremiumClass = 'cyan'; }
+            else if (high_premium < 0) { highPremiumClass = 'down'; }
+
             html += `<tr>
                 <td>${item.date}</td>
                 <td class="price">${(parseFloat(item.price) || 0).toFixed(4)}</td>
+                <td class="price">${(parseFloat(item.high) || 0).toFixed(4)}</td>
                 <td><span class="change ${changeClass}">${changeSign}${change.toFixed(2)}%</span></td>
+                <td><span class="change ${highChangeClass}">${highChangeSign}${high_change.toFixed(2)}%</span></td>
                 <td class="price">${(parseFloat(item.nav) || 0).toFixed(4)}</td>
                 <td><span class="premium ${premiumClass}">${premium >= 0 ? '+' : ''}${premium.toFixed(2)}%</span></td>
+                <td><span class="premium ${highPremiumClass}">${high_premium >= 0 ? '+' : ''}${high_premium.toFixed(2)}%</span></td>
             </tr>`;
         });
 
@@ -841,11 +862,11 @@
                 initCharts(cleanData);
             } else {
                 document.getElementById('title').textContent = `${code} - 历史数据`;
-                document.getElementById('tbody').innerHTML = '<tr><td colspan="5" class="empty">暂无历史数据</td></tr>';
+                document.getElementById('tbody').innerHTML = '<tr><td colspan="8" class="empty">暂无历史数据</td></tr>';
             }
         } catch (e) {
             console.error(e);
-            document.getElementById('tbody').innerHTML = '<tr><td colspan="5" class="error">加载失败: ' + e.message + '</td></tr>';
+            document.getElementById('tbody').innerHTML = '<tr><td colspan="8" class="error">加载失败: ' + e.message + '</td></tr>';
         }
     }
 

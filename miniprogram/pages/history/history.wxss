@@ -146,6 +146,14 @@
   font-family: var(--font-mono);
 }
 
+.stat-date {
+  display: block;
+  color: var(--text-muted);
+  font-size: 22rpx;
+  margin-top: 8rpx;
+  font-family: var(--font-mono);
+}
+
 /* 历史数据列表 */
 .history-list {
   background: var(--bg-secondary);

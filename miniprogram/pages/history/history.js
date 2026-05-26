@@ -7,26 +7,31 @@ Page({
     // 基金信息
     fundCode: '',
     fundName: '',
-    
+
     // 时间范围
     activeRange: 30,
-    
+
     // 历史数据
     historyData: [],
-    
+
     // 统计数据
     avgPremium: 0,
     maxPremium: 0,
     minPremium: 0,
     volatility: 0,
-    
+
+    // 最高价信息
+    highestPrice: 0,
+    highestPriceDate: '',
+    highestPriceChange: 0,
+
     // 图表相关
     showTooltip: false,
     tooltipX: 0,
     tooltipY: 0,
     tooltipDate: '',
     tooltipValue: '',
-    
+
     // 加载状态
     loading: false
   },
@@ -70,13 +75,17 @@ Page({
       });
       
       const historyData = this.formatHistoryData(res.data || []);
-      
+
       // 计算统计数据
       const stats = this.calculateStats(historyData);
-      
+
+      // 计算最高价信息
+      const highestPriceInfo = this.calculateHighestPrice(historyData);
+
       this.setData({
         historyData,
-        ...stats
+        ...stats,
+        ...highestPriceInfo
       });
       
       // 绘制图表
@@ -103,8 +112,40 @@ Page({
       date: item.date || item.DATE,
       price: util.formatPrice(item.price || item.PRICE),
       nav: util.formatPrice(item.nav || item.NAV),
-      premium: util.formatNumber(item.premium || item.PREMIUM_RATE, 2)
+      premium: util.formatNumber(item.premium || item.PREMIUM_RATE, 2),
+      change: util.formatNumber(item.change || item.CHANGE, 2)
     })).sort((a, b) => new Date(b.date) - new Date(a.date));
+  },
+
+  /**
+   * 计算最高价信息
+   */
+  calculateHighestPrice(data) {
+    if (data.length === 0) {
+      return {
+        highestPrice: 0,
+        highestPriceDate: '',
+        highestPriceChange: 0
+      };
+    }
+
+    // 找到价格最高的记录
+    let highestItem = data[0];
+    let highestPrice = parseFloat(highestItem.price);
+
+    data.forEach(item => {
+      const price = parseFloat(item.price);
+      if (price > highestPrice) {
+        highestPrice = price;
+        highestItem = item;
+      }
+    });
+
+    return {
+      highestPrice: util.formatPrice(highestPrice),
+      highestPriceDate: highestItem.date,
+      highestPriceChange: util.formatNumber(highestItem.change, 2)
+    };
   },
 
   /**

@@ -75,13 +75,13 @@ logger = setup_logger()
 
 def get_tencent_kline(code, days=365):
     """
-    从腾讯行情接口获取复权 K 线数据（日收盘价）
+    从腾讯行情接口获取复权 K 线数据（日收盘价和最高价）
     接口: web.ifzq.gtimg.cn
     参数:
         code: 基金代码（6位数字）
         days: 获取天数
     返回:
-        {日期(yyyy-mm-dd): 收盘价(float)} 字典
+        {日期(yyyy-mm-dd): {'price': 收盘价, 'high': 最高价}} 字典
     """
     # 深市代码以 1 开头，沪市代码以 5 开头
     market = 'sz' if code.startswith('1') else 'sh'
@@ -101,10 +101,14 @@ def get_tencent_kline(code, days=365):
             code_data = data.get('data', {}).get(f'{market}{code}', {})
             # 优先使用复权数据 qfqday，回退到 day
             klines = code_data.get('qfqday', []) or code_data.get('day', [])
+            # K线数据格式: [日期, 开盘价, 收盘价, 最高价, 最低价, 成交量]
             result = {
-                item[0]: float(item[2])
+                item[0]: {
+                    'price': float(item[2]),  # 收盘价
+                    'high': float(item[3])    # 最高价
+                }
                 for item in klines
-                if len(item) >= 3 and float(item[2]) > 0
+                if len(item) >= 4 and float(item[2]) > 0
             }
             logger.info(f"{code}: 腾讯K线获取成功，共 {len(result)} 条")
             return result
@@ -243,26 +247,37 @@ def generate_fund_history(code, days=365):
     history = []
 
     for i, date in enumerate(dates):
-        price = price_map[date]                    # 当日收盘价
-        nav = nav_map.get(date, 0)                 # 当日单位净值
+        price_data = price_map[date]              # 当日价格数据（包含收盘价和最高价）
+        price = price_data['price']               # 当日收盘价
+        high = price_data['high']                 # 当日最高价
+        nav = nav_map.get(date, 0)                # 当日单位净值
 
         # 溢价率 = (价格 - 净值) / 净值 * 100
         premium = ((price - nav) / nav * 100) if nav > 0 and price > 0 else 0
+        
+        # 最高价对应的溢价率 = (最高价 - 净值) / 净值 * 100
+        high_premium = ((high - nav) / nav * 100) if nav > 0 and high > 0 else 0
 
         # 涨跌幅 = 相对于前一交易日（dates 中后一个）的变化
         if i < len(dates) - 1:
-            prev_price = price_map[dates[i + 1]]
+            prev_price = price_map[dates[i + 1]]['price']
             change = round((price - prev_price) / prev_price * 100, 2)
+            # 最高涨跌幅 = 最高价相对于前一交易日收盘价的涨跌幅
+            high_change = round((high - prev_price) / prev_price * 100, 2)
         else:
             change = 0
+            high_change = 0
 
         history.append({
             'date': date,
             'nav': round(nav, 4) if nav > 0 else '',
             'valuation': round(valuation, 4) if valuation > 0 else '',
             'price': round(price, 4),
+            'high': round(high, 4),
             'change': change,
+            'high_change': high_change,
             'premium': round(premium, 2) if premium else '',
+            'high_premium': round(high_premium, 2) if high_premium else '',
         })
 
     result = {
@@ -359,9 +374,12 @@ def update_fund_history(code, days=365, incremental=True):
             max_touched = -1
 
             for date in new_dates:
-                price = price_map.get(date, 0)
+                price_data = price_map.get(date, {})
+                price = price_data.get('price', 0)
+                high = price_data.get('high', 0)
                 nav = nav_map.get(date, 0)
                 premium = round((price - nav) / nav * 100, 2) if nav > 0 and price > 0 else ''
+                high_premium = round((high - nav) / nav * 100, 2) if nav > 0 and high > 0 else ''
 
                 existing_idx = next((i for i, r in enumerate(history) if r['date'] == date), None)
 
@@ -370,10 +388,12 @@ def update_fund_history(code, days=365, incremental=True):
                         'nav': round(nav, 4) if nav > 0 else '',
                         'valuation': round(valuation, 4) if valuation > 0 else '',
                         'price': round(price, 4),
+                        'high': round(high, 4),
                         'premium': premium,
+                        'high_premium': high_premium,
                     })
                     max_touched = max(max_touched, existing_idx)
-                    logger.info(f"{code}: {date} 已更新 (price={price}, nav={nav}, premium={premium}%)")
+                    logger.info(f"{code}: {date} 已更新 (price={price}, high={high}, nav={nav}, premium={premium}%)")
                 else:
                     insert_idx = next((i for i, r in enumerate(history) if r['date'] < date), len(history))
                     history.insert(insert_idx, {
@@ -381,24 +401,31 @@ def update_fund_history(code, days=365, incremental=True):
                         'nav': round(nav, 4) if nav > 0 else '',
                         'valuation': round(valuation, 4) if valuation > 0 else '',
                         'price': round(price, 4),
+                        'high': round(high, 4),
                         'change': 0,
+                        'high_change': 0,
                         'premium': premium,
+                        'high_premium': high_premium,
                     })
                     max_touched = max(max_touched, insert_idx)
-                    logger.info(f"{code}: {date} 新增 (price={price}, nav={nav}, premium={premium}%)")
+                    logger.info(f"{code}: {date} 新增 (price={price}, high={high}, nav={nav}, premium={premium}%)")
 
-            # Recalculate change for affected entries (0 to max_touched + 1)
+            # Recalculate change and high_change for affected entries (0 to max_touched + 1)
             recalc_end = min(max_touched + 2, len(history))
             for i in range(recalc_end):
                 if i < len(history) - 1:
                     prev_price = history[i + 1]['price']
                     curr_price = history[i]['price']
+                    curr_high = history[i]['high']
                     if prev_price > 0 and curr_price > 0:
                         history[i]['change'] = round((curr_price - prev_price) / prev_price * 100, 2)
+                        history[i]['high_change'] = round((curr_high - prev_price) / prev_price * 100, 2)
                     else:
                         history[i]['change'] = 0
+                        history[i]['high_change'] = 0
                 else:
                     history[i]['change'] = 0
+                    history[i]['high_change'] = 0
 
             old_data['update_time'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             old_data['days'] = len(history)

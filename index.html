@@ -981,8 +981,14 @@
             }
 
             if (fundData) {
-                // 如果找到，添加到自选
-                mockData.favorite.push({...fundData});
+                // 如果找到，添加到自选，确保包含所有必要字段
+                const completeData = {
+                    ...fundData,
+                    subscribe_status: fundData.subscribe_status || '',
+                    redeem_status: fundData.redeem_status || '',
+                    limit_amount: fundData.limit_amount || ''
+                };
+                mockData.favorite.push(completeData);
                 saveFavorites();
                 renderTable('favorite', mockData.favorite);
                 updateFavoriteStats(mockData.favorite);
@@ -1031,6 +1037,43 @@
             document.getElementById('favoriteOpportunityCount').textContent = opportunities;
             document.getElementById('favoriteMaxPremium').textContent = maxPremium >= 0 ? '+' + maxPremium.toFixed(2) + '%' : maxPremium.toFixed(2) + '%';
             document.getElementById('favoriteMinPremium').textContent = minPremium >= 0 ? '+' + minPremium.toFixed(2) + '%' : minPremium.toFixed(2) + '%';
+        }
+
+        // 刷新自选数据，用最新的API数据更新
+        function refreshFavoriteData() {
+            if (mockData.favorite.length === 0) return;
+            
+            let updated = false;
+            mockData.favorite = mockData.favorite.map(item => {
+                // 从LOF或QDII数据中查找最新数据
+                const latestData = mockData.qdii.find(f => f.code === item.code) ||
+                                  mockData.lof.find(f => f.code === item.code);
+                
+                if (latestData) {
+                    // 确保包含所有必要字段
+                    const completeData = {
+                        ...latestData,
+                        subscribe_status: latestData.subscribe_status || '',
+                        redeem_status: latestData.redeem_status || '',
+                        limit_amount: latestData.limit_amount || ''
+                    };
+                    
+                    // 检查是否有更新
+                    if (JSON.stringify(completeData) !== JSON.stringify(item)) {
+                        updated = true;
+                    }
+                    
+                    return completeData;
+                }
+                
+                return item;
+            });
+            
+            // 如果有更新，保存到localStorage
+            if (updated) {
+                saveFavorites();
+                console.log('自选数据已更新');
+            }
         }
 
         // 数据清洗相关状态
@@ -1351,6 +1394,9 @@ tbody.innerHTML = html;
             // 获取数据（fetchData内部会根据isFilterActive决定是否过滤）
             await fetchData();
 
+            // 用最新的API数据刷新自选数据
+            refreshFavoriteData();
+
             // 更新UI状态（按钮、表格、统计）
             if (isFilterActive) {
                 updateFilterButton();
@@ -1394,6 +1440,13 @@ tbody.innerHTML = html;
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                 tab.classList.add('active');
                 document.getElementById(tab.dataset.tab).classList.add('active');
+                
+                // 切换到自选标签时，刷新数据
+                if (tab.dataset.tab === 'favorite') {
+                    refreshFavoriteData();
+                    renderTable('favorite', mockData.favorite);
+                    updateFavoriteStats(mockData.favorite);
+                }
             });
         });
 

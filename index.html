@@ -448,6 +448,40 @@
             box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
         }
 
+        .add-btn {
+            background: var(--accent);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 12px;
+        }
+
+        .add-btn:hover {
+            background: var(--highlight);
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+        }
+
+        .delete-btn {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #f44336;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .delete-btn:hover {
+            background: #f44336;
+            color: white;
+        }
+
         .data-table td:nth-child(2) {
             font-family: "Source Han Sans CN", sans-serif;
             max-width: 200px;
@@ -592,6 +626,7 @@
             <button class="tab" data-tab="qdii">QDII</button>
             <button class="tab" data-tab="etf">ETF</button>
             <button class="tab" data-tab="option">期权</button>
+            <button class="tab" data-tab="favorite">自选</button>
         </div>
 
         <div id="lof" class="tab-content active">
@@ -802,6 +837,60 @@
             </div>
         </div>
 
+        <div id="favorite" class="tab-content">
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span class="status-dot green"></span>
+                        自选基金监控
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-label">自选个数</div>
+                        <div class="stat-value" id="favoriteCount">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">套利机会数</div>
+                        <div class="stat-value" id="favoriteOpportunityCount">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">最高溢价</div>
+                        <div class="stat-value up" id="favoriteMaxPremium">+0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">最低溢价</div>
+                        <div class="stat-value" id="favoriteMinPremium">0%</div>
+                    </div>
+                </div>
+                <div class="filter-bar">
+                    <input type="text" class="filter-input" id="favoriteSearchInput" placeholder="搜索代码或名称..." oninput="filterTable('favorite', this.value)">
+                    <button class="add-btn" onclick="showAddFavoriteDialog()">+ 增加</button>
+                </div>
+                <div class="table-wrapper" id="favoriteTableWrapper">
+                    <table class="data-table" id="favoriteTable">
+                        <thead>
+                            <tr>
+                                <th data-sort="code">代码</th>
+                                <th data-sort="name">名称</th>
+                                <th data-sort="price">当前价</th>
+                                <th data-sort="change">涨跌幅</th>
+                                <th data-sort="nav">净值</th>
+                                <th data-sort="premium">溢价率</th>
+                                <th data-sort="valuation">估值</th>
+                                <th data-sort="valPremium">估溢率</th>
+                                <th data-sort="subscribe_status">申购/限额</th>
+                                <th data-sort="redeem_status">赎回状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="favoriteTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <footer class="footer">
             跨境套利系统 v1.0 | 数据仅供参考，不构成投资建议
         </footer>
@@ -849,8 +938,100 @@
                 { code: '510300', name: '300ETF', call: 4.25, put: 4.12, future: 8.37, space: 1.2, level: 'medium' },
                 { code: '510500', name: '500ETF', call: 2.85, put: 2.72, space: 0.9, level: 'medium' },
                 { code: '159919', name: '创业板', call: 2.60, put: 2.48, space: 0.5, level: 'low' },
-            ]
+            ],
+            favorite: []
         };
+
+        // 自选基金相关函数
+        function loadFavorites() {
+            const saved = localStorage.getItem('favorite_funds');
+            if (saved) {
+                try {
+                    mockData.favorite = JSON.parse(saved);
+                } catch (e) {
+                    mockData.favorite = [];
+                }
+            }
+        }
+
+        function saveFavorites() {
+            localStorage.setItem('favorite_funds', JSON.stringify(mockData.favorite));
+        }
+
+        function showAddFavoriteDialog() {
+            const code = prompt('请输入基金代码：');
+            if (!code) return;
+
+            const trimmedCode = code.trim();
+            if (!trimmedCode) {
+                alert('基金代码不能为空');
+                return;
+            }
+
+            // 检查是否已存在
+            if (mockData.favorite.some(item => item.code === trimmedCode)) {
+                alert('该基金已在自选列表中');
+                return;
+            }
+
+            // 从LOF或QDII数据中查找
+            let fundData = mockData.lof.find(item => item.code === trimmedCode);
+            if (!fundData) {
+                fundData = mockData.qdii.find(item => item.code === trimmedCode);
+            }
+
+            if (fundData) {
+                // 如果找到，添加到自选
+                mockData.favorite.push({...fundData});
+                saveFavorites();
+                renderTable('favorite', mockData.favorite);
+                updateFavoriteStats(mockData.favorite);
+                alert(`已添加 ${trimmedCode} 到自选列表`);
+            } else {
+                // 如果没找到，提示用户
+                const confirmAdd = confirm(`未在LOF/QDII列表中找到代码 ${trimmedCode}，是否仍要添加？\n（将创建空记录）`);
+                if (confirmAdd) {
+                    const newItem = {
+                        code: trimmedCode,
+                        name: '未知基金',
+                        price: '',
+                        change_percent: '',
+                        nav: '',
+                        premium: '',
+                        valuation: '',
+                        valPremium: '',
+                        subscribe_status: '',
+                        redeem_status: ''
+                    };
+                    mockData.favorite.push(newItem);
+                    saveFavorites();
+                    renderTable('favorite', mockData.favorite);
+                    updateFavoriteStats(mockData.favorite);
+                }
+            }
+        }
+
+        function deleteFavorite(code) {
+            if (confirm(`确定要删除 ${code} 吗？`)) {
+                mockData.favorite = mockData.favorite.filter(item => item.code !== code);
+                saveFavorites();
+                renderTable('favorite', mockData.favorite);
+                updateFavoriteStats(mockData.favorite);
+            }
+        }
+
+        function updateFavoriteStats(data) {
+            const count = data.length;
+            const premiums = data.map(item => parseFloat(item.premium) || 0).filter(p => p !== 0);
+            const opportunities = premiums.filter(p => Math.abs(p) > 2).length;
+            const maxPremium = premiums.length > 0 ? Math.max(...premiums) : 0;
+            const minPremium = premiums.length > 0 ? Math.min(...premiums) : 0;
+
+            document.getElementById('favoriteCount').textContent = count;
+            document.getElementById('favoriteOpportunityCount').textContent = opportunities;
+            document.getElementById('favoriteMaxPremium').textContent = maxPremium >= 0 ? '+' + maxPremium.toFixed(2) + '%' : maxPremium.toFixed(2) + '%';
+            document.getElementById('favoriteMinPremium').textContent = minPremium >= 0 ? '+' + minPremium.toFixed(2) + '%' : minPremium.toFixed(2) + '%';
+        }
 
         // 数据清洗相关状态
         let isFilterActive = false;
@@ -1090,6 +1271,45 @@
                         <td><span class="opportunity ${levelClass}">${levelClass === 'high' ? '高' : levelClass === 'medium' ? '中' : '低'}</span></td>
                         <td><button class="action-btn">详情</button></td>
                     </tr>`;
+                } else if (type === 'favorite') {
+                    const valPremium = parseFloat(item.valPremium) || 0;
+                    const valPremiumClass = valPremium > 5 ? 'high' : valPremium > 1 ? 'medium' : valPremium > 0 ? 'up' : valPremium < -5 ? 'low' : valPremium < -1 ? 'cyan' : valPremium < 0 ? 'down' : '';
+                    const valPremiumSign = valPremium >= 0 ? '+' : '';
+                    const subscribeStatus = item.subscribe_status || '-';
+                    const redeemStatus = item.redeem_status || '-';
+                    const limitAmount = item.limit_amount || '';
+
+                    // 申购状态显示逻辑
+                    let subscribeDisplay = '-';
+                    let subscribeClass = '';
+                    if (limitAmount) {
+                        subscribeDisplay = `${subscribeStatus}/${limitAmount}`;
+                        subscribeClass = 'status-limit';
+                    } else if (item.subscribe_status) {
+                        subscribeDisplay = subscribeStatus;
+                        subscribeClass = subscribeStatus === '开放' ? 'status-open' : subscribeStatus === '暂停' ? 'status-closed' : 'status-limit';
+                    }
+
+                    const redeemClass = !item.redeem_status ? '' : redeemStatus === '开放' ? 'status-open' : redeemStatus === '暂停' ? 'status-closed' : 'status-limit';
+
+                    // 名称列
+                    const nameCell = item.url ?
+                        `<td title="${item.name}"><a href="${item.url}" target="_blank" class="code-link">${item.name}</a></td>` :
+                        `<td title="${item.name}">${item.name}</td>`;
+
+                    html += `<tr class="${rowClass}">
+                        <td><a href="javascript:void(0)" class="code-link" data-code="${item.code}" onclick="showHistory('${item.code}')">${item.code}</a></td>
+                        ${nameCell}
+                        <td class="price ${changeClass}">${formatValue(item.price, 4)}</td>
+                        <td><span class="change ${changeClass}">${change !== null ? changeSign + formatValue(change) + '%' : '-'}</span></td>
+                        <td>${formatValue(item.nav, 4)}</td>
+                        <td><span class="premium ${premiumClass}">${premiumSign}${formatValue(premium)}%</span></td>
+                        <td>${formatValue(item.valuation, 4)}</td>
+                        <td><span class="premium ${valPremiumClass}">${valPremiumSign}${formatValue(valPremium)}%</span></td>
+                        <td><span class="status-tag ${subscribeClass}">${subscribeDisplay}</span></td>
+                        <td><span class="status-tag ${redeemClass}">${redeemStatus}</span></td>
+                        <td><button class="delete-btn" onclick="deleteFavorite('${item.code}')">删除</button></td>
+                    </tr>`;
                 }
             });
 tbody.innerHTML = html;
@@ -1125,6 +1345,9 @@ tbody.innerHTML = html;
             // 先加载过滤状态
             loadFilterState();
 
+            // 加载自选数据
+            loadFavorites();
+
             // 获取数据（fetchData内部会根据isFilterActive决定是否过滤）
             await fetchData();
 
@@ -1137,8 +1360,10 @@ tbody.innerHTML = html;
             renderTable('qdii', mockData.qdii);
             renderTable('etf', mockData.etf);
             renderTable('option', mockData.option);
+            renderTable('favorite', mockData.favorite);
             updateLofStats(mockData.lof);
             updateQdiiStats(mockData.qdii);
+            updateFavoriteStats(mockData.favorite);
             updateTime();
         }
 

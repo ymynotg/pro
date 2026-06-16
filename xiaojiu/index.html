@@ -616,7 +616,9 @@
 
         // 查看历史
         function showHistory(code) {
-            window.open(`../history.html?code=${code}`, '_blank', 'width=900,height=700,left=100,top=50');
+            // 判断基金类型：代码以16或50开头通常是QDII_LOF
+            const type = (code.startsWith('16') || code.startsWith('50')) ? 'qdii' : 'lof';
+            window.open(`../history.html?code=${code}&type=${type}`, '_blank', 'width=900,height=700,left=100,top=50');
         }
 
         // 过滤表格

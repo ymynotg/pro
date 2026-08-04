@@ -39,9 +39,93 @@ def setup_logger(name='fund_history'):
 
 logger = setup_logger()
 
+def get_fund_realtime_sina(code):
+    """
+    从新浪财经fu接口获取基金实时数据
+    接口: hq.sinajs.cn/list=fu{fund_code}
+    返回格式: var hq_str_f_{code}="名称,单位净值,累计净值,估值,日期,规模";
+    
+    返回字段说明:
+    - price: 估值
+    - nav: 基金单位净值
+    - valuation: 估值(同price)
+    - change: 涨跌幅(计算得出)
+    - update_time: 日期
+    """
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Referer': 'https://finance.sina.com.cn/',
+    }
+    import re
+    # 先尝试fu请求
+    url = f'https://hq.sinajs.cn/list=fu{code}'
+    try:
+        resp = requests.get(url, headers=headers, timeout=10)
+        if resp.status_code == 200:
+            match = re.search(r'var hq_str_f_\w+="([^"]+)"', resp.text)
+            if match and match.group(1):
+                fields = match.group(1).split(',')
+                if len(fields) >= 5:
+                    nav = float(fields[1]) if fields[1] else 0
+                    valuation = float(fields[3]) if fields[3] else 0
+                    change = round((valuation - nav) / nav * 100, 2) if nav > 0 else 0
+                    return {
+                        'price': valuation,
+                        'nav': nav,
+                        'valuation': valuation,
+                        'change': change,
+                        'update_time': fields[4],
+                    }
+    except Exception as e:
+        logger.warning(f"新浪fu接口获取失败 {code}: {e}")
+    
+    # fu请求返回空数据时，尝试f_请求
+    url_f = f'https://hq.sinajs.cn/list=f_{code}'
+    try:
+        resp = requests.get(url_f, headers=headers, timeout=10)
+        if resp.status_code == 200:
+            match = re.search(r'var hq_str_f_\w+="([^"]+)"', resp.text)
+            if match and match.group(1):
+                fields = match.group(1).split(',')
+                if len(fields) >= 5:
+                    nav = float(fields[1]) if fields[1] else 0
+                    valuation = float(fields[3]) if fields[3] else 0
+                    change = round((valuation - nav) / nav * 100, 2) if nav > 0 else 0
+                    return {
+                        'price': valuation,
+                        'nav': nav,
+                        'valuation': valuation,
+                        'change': change,
+                        'update_time': fields[4],
+                    }
+    except Exception as e:
+        logger.warning(f"新浪f_接口获取失败 {code}: {e}")
+    
+    return None
+
 def get_fund_realtime(code):
     """
     获取基金实时数据(当日净值和估算价格)
+    优先从天天基金获取，失败时从新浪财经fu接口获取(fallback)
+    
+    返回字段说明:
+    - price: 估算价格(gsz)
+    - nav: 基金单位净值(dwjz)
+    - valuation: 估算价格(同gsz)
+    - change: 涨跌幅(净值涨跌幅)
+    - update_time: 更新时间
+    """
+    # 先尝试天天基金
+    result = _get_fund_realtime_eastmoney(code)
+    if result:
+        return result
+    # fallback到新浪财经fu接口
+    logger.info(f"天天基金获取失败，尝试新浪财经fu接口: {code}")
+    return get_fund_realtime_sina(code)
+
+def _get_fund_realtime_eastmoney(code):
+    """
+    从天天基金获取基金实时数据(当日净值和估算价格)
     数据来源: https://fundgz.1234567.com.cn/js/{code}.js
     
     返回字段说明:

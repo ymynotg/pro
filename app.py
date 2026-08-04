@@ -93,7 +93,90 @@ def load_fund_mapping():
     """
     return load_config(FUND_MAPPING_FILE) or {}
 
+def get_fund_realtime_sina(code):
+    """
+    从新浪财经获取基金实时数据(估值、净值)
+    接口: hq.sinajs.cn/list=fu{fund_code}
+    返回格式: var hq_str_f_{code}="名称,单位净值,累计净值,估值,日期,规模";
+    
+    Args:
+        code: 基金代码
+    
+    Returns:
+        dict: 包含price/valuation/nav/change/update_time, 失败返回None
+    """
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Referer': 'https://finance.sina.com.cn/',
+    }
+    
+    # 依次尝试 fu 和 f_ 两种请求格式
+    for prefix, label in [('fu', 'fu'), ('f_', 'f_')]:
+        url = f'https://hq.sinajs.cn/list={prefix}{code}'
+        start_time = time.time()
+        logger.debug(f"[REQUEST] 新浪财经{label}接口 - URL: {url}")
+        
+        try:
+            resp = requests.get(url, headers=headers, timeout=10)
+            elapsed = round((time.time() - start_time) * 1000, 2)
+            logger.debug(f"[RESPONSE] 状态码: {resp.status_code}, 耗时: {elapsed}ms")
+            
+            if resp.status_code == 200:
+                text = resp.text.strip()
+                logger.debug(f"[RESPONSE] 返回内容: {text[:200]}")
+                
+                # 解析: var hq_str_f_{code}="名称,单位净值,累计净值,估值,日期,规模";
+                match = re.search(r'var hq_str_f_\w+="([^"]+)"', text)
+                if match and match.group(1):
+                    fields = match.group(1).split(',')
+                    if len(fields) >= 5:
+                        name = fields[0]
+                        nav = float(fields[1]) if fields[1] else 0       # 单位净值
+                        valuation = float(fields[3]) if fields[3] else 0  # 估值
+                        date = fields[4]                                   # 日期
+                        
+                        # 计算涨跌幅: (估值 - 净值) / 净值 * 100
+                        change = round((valuation - nav) / nav * 100, 2) if nav > 0 else 0
+                        
+                        result = {
+                            'price': valuation,
+                            'nav': nav,
+                            'valuation': valuation,
+                            'change': change,
+                            'update_time': date,
+                        }
+                        logger.info(f"[SUCCESS-SINA-{label}] 基金{code}({name}) - 净值:{nav}, 估值:{valuation}, 涨跌:{change}%")
+                        return result
+            # fu请求返回空数据，继续尝试f_
+            logger.debug(f"[REQUEST] 新浪财经{label}接口返回空，尝试下一个")
+        except Exception as e:
+            elapsed = round((time.time() - start_time) * 1000, 2)
+            logger.error(f"[ERROR] 基金{code} - 新浪{label}接口请求失败: {str(e)}, 耗时: {elapsed}ms")
+    
+    logger.warning(f"[WARNING] 基金{code} - 新浪财经fu接口全部获取失败")
+    return None
+
 def get_fund_realtime(code):
+    """
+    获取基金实时数据(估值、净值)
+    优先从天天基金获取，失败时从新浪财经fu接口获取(fallback)
+    
+    Args:
+        code: 基金代码
+    
+    Returns:
+        dict: 包含price/valuation/nav/change/update_time, 失败返回None
+    """
+    # 先尝试天天基金
+    result = _get_fund_realtime_eastmoney(code)
+    if result:
+        return result
+    
+    # 天天基金失败，fallback到新浪财经fu接口
+    logger.info(f"[FALLBACK] 基金{code} - 天天基金获取失败，尝试新浪财经fu接口")
+    return get_fund_realtime_sina(code)
+
+def _get_fund_realtime_eastmoney(code):
     """
     从天天基金获取基金实时数据(估值、净值)
     
@@ -103,7 +186,6 @@ def get_fund_realtime(code):
     Returns:
         dict: 包含price/valuation/nav/change/update_time, 失败返回None
     """
-    import datetime
     url = f'https://fundgz.1234567.com.cn/js/{code}.js?rt={int(datetime.datetime.now().timestamp())}'
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
@@ -126,7 +208,6 @@ def get_fund_realtime(code):
             logger.debug(f"[RESPONSE] 返回内容前100字符: {text[:100]}")
             
             if 'jsonpgz' in text:
-                import re
                 match = re.search(r'jsonpgz\(({.+})\)', text)
                 if match:
                     data = json.loads(match.group(1))
@@ -401,11 +482,15 @@ def format_fund_data(funds):
         # 从fund_mapping中获取url
         fund_info = fund_mapping.get(code, {})
         url = fund_info.get('url', '')
-        
+
+        # 生成天天基金网公告页面URL
+        announcement_url = f'https://fundf10.eastmoney.com/jjgg_{code}.html'
+
         item = {
             'code': code,
             'name': f.get('name', ''),
             'url': url,
+            'announcement_url': announcement_url,
             'price': price if price > 0 else '',
             'change': change,
             'change_percent': change_percent if change_percent != 0 else '',

@@ -670,6 +670,7 @@
                                 <th data-sort="premium">溢价率</th>
                                 <th data-sort="valuation">估值</th>
                                 <th data-sort="valPremium">估溢率</th>
+                                <th>公告</th>
                             </tr>
                         </thead>
                         <tbody id="lofTableBody">
@@ -722,6 +723,7 @@
                                 <th data-sort="valPremium">估溢率</th>
                                 <th data-sort="subscribe_status">申购/限额</th>
                                 <th data-sort="redeem_status">赎回状态</th>
+                                <th>公告</th>
                             </tr>
                         </thead>
                         <tbody id="qdiiTableBody">
@@ -881,6 +883,7 @@
                                 <th data-sort="valPremium">估溢率</th>
                                 <th data-sort="subscribe_status">申购/限额</th>
                                 <th data-sort="redeem_status">赎回状态</th>
+                                <th>公告</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -1243,6 +1246,11 @@
                         `<td title="${item.name}"><a href="${item.url}" target="_blank" class="code-link">${item.name}</a></td>` : 
                         `<td title="${item.name}">${item.name}</td>`;
                     
+                    // 公告列：显示天天基金网公告链接
+                    const announcementCell = item.announcement_url ?
+                        `<td><a href="${item.announcement_url}" target="_blank" class="code-link">①</a></td>` :
+                        `<td>-</td>`;
+
                     html += `<tr class="${rowClass}">
                         <td><a href="javascript:void(0)" class="code-link" data-code="${item.code}" onclick="showHistory('${item.code}')">${item.code}</a></td>
                         ${nameCell}
@@ -1252,6 +1260,7 @@
                         <td><span class="premium ${premiumClass}">${premiumSign}${formatValue(premium)}%</span></td>
                         <td>${formatValue(item.valuation, 4)}</td>
                         <td><span class="premium ${valPremiumClass}">${valPremiumSign}${formatValue(valPremium)}%</span></td>
+                        ${announcementCell}
                     </tr>`;
                 } else if (type === 'qdii') {
                     const valPremium = parseFloat(item.valPremium) || 0;
@@ -1279,6 +1288,11 @@
                         `<td title="${item.name}"><a href="${item.url}" target="_blank" class="code-link">${item.name}</a></td>` : 
                         `<td title="${item.name}">${item.name}</td>`;
 
+                    // 公告列：显示天天基金网公告链接
+                    const announcementCell = item.announcement_url ?
+                        `<td><a href="${item.announcement_url}" target="_blank" class="code-link">①</a></td>` :
+                        `<td>-</td>`;
+
                     html += `<tr class="${rowClass}">
                         <td><a href="javascript:void(0)" class="code-link" data-code="${item.code}" onclick="showHistory('${item.code}')">${item.code}</a></td>
                         ${nameCell}
@@ -1290,6 +1304,7 @@
                         <td><span class="premium ${valPremiumClass}">${valPremiumSign}${formatValue(valPremium)}%</span></td>
                         <td><span class="status-tag ${subscribeClass}">${subscribeDisplay}</span></td>
                         <td><span class="status-tag ${redeemClass}">${redeemStatus}</span></td>
+                        ${announcementCell}
                     </tr>`;
                 } else if (type === 'etf') {
                     html += `<tr class="${rowClass}">
@@ -1340,6 +1355,11 @@
                         `<td title="${item.name}"><a href="${item.url}" target="_blank" class="code-link">${item.name}</a></td>` :
                         `<td title="${item.name}">${item.name}</td>`;
 
+                    // 公告列：显示天天基金网公告链接
+                    const announcementCell = item.announcement_url ?
+                        `<td><a href="${item.announcement_url}" target="_blank" class="code-link">①</a></td>` :
+                        `<td>-</td>`;
+
                     html += `<tr class="${rowClass}">
                         <td><a href="javascript:void(0)" class="code-link" data-code="${item.code}" onclick="showHistory('${item.code}')">${item.code}</a></td>
                         ${nameCell}
@@ -1351,6 +1371,7 @@
                         <td><span class="premium ${valPremiumClass}">${valPremiumSign}${formatValue(valPremium)}%</span></td>
                         <td><span class="status-tag ${subscribeClass}">${subscribeDisplay}</span></td>
                         <td><span class="status-tag ${redeemClass}">${redeemStatus}</span></td>
+                        ${announcementCell}
                         <td><button class="delete-btn" onclick="deleteFavorite('${item.code}')">删除</button></td>
                     </tr>`;
                 }

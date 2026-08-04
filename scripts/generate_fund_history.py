@@ -177,7 +177,79 @@ def get_historical_nav(code, days=365):
         return {}
 
 
+def get_fund_realtime_sina(code):
+    """
+    从新浪财经fu接口获取基金实时估值
+    接口: hq.sinajs.cn/list=fu{fund_code}
+    返回格式: var hq_str_f_{code}="名称,单位净值,累计净值,估值,日期,规模";
+    返回:
+        {nav: 最新净值, valuation: 实时估值, change: 涨跌幅} 
+        或 None（获取失败时）
+    """
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Referer': 'https://finance.sina.com.cn/'
+    }
+    # 先尝试fu请求
+    url = f'https://hq.sinajs.cn/list=fu{code}'
+    try:
+        resp = requests.get(url, headers=headers, timeout=10)
+        match = re.search(r'var hq_str_f_\w+="([^"]+)"', resp.text)
+        if match and match.group(1):
+            fields = match.group(1).split(',')
+            if len(fields) >= 5:
+                nav = float(fields[1]) if fields[1] else 0
+                valuation = float(fields[3]) if fields[3] else 0
+                change = round((valuation - nav) / nav * 100, 2) if nav > 0 else 0
+                logger.debug(f"{code}: 新浪fu接口估值获取成功")
+                return {
+                    'nav': nav,
+                    'valuation': valuation,
+                    'change': change,
+                }
+    except Exception:
+        pass
+    
+    # fu请求返回空数据时，尝试f_请求
+    url_f = f'https://hq.sinajs.cn/list=f_{code}'
+    try:
+        resp = requests.get(url_f, headers=headers, timeout=10)
+        match = re.search(r'var hq_str_f_\w+="([^"]+)"', resp.text)
+        if match and match.group(1):
+            fields = match.group(1).split(',')
+            if len(fields) >= 5:
+                nav = float(fields[1]) if fields[1] else 0
+                valuation = float(fields[3]) if fields[3] else 0
+                change = round((valuation - nav) / nav * 100, 2) if nav > 0 else 0
+                logger.debug(f"{code}: 新浪f_接口估值获取成功")
+                return {
+                    'nav': nav,
+                    'valuation': valuation,
+                    'change': change,
+                }
+    except Exception:
+        pass
+    
+    logger.debug(f"{code}: 新浪fu接口估值获取失败")
+    return None
+
 def get_fund_realtime(code):
+    """
+    获取基金实时估值
+    优先从天天基金获取，失败时从新浪财经fu接口获取(fallback)
+    返回:
+        {nav: 最新净值, valuation: 实时估值, change: 涨跌幅} 
+        或 None（获取失败时）
+    """
+    # 先尝试天天基金
+    result = _get_fund_realtime_eastmoney(code)
+    if result:
+        return result
+    # fallback到新浪财经fu接口
+    logger.debug(f"{code}: 天天基金获取失败，尝试新浪财经fu接口")
+    return get_fund_realtime_sina(code)
+
+def _get_fund_realtime_eastmoney(code):
     """
     从天天基金接口获取基金实时估值
     接口: fundgz.1234567.com.cn
@@ -205,7 +277,7 @@ def get_fund_realtime(code):
                 return result
     except Exception:
         pass
-    logger.debug(f"{code}: 实时估值获取失败")
+    logger.debug(f"{code}: 天天基金实时估值获取失败")
     return None
 
 
